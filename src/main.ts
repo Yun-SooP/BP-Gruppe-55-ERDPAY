@@ -1,5 +1,5 @@
 import './style.css'
-import { setupCounter } from './counter.ts'
+import { setupSession } from './setup.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -19,4 +19,4 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </div>
 `
 
-setupCounter(document.querySelector<HTMLButtonElement>('#privatekey')!)
+setupSession(document.querySelector<HTMLButtonElement>('#privatekey')!)
