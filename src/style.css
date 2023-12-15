@@ -94,3 +94,30 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.basePop {
+  opacity: 0;
+  color: black;
+  position: fixed;
+  z-index: -1;
+
+  border-radius: 15px;
+  padding: 15px 25px;
+  width: 380px;
+  height: 300px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.mainPop {
+  position: fixed;
+  z-index: 100;
+}
+
+.open {
+  opacity: 100;
+  z-index: 100;  
+}
