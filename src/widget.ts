@@ -25,8 +25,13 @@ btn2?.addEventListener('click', () => {
     list?.remove('open');
 });
 
-const balance = document.querySelector('#balance')
-balance?.addEventListener('click', () => {
+const btn3 = document.querySelector('#transfer');
+btn3?.addEventListener('click', () => {
+    window.location.href = '/src/transfer.html';
+});
+
+const btn4 = document.querySelector('#balance')
+btn4?.addEventListener('click', () => {
     goToBalance(document.querySelector<HTMLDivElement>('#app')!)
 })
 
