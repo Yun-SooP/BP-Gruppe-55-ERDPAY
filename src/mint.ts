@@ -5,9 +5,18 @@ export async function mint(session: Session, token: string, id: number){
     if (!Number.isInteger(id) || id < 0){
         throw new Error('Invalid ID!')
     }
-    const transaction = await session.mint(Address.fromString(token), BigInt(id))
-    const accepted = await transaction.receipt
-    const status = accepted.status
-    const error = accepted.error
+    let transaction
+    let accepted
+    let status
+    let error
+    try {
+        transaction = await session.mint(Address.fromString(token), BigInt(id))
+        accepted = await transaction.receipt
+        status = accepted.status
+        error = accepted.error
+    } catch (err){
+        status = 0
+        error = err
+    }
     return { status, error }
 }
