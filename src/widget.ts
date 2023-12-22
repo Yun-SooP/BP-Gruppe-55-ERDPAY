@@ -20,14 +20,14 @@ export function widgetBody(html: HTMLDivElement){
             <button id="balance">View Account Balance</button>
         </form>
     `;
-    const btn3 = document.querySelector<HTMLButtonElement>('#transfer');
-    btn3?.addEventListener('click', () => {
+    const transfer = document.querySelector<HTMLButtonElement>('#transfer');
+    transfer?.addEventListener('click', () => {
         htmlCreateSessionForTransfer(html)
 
     });
 
-    const btn4 = document.querySelector<HTMLButtonElement>('#balance')
-    btn4?.addEventListener('click', () => {
+    const balance = document.querySelector<HTMLButtonElement>('#balance')
+    balance?.addEventListener('click', () => {
         htmlBalance(html)
     })
 }
