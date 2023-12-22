@@ -7,6 +7,7 @@ import { Assets } from '@polycrypt/erdstall/ledger/assets';
 import { newSession, restoreSession } from './setup_session.ts'
 import { mint } from './mint.ts';
 import { Tokens } from '@polycrypt/erdstall/ledger/assets';
+import { start } from './widget.ts';
 
 
 
@@ -22,6 +23,7 @@ export function htmlCreateSessionForTransfer(html : HTMLElement){
   <div>
     <h1>Transfer</h1>
     <div id= "transfer" class="card">
+      <button id="return" type="button">return</button>
       <p>Create a new session or retore your previous session with your private key.</p>
       <div>
         <button id="newSession" type="button">new session</button>
@@ -39,6 +41,9 @@ export function htmlCreateSessionForTransfer(html : HTMLElement){
   const b_newSession = document.querySelector<HTMLButtonElement>('#newSession')!
   const b_restoreSession = document.querySelector<HTMLButtonElement>('#restoreSession')!
   var privateKey_previous = document.querySelector<HTMLInputElement>('#privateKey')!;
+
+  const b_return = document.querySelector<HTMLButtonElement>('#return')!
+  b_return.addEventListener('click', () => start())
 
 
   b_newSession.addEventListener('click', async () => {
