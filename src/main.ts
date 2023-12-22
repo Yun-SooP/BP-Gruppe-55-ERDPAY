@@ -1,5 +1,5 @@
 import './style.css'
-import { setupSession } from './setup.ts'
+import { setupSession } from './setup_session.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
