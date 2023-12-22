@@ -118,17 +118,41 @@ form {
 form button{
   width: 100%;
   height: 50px;
-
-  border-radius: 10px;
-
-
   margin-bottom: 8px;
+  border-radius: 10px;
 
   background-color: #fff;
   color:var(--main-color-violet);
   font-size: 17px;
   font-weight: 400;
   cursor: pointer;
+
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  outline: none;
+}
+form button:hover{
+  box-shadow: 0px 0px 5px 3px rgb(255, 255, 255);
+}
+form input{
+  width: 100%;
+  padding: 12px 20px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 3px solid #c6bbe7;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+form input[type=text]:focus{
+  border: 3px solid #555;
+
+
+}
+form scroll{
+  width: 100%;
+  margin-bottom: 8px;
 }
 
 @media (prefers-color-scheme: light) {
