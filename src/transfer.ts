@@ -7,17 +7,17 @@ import { Assets } from '@polycrypt/erdstall/ledger/assets';
 import { newSession, restoreSession } from './setup_session.ts'
 import { mint } from './mint.ts';
 import { Tokens } from '@polycrypt/erdstall/ledger/assets';
-import { start } from './widget.ts';
+import { widget } from './widget.ts';
 
 
 
 let session: Session;
 let privateKey: string;
 let account : Account;
-let apphtml : HTMLElement
+let apphtml : HTMLDivElement
 
 
-export function htmlCreateSessionForTransfer(html : HTMLElement){
+export function htmlCreateSessionForTransfer(html : HTMLDivElement){
   apphtml = html
   html.innerHTML = `
   
@@ -27,7 +27,7 @@ export function htmlCreateSessionForTransfer(html : HTMLElement){
   var privateKey_previous = document.querySelector<HTMLInputElement>('#privateKey')!;
 
   const b_return = document.querySelector<HTMLButtonElement>('#return')!
-  b_return.addEventListener('click', () => start())
+  b_return.addEventListener('click', () => widget(apphtml))
 
 
   b_newSession.addEventListener('click', async () => {

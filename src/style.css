@@ -92,9 +92,11 @@ img {
 }
 
 
+
 .widget__header {
   padding: 2.5rem 2rem 1rem;
   font-family: inherit;
+
   /*header text colour*/
   color: #fff;
   border-top-left-radius: 10px;
@@ -116,7 +118,10 @@ form {
 form button{
   width: 100%;
   height: 50px;
+
   border-radius: 10px;
+
+
   margin-bottom: 8px;
 
   background-color: #fff;
