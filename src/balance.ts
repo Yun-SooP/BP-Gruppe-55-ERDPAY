@@ -28,16 +28,24 @@ export async function goToBalance(html : HTMLElement) {
     </div>
   </div>
   `
-  const client = await setupClient()
+
+  // Try to set up client
+  let client
+  try {
+    client = await setupClient()
+  } catch (error) {
+    alert(error)
+  }
 
   const back = document.querySelector<HTMLButtonElement>('#back')!
   const button = document.querySelector<HTMLButtonElement>('#balance')!
-  var input = document.querySelector<HTMLInputElement>('#address')!
+  let input = document.querySelector<HTMLInputElement>('#address')!
   const array = document.querySelector<HTMLBodyElement>('#array')!
 
+  // initialize buttons
   button.innerHTML = `View Balance`
   button.addEventListener('click', () => {
-    viewBalance(client, input, array)
+    viewBalance(client!, input, array)
   })
 
   back.innerHTML = `Return`
@@ -51,7 +59,7 @@ export async function goToBalance(html : HTMLElement) {
  */
 async function viewBalance(client : Client, input : HTMLInputElement, array : HTMLBodyElement) {
   try {
-    var account = await client.getAccount(Address.fromString(input.value))
+    let account = await client.getAccount(Address.fromString(input.value))
     let entries = Array.from(account.values.values.entries())
     let assets = ""
     for (let i = 0; i < entries.length; i++) {
