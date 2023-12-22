@@ -7,14 +7,22 @@ const provider = new ethers.providers.JsonRpcProvider(url);
 // create custodial session
 
 export async function newSession() {
-  const { session, privateKey } = Session.generateCustodial(provider, erdOperatorUrl);
-  await session.initialize()
-  await session.subscribe()
-  return { session, privateKey }
+  try {
+    const { session, privateKey } = Session.generateCustodial(provider, erdOperatorUrl);
+    await session.initialize()
+    await session.subscribe()
+    return { session, privateKey }
+  } catch(err) {
+    alert(err)
+  }
 }
 export async function restoreSession(privateKey: string) {
-  const session = Session.restoreCustodial(provider, erdOperatorUrl, privateKey)
-  await session.initialize()
-  await session.subscribe()
-  return session
+  try {
+    const session = Session.restoreCustodial(provider, erdOperatorUrl, privateKey)
+    await session.initialize()
+    await session.subscribe()
+    return session
+  } catch(err) {
+    alert(err)
+  }
 }

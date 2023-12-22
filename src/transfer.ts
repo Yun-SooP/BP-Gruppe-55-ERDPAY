@@ -42,15 +42,27 @@ function htmlCreateSessionForTransfer(){
 
 
   b_newSession.addEventListener('click', async () => {
-    let newSession_ = await newSession()
-    session = newSession_.session
-    privateKey = newSession_.privateKey
-    console.log(session.address.toString())
+    let newSession_
+    try {
+      newSession_ = await newSession()
+    } catch(err) {
+      alert(err)
+      return
+    }
+    session = newSession_!.session
+    privateKey = newSession_!.privateKey
     htmlTransfer()
   })
   b_restoreSession.addEventListener('click', async () => {
     privateKey = privateKey_previous.value
-    session = await restoreSession(privateKey)
+    let restoredSession
+    try {
+      restoredSession = await restoreSession(privateKey)
+    } catch(err) {
+      alert(err)
+      return
+    }
+    session = restoredSession!
     htmlTransfer()
   })
 }
@@ -118,7 +130,12 @@ async function htmlTransfer(){
     }
 
     b_makeTransfer.addEventListener('click', async () => {
-      await transferTo(session, select.value, parseInt(amount.value), address_recipient.value)
+      const { status, error } = await transferTo(session, select.value, parseInt(amount.value), address_recipient.value)
+      if (status == 0) {
+        alert("transfer failed!: " + error)
+      } else if (status == 1) {
+        alert("transfer succesful!")
+      }
       await htmlTransfer()
     })
 
@@ -127,16 +144,25 @@ async function htmlTransfer(){
   b_mint.addEventListener('click', async ()=>{
     const token_address = document.querySelector<HTMLInputElement>('#token_address')!
     const token_id = document.querySelector<HTMLInputElement>('#token_id')!
-    await mint(session, token_address.value, parseInt(token_id.value))
+    const { status , error } = await mint(session, token_address.value, parseInt(token_id.value))
+    if (status == 0) {
+      alert("minting failed!: " + error)
+    } else if (status == 1){
+      alert("token succesfully minted!")
+    }
     await htmlTransfer()
   })
 }
 
 
-function transferTo(session: Session, token: string, amount: number, address: string) {
+async function transferTo(session: Session, token: string, amount: number, address: string) {
     let tokens = <Tokens>account.values.values.get(token)!
     tokens.value = tokens.value.slice(0, amount)
     const asset = <Asset>tokens
     let assets_transfer = new Assets({ token: token, asset: asset })
-    return session.transferTo(assets_transfer, Address.fromString(address))
+    const transaction = await session.transferTo(assets_transfer, Address.fromString(address))
+    const receipt = await transaction.receipt
+    const status = receipt.status
+    const error = receipt.error
+    return { status, error}
 }
