@@ -161,10 +161,19 @@ async function transferTo(session: Session, token: string, amount: number, addre
     tokens.value = tokens.value.slice(0, amount)
     const asset = <Asset>tokens
     let assets_transfer = new Assets({ token: token, asset: asset })
-    const transaction = await session.transferTo(assets_transfer, Address.fromString(address))
-    const receipt = await transaction.receipt
-    const status = receipt.status
-    const error = receipt.error
+    let transaction
+    let receipt
+    let status
+    let error
+    try {
+      transaction = await session.transferTo(assets_transfer, Address.fromString(address))
+      receipt = await transaction.receipt
+      status = receipt.status
+      error = receipt.error
+    } catch (err) {
+      status = 0
+      error = err
+    }
     return { status, error}
 
 }
