@@ -20,23 +20,7 @@ let apphtml : HTMLElement
 export function htmlCreateSessionForTransfer(html : HTMLElement){
   apphtml = html
   html.innerHTML = `
-  <div>
-    <h1>Transfer</h1>
-    <div id= "transfer" class="card">
-      <button id="return" type="button">return</button>
-      <p>Create a new session or retore your previous session with your private key.</p>
-      <div>
-        <button id="newSession" type="button">new session</button>
-      </div>
-      <br>
-      <div>
-        <form>
-          <input type = "text" id = "privateKey" placeholder="Type in your private key"/><br>
-          <button id="restoreSession" type="button">restore session</button>
-        </form>
-      </div>
-    </div>
-  </div>
+  
   `
   const b_newSession = document.querySelector<HTMLButtonElement>('#newSession')!
   const b_restoreSession = document.querySelector<HTMLButtonElement>('#restoreSession')!
