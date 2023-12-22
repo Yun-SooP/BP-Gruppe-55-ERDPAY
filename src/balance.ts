@@ -2,13 +2,13 @@ import './style.css'
 import { setupClient } from './setup_client.ts'
 import { Address} from "@polycrypt/erdstall/ledger";
 import { Client } from '@polycrypt/erdstall';
-import { start } from './widget.ts';
+import { widget } from './widget.ts';
 
 /**
  * export function to change to balance viewer
  * @param html main body of widget
  */
-export async function htmlBalance(html : HTMLElement) {
+export async function htmlBalance(html : HTMLDivElement) {
   html.innerHTML = `
   <div>
     <a href="https://github.com/perun-network/erdstall-ts-sdk" target="_blank">
@@ -50,7 +50,7 @@ export async function htmlBalance(html : HTMLElement) {
 
   back.innerHTML = `Return`
   back.addEventListener('click', () => 
-    start()
+    widget(html)
   )
 }
 
