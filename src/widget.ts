@@ -1,4 +1,5 @@
 import { goToBalance } from "./balance";
+import { htmlCreateSessionForTransfer } from "./transfer";
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div>
@@ -27,7 +28,7 @@ btn2?.addEventListener('click', () => {
 
 const btn3 = document.querySelector('#transfer');
 btn3?.addEventListener('click', () => {
-    window.location.href = '/src/transfer.html';
+    htmlCreateSessionForTransfer(document.querySelector<HTMLDivElement>('#app')!)
 });
 
 const btn4 = document.querySelector('#balance')

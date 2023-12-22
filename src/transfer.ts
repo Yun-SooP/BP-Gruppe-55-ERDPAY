@@ -13,12 +13,12 @@ import { Tokens } from '@polycrypt/erdstall/ledger/assets';
 let session: Session;
 let privateKey: string;
 let account : Account;
+let apphtml : HTMLElement
 
-htmlCreateSessionForTransfer()
 
-function htmlCreateSessionForTransfer(){
-
-  document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+export function htmlCreateSessionForTransfer(html : HTMLElement){
+  apphtml = html
+  html.innerHTML = `
   <div>
     <h1>Transfer</h1>
     <div id= "transfer" class="card">
@@ -98,7 +98,7 @@ async function htmlTransfer(){
   b_privateKey.addEventListener('click', () => alert(privateKey))
 
   const b_return = document.querySelector<HTMLButtonElement>('#return')!
-  b_return.addEventListener('click', () => htmlCreateSessionForTransfer())
+  b_return.addEventListener('click', () => htmlCreateSessionForTransfer(apphtml))
 
   const address_recipient = document.querySelector<HTMLInputElement>('#address_recipient')!;
   const b_makeTransfer = document.querySelector<HTMLButtonElement>('#makeTransfer')!
