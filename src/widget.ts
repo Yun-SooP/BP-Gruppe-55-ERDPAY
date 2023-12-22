@@ -1,4 +1,4 @@
-import { goToBalance } from "./balance";
+import { htmlBalance } from "./balance";
 import { htmlCreateSessionForTransfer } from "./transfer";
 
 export function start() {
@@ -34,7 +34,7 @@ export function start() {
 
     const btn4 = document.querySelector('#balance')
     btn4?.addEventListener('click', () => {
-        goToBalance(document.querySelector<HTMLDivElement>('#app')!)
+        htmlBalance(document.querySelector<HTMLDivElement>('#app')!)
     })
 }
 

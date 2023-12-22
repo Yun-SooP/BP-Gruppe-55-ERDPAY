@@ -8,7 +8,7 @@ import { start } from './widget.ts';
  * export function to change to balance viewer
  * @param html main body of widget
  */
-export async function goToBalance(html : HTMLElement) {
+export async function htmlBalance(html : HTMLElement) {
   html.innerHTML = `
   <div>
     <a href="https://github.com/perun-network/erdstall-ts-sdk" target="_blank">
