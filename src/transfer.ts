@@ -2,21 +2,23 @@ import './style.css'
 import { Session } from "@polycrypt/erdstall";
 import { Address } from '@polycrypt/erdstall/ledger';
 import { Account } from '@polycrypt/erdstall/ledger';
-import { Assets, decodePackedAssets } from '@polycrypt/erdstall/ledger/assets';
+import { Asset } from '@polycrypt/erdstall/ledger/assets';
+import { Assets } from '@polycrypt/erdstall/ledger/assets';
 import { newSession, restoreSession } from './setup_session.ts'
 import { mint } from './mint.ts';
+import { Tokens } from '@polycrypt/erdstall/ledger/assets';
 
 
 
 let session: Session;
 let privateKey: string;
 let account : Account;
+let apphtml : HTMLElement
 
-htmlCreateSessionForTransfer()
 
-function htmlCreateSessionForTransfer(){
-
-  document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+export function htmlCreateSessionForTransfer(html : HTMLElement){
+  apphtml = html
+  html.innerHTML = `
   <div>
     <h1>Transfer</h1>
     <div id= "transfer" class="card">
@@ -40,78 +42,129 @@ function htmlCreateSessionForTransfer(){
 
 
   b_newSession.addEventListener('click', async () => {
-    let newSession_ = await newSession()
-    session = newSession_.session
-    privateKey = newSession_.privateKey
-    console.log(session.address.toString())
+    let newSession_
+    try {
+      newSession_ = await newSession()
+    } catch(err) {
+      alert(err)
+      return
+    }
+    session = newSession_!.session
+    privateKey = newSession_!.privateKey
     htmlTransfer()
   })
   b_restoreSession.addEventListener('click', async () => {
     privateKey = privateKey_previous.value
-    session = await restoreSession(privateKey)
+    let restoredSession
+    try {
+      restoredSession = await restoreSession(privateKey)
+    } catch(err) {
+      alert(err)
+      return
+    }
+    session = restoredSession!
     htmlTransfer()
   })
 }
 
 
 async function htmlTransfer(){
+  account = await session!.getAccount(session!.address)
+
   document.querySelector<HTMLDivElement>('#transfer')!.innerHTML = `
-      <button id="privatekey" type="button"></button>
+      <button id="return" type="button">return</button>
+      <button id="privatekey" type="button">Your private key</button>
       <div id ="select_token">
       </div>
+      <br>
       <div id ="transfer_info">
         <form>
-          Transfer to: <input type = "text" id = "address_recipient" placeholder="Type in the recipient address"/>
-          <button id="makeTransfer" type="button"></button>
+          Transfer to: <input type = "text" id = "address_recipient" placeholder="Type in the recipient address"/><br>
+          <button id="makeTransfer" type="button">make transfer</button>
+        </form>
+      </div>
+      <br>
+      <div id ="minting">
+        <form>
+          token address: <input type = "text" id = "token_address" placeholder="Type in the token address"/>
+          token id: <input type = "text" id = "token_id" placeholder="Type in the token id"/><br>
+          <button id="mint" type="button">mint new token</button>
         </form>
       </div>
   `
-  account = await session!.getAccount(session!.address)
-  const button_privateKey = document.querySelector<HTMLButtonElement>('#privatekey')!
-  button_privateKey.innerHTML = `Your private key`
-  button_privateKey.addEventListener('click', () => alert(privateKey))
+  
 
-  var address_recipient = document.querySelector<HTMLInputElement>('#address_recipient')!;
+  const b_privateKey = document.querySelector<HTMLButtonElement>('#privatekey')!
+  b_privateKey.addEventListener('click', () => alert(privateKey))
 
-  const makeTransfer = document.querySelector<HTMLButtonElement>('#makeTransfer')!
-  makeTransfer.innerText = 'make transfer'
+  const b_return = document.querySelector<HTMLButtonElement>('#return')!
+  b_return.addEventListener('click', () => htmlCreateSessionForTransfer(apphtml))
+
+  const address_recipient = document.querySelector<HTMLInputElement>('#address_recipient')!;
+  const b_makeTransfer = document.querySelector<HTMLButtonElement>('#makeTransfer')!
+  
+  const b_mint = document.querySelector<HTMLButtonElement>('#mint')!
+
 
   if (account.values.values.size == 0){
     document.querySelector<HTMLDivElement>('#select_token')!.innerHTML = `
       You have no token available.
     `
     address_recipient.disabled = true
-    makeTransfer.disabled = true
+    b_makeTransfer.disabled = true
   } else{
     document.querySelector<HTMLDivElement>('#select_token')!.innerHTML = `
-      <select name="token_transfer" size = "5">
+      Available tokens (token address):
+      <select id="token_transfer" size = "5">
       </select>
+      amount: <input type = "text" id = "amount" placeholder="amount of tokens to transfer"/>
     `
-    let option = document.createElement("option")
-    option.text="Token1"
-    let select = document.querySelector<HTMLSelectElement>('#token_transfer')!
+    const select = document.querySelector<HTMLSelectElement>('#token_transfer')!
+    const tokens = Array.from(account.values.values.entries())
+    const amount = document.querySelector<HTMLInputElement>('#amount')!;
+    for (let i = 0; i < tokens.length; i++){
+      const option = document.createElement("option")
+      let token = tokens[i]
+      option.value = token[0]
+      option.text = token[0] + ' (amount: ' + (<Tokens>token[1]).value.length + ')'
+      select.add(option)
+    }
+
+    b_makeTransfer.addEventListener('click', async () => {
+      const { status, error } = await transferTo(session, select.value, parseInt(amount.value), address_recipient.value)
+      if (status == 0) {
+        alert("transfer failed!: " + error)
+      } else if (status == 1) {
+        alert("transfer succesful!")
+      }
+      await htmlTransfer()
+    })
+
   }
   
-
-  makeTransfer.addEventListener('click', () => {
-    transferWithMint(session, address_recipient.value)
+  b_mint.addEventListener('click', async ()=>{
+    const token_address = document.querySelector<HTMLInputElement>('#token_address')!
+    const token_id = document.querySelector<HTMLInputElement>('#token_id')!
+    const { status , error } = await mint(session, token_address.value, parseInt(token_id.value))
+    if (status == 0) {
+      alert("minting failed!: " + error)
+    } else if (status == 1){
+      alert("token succesfully minted!")
+    }
+    await htmlTransfer()
   })
 }
-let assets = null
-let minting_id = 0
 
-async function transferWithMint(session: Session, address: string) {
-  await mint(session, "0x923439be515b6a928cb9650d70000a9044e49e84", minting_id)
-  let asset = account.values.values.get("0x923439be515b6a928cb9650d70000a9044e49e84")!
-  console.log(asset)
-  asset.value = [BigInt(0), BigInt(53)]
-  
-  console.log(asset.value)
 
-  let assets_transfer = new Assets({ token: "0x923439be515b6a928cb9650d70000a9044e49e84", asset: asset })
-  await transferTo(session, assets_transfer, address)
-}
+async function transferTo(session: Session, token: string, amount: number, address: string) {
+    let tokens = <Tokens>account.values.values.get(token)!
+    tokens.value = tokens.value.slice(0, amount)
+    const asset = <Asset>tokens
+    let assets_transfer = new Assets({ token: token, asset: asset })
+    const transaction = await session.transferTo(assets_transfer, Address.fromString(address))
+    const receipt = await transaction.receipt
+    const status = receipt.status
+    const error = receipt.error
+    return { status, error}
 
-function transferTo(session: Session, assets: Assets, address: string) {
-    return session.transferTo(assets, Address.fromString(address))
 }
