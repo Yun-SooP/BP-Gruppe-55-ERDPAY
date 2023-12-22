@@ -105,6 +105,7 @@ async function htmlTransfer(){
   
   const b_mint = document.querySelector<HTMLButtonElement>('#mint')!
 
+
   if (account.values.values.size == 0){
     document.querySelector<HTMLDivElement>('#select_token')!.innerHTML = `
       You have no token available.
@@ -165,4 +166,5 @@ async function transferTo(session: Session, token: string, amount: number, addre
     const status = receipt.status
     const error = receipt.error
     return { status, error}
+
 }
