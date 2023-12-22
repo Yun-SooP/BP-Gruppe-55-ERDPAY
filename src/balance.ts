@@ -2,6 +2,7 @@ import './style.css'
 import { setupClient } from './setup_client.ts'
 import { Address} from "@polycrypt/erdstall/ledger";
 import { Client } from '@polycrypt/erdstall';
+import { start } from './widget.ts';
 
 /**
  * export function to change to balance viewer
@@ -16,6 +17,7 @@ export async function goToBalance(html : HTMLElement) {
     <h1>erdPay</h1>
     <div class="card">
       <button id="balance" type="button"></button>
+      <button id="back" type="button"></button>
     </div>
     <div>
         <label for="address">Address:</label>
@@ -28,6 +30,7 @@ export async function goToBalance(html : HTMLElement) {
   `
   const client = await setupClient()
 
+  const back = document.querySelector<HTMLButtonElement>('#back')!
   const button = document.querySelector<HTMLButtonElement>('#balance')!
   var input = document.querySelector<HTMLInputElement>('#address')!
   const array = document.querySelector<HTMLBodyElement>('#array')!
@@ -36,10 +39,15 @@ export async function goToBalance(html : HTMLElement) {
   button.addEventListener('click', () => {
     viewBalance(client, input, array)
   })
+
+  back.innerHTML = `Return`
+  back.addEventListener('click', () => 
+    start()
+  )
 }
 
 /**
- * Function to display current assets of the givven address
+ * Function to display current assets of the given address
  */
 async function viewBalance(client : Client, input : HTMLInputElement, array : HTMLBodyElement) {
   try {
