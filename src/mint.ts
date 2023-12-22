@@ -2,9 +2,6 @@ import { Session } from "@polycrypt/erdstall";
 import { Address } from "@polycrypt/erdstall/ledger";
 
 export async function mint(session: Session, token: string, id: number){
-    if (!Number.isInteger(id) || id < 0){
-        throw new Error('Invalid ID!')
-    }
     let transaction
     let accepted
     let status
