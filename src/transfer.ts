@@ -44,9 +44,9 @@ export function htmlCreateSessionForTransfer(html : HTMLDivElement){
           
         </div>
         
-        <div class = "arrow" id="return" ></div>
+        
       </div>
-      
+      <div class = "arrow" id="return" ></div>
     </div>
   `
   const b_newSession = document.querySelector<HTMLButtonElement>('#newSession')!
