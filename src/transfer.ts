@@ -21,20 +21,32 @@ export function htmlCreateSessionForTransfer(html : HTMLDivElement){
   apphtml = html
   html.innerHTML = `
     <div>
+     
       <header class="widget__header">
+        <button class = "button logoButton" id="returnMain" type="button">
+          <img src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
+        </button>
+
         <h3>Transfer</h3>
+        <p>Create a new session or restore your previous session with your private key.</p>
       </header>
+      
       <div id = "transfer">
-        <p>Create a new session or retore your previous session with your private key.</p>
-        <form>
-          <button id="newSession" type="button">new session</button>
-          <div>
-            <input type = "text" id = "privateKey" placeholder="Type in your private key"/><br>
-            <button id="restoreSession" type="button">restore session</button>
-          </div>
-          <button id="return" type="button">return</button>
-        </form>
+        
+        <div class = "button_container">
+          <button class = "button sqrButton" id="newSession" type="button">new session</button>
+          <p> or </p>
+          <form>
+            <input type = "text" id = "privateKey" placeholder="Enter your private key"/><br>
+            <button  id="restoreSession" type="button">restore session</button>
+          </form>
+          
+          
+        </div>
+        
+        <div class = "arrow" id="return" ></div>
       </div>
+      
     </div>
   `
   const b_newSession = document.querySelector<HTMLButtonElement>('#newSession')!
@@ -76,10 +88,12 @@ async function htmlTransfer(){
   account = await session!.getAccount(session!.address)
 
   document.querySelector<HTMLDivElement>('#transfer')!.innerHTML = `
-      <button id="return" type="button">return</button>
-      <button id="privatekey" type="button">Your private key</button>
-      <div id ="select_token">
-      </div>
+      
+  <div class="button_container">
+      <button class = "button privateKey" id="privatekey" type="button">Click to see private key</button>
+      
+  </div>
+  <div id ="select_token"></div>
       <br>
       <div id ="transfer_info">
         <form>

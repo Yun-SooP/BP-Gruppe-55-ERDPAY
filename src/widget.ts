@@ -13,12 +13,17 @@ export function widget(html: HTMLDivElement) {
 export function widgetBody(html: HTMLDivElement){
     html.innerHTML = `
         <header class="widget__header">
+            <button class = "button logoButton" id="logoButton" type="button">
+                <img src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
+            </button>
+
             <h3> Welcome to ErdPay</h3>
+            <p> Select an action to perform</p>
         </header>
-        <form>
-            <button id="transfer">Transfer</button>
-            <button id="balance">View Account Balance</button>
-        </form>
+        <div class="button_container">
+            <button class = "button sqrButton" id="transfer">Transfer</button>
+            <button class = "button sqrButton" id="balance">View Balance</button>
+        </div>
     `;
     const transfer = document.querySelector<HTMLButtonElement>('#transfer');
     transfer?.addEventListener('click', () => {

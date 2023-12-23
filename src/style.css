@@ -5,11 +5,14 @@
   color-scheme: light dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  letter-spacing: .1rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   --mainFont: Verdana, Geneva, Tahoma, sans-serif;
-  --main-color-violet: #735eed;
+  --main-color: #735eed;
+  --second-color: #ffffff;
+  --third-color:#abc9fc;
 }
 
 body {
@@ -21,51 +24,12 @@ body {
   min-height: 100vh;
 }
 
-
-
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
-
-.button_container {
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 200px;
-  height: 50px;
-  border-radius: 1000px;
-  background-color: var(--main-color-violet);
-}
-
-body button {
-  background-color: var(--main-color-violet);
-}
-
-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background-color: var(--main-color-violet);
-
-  width: 200px;
-  height: 50px;
-  border-radius: 1000px;
-  cursor: pointer;
-}
-
-
 img {
   filter: saturate(0%) brightness(350%);
   /*-width: 200%;*/
@@ -73,6 +37,117 @@ img {
   padding: 0%;
   box-sizing: border-box;
 }
+
+.button_container {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem 1.5rem;
+}
+
+body button {
+  background-color: var(--main-color);
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-family:inherit;
+  width: 200px;
+  height: 50px;
+  border-radius: 1000px;
+  color: var(--second-color);
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  outline: none;
+  cursor: pointer;
+}
+
+.sqrButton {
+  width: 40%;
+  height: 0;
+  padding: 15%;
+  margin: 3%;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  
+  background-color: var(--second-color);
+  color:var(--main-color);
+  
+  font-size: 17px;
+  font-weight: 530;
+  letter-spacing: .1rem;
+}
+.sqrButton:hover {
+  box-shadow: 0px 0px 5px 3px rgb(255, 255, 255);
+  color: var(--third-color);
+}
+
+.logoButton {
+  width: 100%;
+  
+  background-color: transparent;
+  transition: none;
+}
+
+.return {
+  width: 200px;
+  height: 200px;
+  padding: 2%;
+  
+  color: #ffffff;
+  
+  border-radius: 20px;
+  transition: all .3s ease;
+  
+  cursor: pointer;
+  align-items: center;
+  font-size: 14px;
+}
+
+.arrow {
+  width: 2vmin;
+  height: 2vmin;
+  box-sizing: border-box;
+  margin-bottom: 5%;
+  margin-top: 5px;
+  
+  position: relative;
+  margin-left: 5%;
+  transform: rotate(-45deg);
+  
+  &::before {
+    content: '';
+    width: 100%;
+    height:100%;
+    border-width: .8vmin 0  0 .8vmin;
+    border-style: solid;
+    border-color: var(--second-color);
+    transition: .2s ease;
+    display: block;
+    transform-origin: 50% 50% ;
+  }
+  &:hover::before {
+    border-color: var(--third-color);
+    transform: scale(.8);
+    
+  }
+  
+}
+.privateKey {
+  width: 100%;
+  height: 50px;
+  
+  border-radius: 10px;
+  position: relative;
+  
+}
+
+
+
+
 
 .widget_body {
   box-shadow: 0 0 18px 8px rgba(0, 0, 0, 0.1), 0 0 32px 32px rgba(0, 0, 0, 0.08);
@@ -91,49 +166,55 @@ img {
   box-sizing: border-box;
 }
 
-
-
 .widget__header {
   padding: 2.5rem 2rem 1rem;
   font-family: inherit;
 
   /*header text colour*/
-  color: #fff;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  color: var(--second-color);
+  border-radius: 10px;
   text-align: center;
+  align-items: center;
 }
+
 h3, p, input {
   margin: 0;
   padding: 0;
+  letter-spacing: .01rem;
+  color: var(--second-color);
 }
+
 .widget__header h3 {
   font-size: 24px;
   font-weight: 400;
   margin-bottom: 8px;
 }
+
+
 form {
   padding: 2rem 1rem 1.5rem;
 }
 form button{
   width: 100%;
   height: 50px;
-  margin-bottom: 8px;
+  
+  
   border-radius: 10px;
+  position: relative;
 
-  background-color: #fff;
-  color:var(--main-color-violet);
+  background-color:var(--second-color);
+  color: var(--main-color);
   font-size: 17px;
   font-weight: 400;
+  
   cursor: pointer;
 
   -webkit-transition: 0.2s;
   transition: 0.2s;
   outline: none;
 }
-form button:hover{
-  box-shadow: 0px 0px 5px 3px rgb(255, 255, 255);
-}
+
+
 form input{
   width: 100%;
   padding: 12px 20px;
@@ -141,6 +222,7 @@ form input{
   box-sizing: border-box;
   border-radius: 10px;
   border: 3px solid #c6bbe7;
+  color: var(--main-color);
   -webkit-transition: 0.5s;
   transition: 0.5s;
   outline: none;
@@ -153,6 +235,11 @@ form input[type=text]:focus{
 form scroll{
   width: 100%;
   margin-bottom: 8px;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 @media (prefers-color-scheme: light) {
