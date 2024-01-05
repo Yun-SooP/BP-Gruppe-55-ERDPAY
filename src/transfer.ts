@@ -195,10 +195,10 @@ async function htmlTransfer() {
 
   b_mint.addEventListener("click", async () => {
     const token_address = document.querySelector<HTMLInputElement>(
-      ".mint-form input[value='token address']"
+      ".mint-form input[placeholder='token address']"
     )!;
     const token_id = document.querySelector<HTMLInputElement>(
-      ".mint-form input[value='token ID']"
+      ".mint-form input[placeholder='token ID']"
     )!;
     const { status, error } = await mint(
       session,
