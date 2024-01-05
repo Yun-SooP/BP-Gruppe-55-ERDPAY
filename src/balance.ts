@@ -6,24 +6,36 @@ import { widget } from './widget.ts';
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 
 /**
- * export function to change to balance viewer
- * @param html main body of widget
+ * Function to change to the HTML of balance viewer.
+ * @param html Main body of widget
  */
+
+
 export async function htmlBalance(html : HTMLDivElement) {
+  
   html.innerHTML = `
-  <div>
-    <a href="https://github.com/perun-network/erdstall-ts-sdk" target="_blank">
-      <img src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>erdPay</h1>
-    <div class="card">
-      <button id="balance" type="button"></button>
-      <button id="back" type="button"></button>
-    </div>
-    <div>
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address">
-    </div>
+  <div class = "balance-window">
+    <img 
+      class = "erdstall-logo"
+      src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" 
+      alt="TypeScript" 
+    />
+    <button class="goback-button">
+        <i class="fa-solid fa-angle-left"></i>
+    </button>
+
+    <header class =" balance-window__header">
+      <h1>Balance</h1>
+      <p>
+          Enter the address of the account you want to view the balance
+      </p>
+    </header>
+
+    <form class = "balance-window__form">
+      <input type="text" placeholder="recipient address" />
+      <input type="button" value="view balance" />
+    </form>
+    
     <div>
         <label id="array"></label>
     </div>
@@ -49,14 +61,15 @@ export async function htmlBalance(html : HTMLDivElement) {
     viewBalance(client!, input, array)
   })
 
-  back.innerHTML = `Return`
-  back.addEventListener('click', () => 
-    widget(html)
-  )
+  
+  const b_return = document.querySelector<HTMLButtonElement>(
+    ".session-window .goback-button"
+  )!;
+  b_return.addEventListener("click", () => widget(html));
 }
 
 /**
- * Function to display current assets of the given address
+ * Function to display current assets of the given address.
  */
 async function viewBalance(client : Client, input : HTMLInputElement, array : HTMLBodyElement) {
   try {
