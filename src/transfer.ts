@@ -100,8 +100,7 @@ async function htmlTransfer() {
 
       <h1>Your Token</h1>
       <div class="token-window">
-        <p>You have no token available</p>
-        <!-- 수정예정 -->
+        
       </div>
 
       <h1>Transfer</h1>
@@ -141,16 +140,22 @@ async function htmlTransfer() {
     '.transfer-form input[value="make transfer"]'
   )!;
 
-  const b_mint = document.querySelector<HTMLButtonElement>("#mint")!;
+  const b_mint = document.querySelector<HTMLButtonElement>(
+    '.mint-form input[value="mint new token"]'
+  )!;
 
   if (account.values.values.size == 0) {
-    document.querySelector<HTMLDivElement>("#select_token")!.innerHTML = `
-      You have no token available.
+    document.querySelector<HTMLDivElement>(
+      ".transfer-window-container .token-window"
+    )!.innerHTML = `
+      <p>You have no token available.</p>
     `;
     address_recipient.disabled = true;
     b_makeTransfer.disabled = true;
   } else {
-    document.querySelector<HTMLDivElement>("#select_token")!.innerHTML = `
+    document.querySelector<HTMLDivElement>(
+      ".transfer-window-container .token-window"
+    )!.innerHTML = `
       Available tokens (token address):
       <select id="token_transfer" size = "5">
       </select>
