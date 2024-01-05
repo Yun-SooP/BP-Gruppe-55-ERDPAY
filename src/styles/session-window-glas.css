@@ -37,6 +37,7 @@
   position: relative;
   top: -20px;
   right: -155px;
+  cursor: pointer
 }
 
 .session-window .fa-angle-left {

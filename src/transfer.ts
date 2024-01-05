@@ -58,17 +58,16 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     ".session-window__form input[type=text]"
   )!;
 
+  const logo_return = document.querySelector<HTMLButtonElement>(
+    ".erdstall-logo"
+  )!;
+  logo_return.addEventListener("click", () => widget(apphtml));
+  
   const b_return = document.querySelector<HTMLButtonElement>(
     ".session-window .goback-button"
   )!;
   b_return.addEventListener("click", () => widget(apphtml));
-
-  const logo_return = document.querySelector<HTMLButtonElement>(
-    ".session-window .erdstall-logo"
-  )!;
-  logo_return.addEventListener("click", () => widget(apphtml));
   
-
   b_newSession.addEventListener("click", async () => {
     let newSession_;
     try {
@@ -149,6 +148,15 @@ async function htmlTransfer() {
     htmlCreateSessionForTransfer(apphtml)
   );
 
+  const logo_return = document.querySelector<HTMLButtonElement>(
+    ".erdstall-logo"
+  )!;
+  logo_return.addEventListener("click", () => widget(apphtml));
+ 
+  b_return.addEventListener("click", () =>
+    htmlCreateSessionForTransfer(apphtml)
+  );
+
   const address_recipient = document.querySelector<HTMLInputElement>(
     '.transfer-form input[placeholder="recipient address"]'
   )!;
@@ -172,10 +180,10 @@ async function htmlTransfer() {
     document.querySelector<HTMLDivElement>(
       ".transfer-window-container .token-window"
     )!.innerHTML = `
-      Available tokens (token address):
-      <select id="token_transfer" size = "5">
-      </select>
-      amount: <input type = "text" id = "amount" placeholder="amount of tokens to transfer"/>
+      <p>Available tokens (token address):</p>
+      <select id="token_transfer" size = "5"></select>
+      <p>amount:</p> 
+      <input type = "text" id = "amount" placeholder="amount of tokens to transfer"/>
     `;
     const select =
       document.querySelector<HTMLSelectElement>("#token_transfer")!;
@@ -263,3 +271,5 @@ async function transferTo(
   }
   return { status, error };
 }
+
+
