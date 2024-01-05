@@ -14,6 +14,10 @@ let privateKey: string;
 let account: Account;
 let apphtml: HTMLDivElement;
 
+/**
+ * 
+ * @param html 
+ */
 export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
   apphtml = html;
   html.innerHTML = `
@@ -92,6 +96,9 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
   });
 }
 
+/**
+ * 
+ */
 async function htmlTransfer() {
   account = await session!.getAccount(session!.address);
 
@@ -220,6 +227,14 @@ async function htmlTransfer() {
   });
 }
 
+/**
+ * 
+ * @param session 
+ * @param token 
+ * @param amount 
+ * @param address 
+ * @returns 
+ */
 async function transferTo(
   session: Session,
   token: string,
