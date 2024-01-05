@@ -43,10 +43,10 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     </div>
   `;
   const b_newSession = document.querySelector(
-    'session-window__form input[value="New Session"]'
+    '.session-window__form input[value="New Session"]'
   )!;
   const b_restoreSession = document.querySelector(
-    'input[value="Restore Session"]'
+    '.session-window__form input[value="Restore Session"]'
   )!;
   var privateKey_previous = document.querySelector<HTMLInputElement>(
     "session-window__form input[type=text]"
@@ -84,7 +84,7 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
 async function htmlTransfer() {
   account = await session!.getAccount(session!.address);
 
-  document.querySelector<HTMLDivElement>("#transfer")!.innerHTML = `
+  apphtml.innerHTML = `
       
   <div class="button_container">
       <button class = "button privateKey" id="privatekey" type="button">Click to see private key</button>
