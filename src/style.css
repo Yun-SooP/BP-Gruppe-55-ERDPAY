@@ -2,6 +2,7 @@
 @import "styles/main-window-glas.css";
 @import "styles/session-window-glas.css";
 @import "styles/transfer-window-glas.css";
+@import "styles/balance-window-glas.css";
 
 .main-button {
   width: 220px;
