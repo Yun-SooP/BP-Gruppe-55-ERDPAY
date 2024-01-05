@@ -3,6 +3,7 @@ import { setupClient } from './setup_client.ts'
 import { Address} from "@polycrypt/erdstall/ledger";
 import { Client } from '@polycrypt/erdstall';
 import { widget } from './widget.ts';
+import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 
 /**
  * export function to change to balance viewer
@@ -64,7 +65,7 @@ async function viewBalance(client : Client, input : HTMLInputElement, array : HT
     let assets = ""
     for (let i = 0; i < entries.length; i++) {
       let asset = entries[i]
-      assets += "Token: " + asset[0] + " IDs:"
+      assets += "Token: " + asset[0] + " Amount: " + (<Tokens>asset[1]).value.length + " IDs:"
       for (const id of asset[1].toJSON()){
           assets += " " + parseInt(id)
       }
@@ -73,7 +74,7 @@ async function viewBalance(client : Client, input : HTMLInputElement, array : HT
     if (entries.length == 0) array.innerHTML = "No assets"
     else array.innerHTML = assets
   } catch (error) {
-    array.innerHTML = "Non valid address"
+    alert("Invalid address")
   }
 }
 

@@ -54,11 +54,16 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     ".session-window__form input[type=text]"
   )!;
 
+  const logo_return = document.querySelector<HTMLButtonElement>(
+    ".erdstall-logo"
+  )!;
+  logo_return.addEventListener("click", () => widget(apphtml));
+  
   const b_return = document.querySelector<HTMLButtonElement>(
     ".session-window .goback-button"
   )!;
   b_return.addEventListener("click", () => widget(apphtml));
-
+  
   b_newSession.addEventListener("click", async () => {
     let newSession_;
     try {
@@ -132,6 +137,15 @@ async function htmlTransfer() {
   const b_return = document.querySelector<HTMLButtonElement>(
     ".transfer-window-container .goback-button"
   )!;
+  b_return.addEventListener("click", () =>
+    htmlCreateSessionForTransfer(apphtml)
+  );
+
+  const logo_return = document.querySelector<HTMLButtonElement>(
+    ".erdstall-logo"
+  )!;
+  logo_return.addEventListener("click", () => widget(apphtml));
+ 
   b_return.addEventListener("click", () =>
     htmlCreateSessionForTransfer(apphtml)
   );
@@ -242,3 +256,5 @@ async function transferTo(
   }
   return { status, error };
 }
+
+
