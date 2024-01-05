@@ -54,16 +54,15 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     ".session-window__form input[type=text]"
   )!;
 
-  const logo_return = document.querySelector<HTMLButtonElement>(
-    ".erdstall-logo"
-  )!;
+  const logo_return =
+    document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
   logo_return.addEventListener("click", () => widget(apphtml));
-  
+
   const b_return = document.querySelector<HTMLButtonElement>(
     ".session-window .goback-button"
   )!;
   b_return.addEventListener("click", () => widget(apphtml));
-  
+
   b_newSession.addEventListener("click", async () => {
     let newSession_;
     try {
@@ -106,17 +105,9 @@ async function htmlTransfer() {
         <i class="fa-solid fa-angle-left"></i>
       </button>
 
-      <h1>Your Token</h1>
-      <div class="token-window">
-        
-      </div>
-
       <h1>Transfer</h1>
-      <form class="transfer-form">
-        <!-- <p>Transfer to</p> -->
-        <input type="text" placeholder="recipient address" />
-        <input type="button" value="make transfer" />
-      </form>
+      <div class="transfer-window">
+      </div>
 
       <h1>Mint</h1>
       <form class="mint-form">
@@ -141,11 +132,10 @@ async function htmlTransfer() {
     htmlCreateSessionForTransfer(apphtml)
   );
 
-  const logo_return = document.querySelector<HTMLButtonElement>(
-    ".erdstall-logo"
-  )!;
+  const logo_return =
+    document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
   logo_return.addEventListener("click", () => widget(apphtml));
- 
+
   b_return.addEventListener("click", () =>
     htmlCreateSessionForTransfer(apphtml)
   );
@@ -161,22 +151,31 @@ async function htmlTransfer() {
     '.mint-form input[value="mint new token"]'
   )!;
 
+  const transfer_window = document.querySelector<HTMLDivElement>(
+    ".transfer-window-container .transfer-window"
+  )!;
+
   if (account.values.values.size == 0) {
-    document.querySelector<HTMLDivElement>(
-      ".transfer-window-container .token-window"
-    )!.innerHTML = `
+    transfer_window.innerHTML = `
       <p>You have no token available.</p>
     `;
+    transfer_window.style.height = "70px";
     address_recipient.disabled = true;
     b_makeTransfer.disabled = true;
   } else {
-    document.querySelector<HTMLDivElement>(
-      ".transfer-window-container .token-window"
-    )!.innerHTML = `
-      <p>Available tokens (token address):</p>
-      <select id="token_transfer" size = "5"></select>
-      <p>amount:</p> 
-      <input type = "text" id = "amount" placeholder="amount of tokens to transfer"/>
+    transfer_window.innerHTML = `
+      <h2>Choose your token to send</h2>
+      <div class="available-tokens-header">
+          <span>Available Tokens</span>
+          <span>Amount</span>
+      </div>
+      <select class="token-list" size = "5"></select>
+      <form class="transfer-form">
+        <input type = "text" class="transfer-form__token-amount" placeholder="amount of tokens to transfer"/>
+        <span>Tokens</span>
+        <input type="text" class="transfer-formt__recipient-address"placeholder="recipient address" />
+        <input type="button" value="make transfer" />
+      </form>
     `;
     const select =
       document.querySelector<HTMLSelectElement>("#token_transfer")!;
@@ -256,5 +255,3 @@ async function transferTo(
   }
   return { status, error };
 }
-
-
