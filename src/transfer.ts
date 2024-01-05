@@ -137,7 +137,7 @@ async function htmlTransfer() {
   );
 
   const address_recipient = document.querySelector<HTMLInputElement>(
-    '.transfer-form input[placeholder="recipient adress"]'
+    '.transfer-form input[placeholder="recipient address"]'
   )!;
   const b_makeTransfer = document.querySelector<HTMLInputElement>(
     '.transfer-form input[value="make transfer"]'
@@ -194,9 +194,12 @@ async function htmlTransfer() {
   }
 
   b_mint.addEventListener("click", async () => {
-    const token_address =
-      document.querySelector<HTMLInputElement>("#token_address")!;
-    const token_id = document.querySelector<HTMLInputElement>("#token_id")!;
+    const token_address = document.querySelector<HTMLInputElement>(
+      ".mint-form input[value='token address']"
+    )!;
+    const token_id = document.querySelector<HTMLInputElement>(
+      ".mint-form input[value='token ID']"
+    )!;
     const { status, error } = await mint(
       session,
       token_address.value,
