@@ -54,6 +54,9 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     ".session-window__form input[type=text]"
   )!;
 
+  /**
+   * Event listeners for going back to the main page 
+   */
   const logo_return = document.querySelector<HTMLButtonElement>(
     ".erdstall-logo"
   )!;
@@ -63,7 +66,9 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     ".session-window .goback-button"
   )!;
   b_return.addEventListener("click", () => widget(apphtml));
+
   
+
   b_newSession.addEventListener("click", async () => {
     let newSession_;
     try {
@@ -134,6 +139,7 @@ async function htmlTransfer() {
     document.querySelector<HTMLButtonElement>(".private-key")!;
   b_privateKey.addEventListener("click", () => alert(privateKey));
 
+  // Event listener for going back one page
   const b_return = document.querySelector<HTMLButtonElement>(
     ".transfer-window-container .goback-button"
   )!;
@@ -141,14 +147,13 @@ async function htmlTransfer() {
     htmlCreateSessionForTransfer(apphtml)
   );
 
+  // Event listener for going back to the main page
   const logo_return = document.querySelector<HTMLButtonElement>(
     ".erdstall-logo"
   )!;
   logo_return.addEventListener("click", () => widget(apphtml));
  
-  b_return.addEventListener("click", () =>
-    htmlCreateSessionForTransfer(apphtml)
-  );
+  
 
   const address_recipient = document.querySelector<HTMLInputElement>(
     '.transfer-form input[placeholder="recipient address"]'
