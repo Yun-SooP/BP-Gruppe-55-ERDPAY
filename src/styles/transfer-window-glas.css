@@ -15,8 +15,8 @@
 }
 
 .transfer-window-container {
-  width: 500px;
-  height: 800px;
+  width: 600px;
+  height: 950px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -77,12 +77,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  text-align: left;
+  align-items: center;
   margin-bottom: 50px;
 
   /* to do: responsive */
-  width: 375px;
-  height: 80px;
+  width: 450px;
+  height: 200px;
 
   border: solid 1px rgba(255, 255, 255, 0.25);
   border-radius: 16px;
@@ -93,8 +93,26 @@
 }
 
 .transfer-window-container .token-window p {
+  align-self: flex-start;
   margin-left: 20px;
   color: rgba(255, 255, 255, 0.6);
+}
+
+.transfer-window-container .token-window select {
+  width: 400px;
+  height: 150px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+
+  background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(30px);
+
+  font-size: 16px;
+  color: rgba(255, 255, 255, 1);
+
+  cursor: text;
+  caret-color: rgba(255, 255, 255, 0.6);
+  outline: none;
 }
 
 .transfer-window-container form {
@@ -107,7 +125,7 @@
   margin-bottom: 50px;
 
   /* to do: responsive */
-  width: 375px;
+  width: 450px;
   height: 150px;
 
   border: solid 1px rgba(255, 255, 255, 0.25);
