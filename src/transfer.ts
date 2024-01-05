@@ -42,12 +42,14 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
       </form>
     </div>
   `;
-  const b_newSession = document.querySelector(
-    '.session-window__form input[value="New Session"]'
+  const b_newSession = document.querySelector<HTMLInputElement>(
+    ".session-window__form input[value='New Session']"
   )!;
-  const b_restoreSession = document.querySelector(
-    '.session-window__form input[value="Restore Session"]'
+  const b_restoreSession = document.querySelector<HTMLInputElement>(
+    ".session-window__form input[value='Restore Session']"
+    // to fix
   )!;
+
   var privateKey_previous = document.querySelector<HTMLInputElement>(
     "session-window__form input[type=text]"
   )!;
@@ -69,6 +71,7 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     privateKey = newSession_!.privateKey;
     htmlTransfer();
   });
+
   b_restoreSession.addEventListener("click", async () => {
     privateKey = privateKey_previous.value;
     let restoredSession;
@@ -140,7 +143,7 @@ async function htmlTransfer() {
     '.transfer-form input[value="make transfer"]'
   )!;
 
-  const b_mint = document.querySelector<HTMLButtonElement>(
+  const b_mint = document.querySelector<HTMLInputElement>(
     '.mint-form input[value="mint new token"]'
   )!;
 
