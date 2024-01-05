@@ -52,7 +52,9 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     "session-window__form input[type=text]"
   )!;
 
-  const b_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
+  const b_return = document.querySelector<HTMLButtonElement>(
+    ".session-window .goback-button"
+  )!;
   b_return.addEventListener("click", () => widget(apphtml));
 
   b_newSession.addEventListener("click", async () => {
@@ -86,41 +88,58 @@ async function htmlTransfer() {
 
   apphtml.innerHTML = `
       
-  <div class="button_container">
-      <button class = "button privateKey" id="privatekey" type="button">Click to see private key</button>
-      
-  </div>
-  <div id ="select_token"></div>
-      <br>
-      <div id ="transfer_info">
-        <form>
-          Transfer to: <input type = "text" id = "address_recipient" placeholder="Type in the recipient address"/><br>
-          <button id="makeTransfer" type="button">make transfer</button>
-        </form>
+  <div class="transfer-window-container">
+      <img
+        class="erdstall-logo"
+        src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
+        alt="TypeScript"
+      />
+      <button class="goback-button">
+        <i class="fa-solid fa-angle-left"></i>
+      </button>
+
+      <h1>Your Token</h1>
+      <div class="token-window">
+        <p>You have no token available</p>
+        <!-- 수정예정 -->
       </div>
-      <br>
-      <div id ="minting">
-        <form>
-          token address: <input type = "text" id = "token_address" placeholder="Type in the token address"/>
-          token id: <input type = "text" id = "token_id" placeholder="Type in the token id"/><br>
-          <button id="mint" type="button">mint new token</button>
-        </form>
-      </div>
+
+      <h1>Transfer</h1>
+      <form class="transfer-form">
+        <!-- <p>Transfer to</p> -->
+        <input type="text" placeholder="recipient address" />
+        <input type="button" value="make transfer" />
+      </form>
+
+      <h1>Mint</h1>
+      <form class="mint-form">
+        <input type="text" placeholder="token address" />
+        <input type="text" placeholder="token ID" />
+        <input type="button" value="mint new token" />
+      </form>
+
+      <span class="private-key">your private key</span>
+    </div>
+    
   `;
 
   const b_privateKey =
-    document.querySelector<HTMLButtonElement>("#privatekey")!;
+    document.querySelector<HTMLButtonElement>(".private-key")!;
   b_privateKey.addEventListener("click", () => alert(privateKey));
 
-  const b_return = document.querySelector<HTMLButtonElement>("#return")!;
+  const b_return = document.querySelector<HTMLButtonElement>(
+    ".transfer-window-container .goback-button"
+  )!;
   b_return.addEventListener("click", () =>
     htmlCreateSessionForTransfer(apphtml)
   );
 
-  const address_recipient =
-    document.querySelector<HTMLInputElement>("#address_recipient")!;
-  const b_makeTransfer =
-    document.querySelector<HTMLButtonElement>("#makeTransfer")!;
+  const address_recipient = document.querySelector<HTMLInputElement>(
+    '.transfer-form input[placeholder="recipient adress"]'
+  )!;
+  const b_makeTransfer = document.querySelector<HTMLInputElement>(
+    '.transfer-form input[value="make transfer"]'
+  )!;
 
   const b_mint = document.querySelector<HTMLButtonElement>("#mint")!;
 

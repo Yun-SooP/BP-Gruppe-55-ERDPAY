@@ -35,13 +35,13 @@ export function widget(html: HTMLDivElement) {
 export function makeWidgetButton() {
   const html = document.querySelector<HTMLDivElement>("#app")!;
   html.innerHTML = `
-    <div>
-        <button id="mainButton" type="button">
-            <img src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
+    <div class="dummy">
+        <button class="main-button" type="button">
+            <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
         </button>
     </div>
     `;
-  const btn = document.querySelector("#mainButton");
+  const btn = document.querySelector(".main-button");
   btn?.addEventListener("click", () => {
     widget(html);
   });
