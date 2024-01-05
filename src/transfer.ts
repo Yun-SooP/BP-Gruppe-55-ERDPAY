@@ -14,6 +14,10 @@ let privateKey: string;
 let account: Account;
 let apphtml: HTMLDivElement;
 
+/**
+ * 
+ * @param html 
+ */
 export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
   apphtml = html;
   html.innerHTML = `
@@ -96,6 +100,9 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
   });
 }
 
+/**
+ * 
+ */
 async function htmlTransfer() {
   account = await session!.getAccount(session!.address);
 
@@ -197,16 +204,22 @@ async function htmlTransfer() {
     }
 
     b_makeTransfer.addEventListener("click", async () => {
+      if (select.value == ""){
+        alert("Please select a token to transfer.")
+        return
+      }
       const { status, error } = await transferTo(
         session,
         select.value,
-        parseInt(amount.value),
+        parseFloat(amount.value),
         address_recipient.value
       );
-      if (status == 0) {
-        alert("transfer failed!: " + error);
-      } else if (status == 1) {
-        alert("transfer succesful!");
+      if (status == 1) {
+        alert("Transfer succesful!");
+      } else if (status == 0) {
+        const err : Error = <Error>error
+        alert("Transfer failed!: " + err.message);
+        return
       }
       await htmlTransfer();
     });
@@ -222,31 +235,50 @@ async function htmlTransfer() {
     const { status, error } = await mint(
       session,
       token_address.value,
-      parseInt(token_id.value)
+      parseFloat(token_id.value)
     );
     if (status == 0) {
-      alert("minting failed!: " + error);
+      const err : Error = <Error>error
+      alert("Minting failed: " + err.message);
+      return
     } else if (status == 1) {
-      alert("token succesfully minted!");
+      alert("Token succesfully minted!");
     }
     await htmlTransfer();
   });
 }
 
+/**
+ * 
+ * @param session 
+ * @param token 
+ * @param amount 
+ * @param address 
+ * @returns 
+ */
 async function transferTo(
   session: Session,
   token: string,
   amount: number,
   address: string
 ) {
-  let tokens = <Tokens>account.values.values.get(token)!;
-  tokens.value = tokens.value.slice(0, amount);
-  const asset = <Asset>tokens;
-  let assets_transfer = new Assets({ token: token, asset: asset });
+  
   let transaction;
   let receipt;
   let status;
   let error;
+
+  if (Number.isNaN(amount) || amount <= 0 || !Number.isInteger(amount)){
+    status = 0
+    error = new Error("Please enter a valid amount.")
+    return { status, error }
+  } 
+
+  let tokens = <Tokens>account.values.values.get(token)!;
+  tokens.value = tokens.value.slice(0, amount);
+  const asset = <Asset>tokens;
+  let assets_transfer = new Assets({ token: token, asset: asset });
+
   try {
     transaction = await session.transferTo(
       assets_transfer,

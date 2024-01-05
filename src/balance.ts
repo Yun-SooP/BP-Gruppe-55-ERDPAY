@@ -6,8 +6,8 @@ import { widget } from './widget.ts';
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 
 /**
- * export function to change to balance viewer
- * @param html main body of widget
+ * Function to change to the HTML of balance viewer.
+ * @param html Main body of widget
  */
 export async function htmlBalance(html : HTMLDivElement) {
   html.innerHTML = `
@@ -56,7 +56,7 @@ export async function htmlBalance(html : HTMLDivElement) {
 }
 
 /**
- * Function to display current assets of the given address
+ * Function to display current assets of the given address.
  */
 async function viewBalance(client : Client, input : HTMLInputElement, array : HTMLBodyElement) {
   try {
