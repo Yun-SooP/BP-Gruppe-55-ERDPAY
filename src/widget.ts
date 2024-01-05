@@ -3,28 +3,30 @@ import { htmlCreateSessionForTransfer } from "./transfer";
 
 export function widget(html: HTMLDivElement) {
   html.innerHTML = `
-        <div class="widget_body" id="widgetBodyMain">
-            <header class="widget__header">
-                <button class = "button logoButton" id="logoButton" type="button">
-                    <img src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
-                </button>
+    <div class="main-window">
+    <img
+        class="erdstall-logo"
+        src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
+        alt="TypeScript"
+    />
+    <header class="main-window__header">
+        <h1>Welcome to ErdPay</h1>
+        <p>Select an action to perform</p>
+    </header>
 
-            <h3> Welcome to ErdPay</h3>
-            <p> Select an action to perform</p>
-            </header>
-            <div class="button_container">
-                <button class = "button sqrButton" id="transfer">Transfer</button>
-                <button class = "button sqrButton" id="balance">View Balance</button>
-            </div>
-        </div>
+    <form class="main-window__form">
+        <input type="button" value="View Balance" />
+        <input type="button" value="Transfer" />
+    </form>
+    </div>
     `;
 
-  const transfer = document.querySelector<HTMLButtonElement>("#transfer");
+  const transfer = document.querySelector("input:last-child");
   transfer?.addEventListener("click", () => {
     htmlCreateSessionForTransfer(html);
   });
 
-  const balance = document.querySelector<HTMLButtonElement>("#balance");
+  const balance = document.querySelector("input:first-child");
   balance?.addEventListener("click", () => {
     htmlBalance(html);
   });
