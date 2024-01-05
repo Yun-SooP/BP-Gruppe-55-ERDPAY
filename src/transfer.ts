@@ -173,10 +173,10 @@ async function htmlTransfer() {
     document.querySelector<HTMLDivElement>(
       ".transfer-window-container .token-window"
     )!.innerHTML = `
-      Available tokens (token address):
-      <select id="token_transfer" size = "5">
-      </select>
-      amount: <input type = "text" id = "amount" placeholder="amount of tokens to transfer"/>
+      <p>Available tokens (token address):</p>
+      <select id="token_transfer" size = "5"></select>
+      <p>amount:</p> 
+      <input type = "text" id = "amount" placeholder="amount of tokens to transfer"/>
     `;
     const select =
       document.querySelector<HTMLSelectElement>("#token_transfer")!;
