@@ -59,6 +59,12 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
   )!;
   b_return.addEventListener("click", () => widget(apphtml));
 
+  const logo_return = document.querySelector<HTMLButtonElement>(
+    ".session-window .erdstall-logo"
+  )!;
+  logo_return.addEventListener("click", () => widget(apphtml));
+  
+
   b_newSession.addEventListener("click", async () => {
     let newSession_;
     try {
