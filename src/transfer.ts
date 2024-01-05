@@ -51,7 +51,7 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
   )!;
 
   var privateKey_previous = document.querySelector<HTMLInputElement>(
-    "session-window__form input[type=text]"
+    ".session-window__form input[type=text]"
   )!;
 
   const b_return = document.querySelector<HTMLButtonElement>(
