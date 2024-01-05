@@ -74,7 +74,7 @@ async function viewBalance(client : Client, input : HTMLInputElement, array : HT
     if (entries.length == 0) array.innerHTML = "No assets"
     else array.innerHTML = assets
   } catch (error) {
-    array.innerHTML = "Non valid address"
+    alert("Invalid address")
   }
 }
 
