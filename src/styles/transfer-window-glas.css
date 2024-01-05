@@ -38,6 +38,7 @@
   position: relative;
   top: -20px;
   right: -155px;
+  cursor: pointer
 }
 
 .transfer-window-container .fa-angle-left {
