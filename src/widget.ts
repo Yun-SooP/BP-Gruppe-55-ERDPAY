@@ -21,12 +21,12 @@ export function widget(html: HTMLDivElement) {
     </div>
     `;
 
-  const transfer = document.querySelector("input:last-child");
+  const transfer = document.querySelector('input[value="Transfer"]');
   transfer?.addEventListener("click", () => {
     htmlCreateSessionForTransfer(html);
   });
 
-  const balance = document.querySelector("input:first-child");
+  const balance = document.querySelector('input[value="View Balance"]');
   balance?.addEventListener("click", () => {
     htmlBalance(html);
   });
