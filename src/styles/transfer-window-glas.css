@@ -153,6 +153,8 @@
   cursor: text;
   caret-color: rgba(255, 255, 255, 0.6);
   outline: none;
+
+  transition: 0.3s;
 }
 
 .transfer-window-container input[type="text"]::placeholder {
@@ -188,6 +190,10 @@
 
 .transfer-form input[value="make transfer"] {
   background-color: #283048;
+}
+
+.balance-window__form input[type="text"]:focus {
+  border: 1px solid #2e2e2e;
 }
 
 .transfer-window-container input[type="button"]:hover,
