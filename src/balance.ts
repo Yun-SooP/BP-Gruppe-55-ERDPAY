@@ -1,8 +1,8 @@
-import './style.css'
-import { setupClient } from './setup_client.ts'
-import { Address} from "@polycrypt/erdstall/ledger";
-import { Client } from '@polycrypt/erdstall';
-import { widget } from './widget.ts';
+import "./style.css";
+import { setupClient } from "./setup_client.ts";
+import { Address } from "@polycrypt/erdstall/ledger";
+import { Client } from "@polycrypt/erdstall";
+import { widget } from "./widget.ts";
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 
 /**
@@ -10,9 +10,7 @@ import { Tokens } from "@polycrypt/erdstall/ledger/assets";
  * @param html Main body of widget
  */
 
-
-export async function htmlBalance(html : HTMLDivElement) {
-  
+export async function htmlBalance(html: HTMLDivElement) {
   html.innerHTML = `
   <div class = "balance-window">
     <img 
@@ -24,7 +22,7 @@ export async function htmlBalance(html : HTMLDivElement) {
         <i class="fa-solid fa-angle-left"></i>
     </button>
 
-    <header class =" balance-window__header">
+    <header class = "balance-window__header">
       <h1>Balance</h1>
       <p>
           Enter the address of the account you want to view the balance
@@ -32,7 +30,7 @@ export async function htmlBalance(html : HTMLDivElement) {
     </header>
 
     <form class = "balance-window__form">
-      <input type="text" placeholder="recipient address" />
+      <input type="text" placeholder="account address" />
       <input type="button" value="view balance" />
     </form>
     
@@ -40,54 +38,61 @@ export async function htmlBalance(html : HTMLDivElement) {
         <label id="array"></label>
     </div>
   </div>
-  `
+  `;
 
   // Try to set up client
-  let client
+  let client;
   try {
-    client = await setupClient()
+    client = await setupClient();
   } catch (error) {
-    alert(error)
+    alert(error);
   }
 
-  const back = document.querySelector<HTMLButtonElement>('#back')!
-  const button = document.querySelector<HTMLButtonElement>('#balance')!
-  let input = document.querySelector<HTMLInputElement>('#address')!
-  const array = document.querySelector<HTMLBodyElement>('#array')!
-
-  // initialize buttons
-  button.innerHTML = `View Balance`
-  button.addEventListener('click', () => {
-    viewBalance(client!, input, array)
-  })
-
-  
-  const b_return = document.querySelector<HTMLButtonElement>(
-    ".session-window .goback-button"
+  //add eventlistners
+  const button = document.querySelector<HTMLButtonElement>(
+    ".balance-window__form input[type='button']"
   )!;
+  let input = document.querySelector<HTMLInputElement>(
+    ".balance-window__form input[type='text']"
+  )!;
+  const array = document.querySelector<HTMLBodyElement>("#array")!;
+
+  button.addEventListener("click", () => {
+    viewBalance(client!, input, array);
+  });
+
+  const b_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
   b_return.addEventListener("click", () => widget(html));
 }
 
 /**
  * Function to display current assets of the given address.
  */
-async function viewBalance(client : Client, input : HTMLInputElement, array : HTMLBodyElement) {
+async function viewBalance(
+  client: Client,
+  input: HTMLInputElement,
+  array: HTMLBodyElement
+) {
   try {
-    let account = await client.getAccount(Address.fromString(input.value))
-    let entries = Array.from(account.values.values.entries())
-    let assets = ""
+    let account = await client.getAccount(Address.fromString(input.value));
+    let entries = Array.from(account.values.values.entries());
+    let assets = "";
     for (let i = 0; i < entries.length; i++) {
-      let asset = entries[i]
-      assets += "Token: " + asset[0] + " Amount: " + (<Tokens>asset[1]).value.length + " IDs:"
-      for (const id of asset[1].toJSON()){
-          assets += " " + parseInt(id)
+      let asset = entries[i];
+      assets +=
+        "Token: " +
+        asset[0] +
+        " Amount: " +
+        (<Tokens>asset[1]).value.length +
+        " IDs:";
+      for (const id of asset[1].toJSON()) {
+        assets += " " + parseInt(id);
       }
-      assets += "<br>"
+      assets += "<br>";
     }
-    if (entries.length == 0) array.innerHTML = "No assets"
-    else array.innerHTML = assets
+    if (entries.length == 0) array.innerHTML = "No assets";
+    else array.innerHTML = assets;
   } catch (error) {
-    alert("Invalid address")
+    alert("Invalid address");
   }
 }
-
