@@ -171,8 +171,8 @@ async function htmlTransfer() {
       <p>You have no token available.</p>
     `;
     transfer_window.style.height = "70px";
-    address_recipient.disabled = true;
-    b_makeTransfer.disabled = true;
+    // address_recipient.disabled = true;
+    // b_makeTransfer.disabled = true;
   } else {
     transfer_window.innerHTML = `
       <h2>Choose your token to send</h2>
@@ -188,10 +188,11 @@ async function htmlTransfer() {
         <input type="button" value="make transfer" />
       </form>
     `;
-    const select =
-      document.querySelector<HTMLSelectElement>("#token_transfer")!;
+    const select = document.querySelector<HTMLSelectElement>(".token-list")!;
     const tokens = Array.from(account.values.values.entries());
-    const amount = document.querySelector<HTMLInputElement>("#amount")!;
+    const amount = document.querySelector<HTMLInputElement>(
+      ".transfer-form__token-amount"
+    )!;
     for (let i = 0; i < tokens.length; i++) {
       const option = document.createElement("option");
       let token = tokens[i];
