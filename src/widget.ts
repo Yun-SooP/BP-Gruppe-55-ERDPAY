@@ -1,6 +1,10 @@
 import { htmlBalance } from "./balance";
 import { htmlCreateSessionForTransfer } from "./transfer";
 
+/**
+ * Function to display selection between transfer and view balance.
+ * @param html HTML element to display to
+ */
 export function widget(html: HTMLDivElement) {
   html.innerHTML = `
     <div class="main-window">
@@ -32,6 +36,9 @@ export function widget(html: HTMLDivElement) {
   });
 }
 
+/**
+ * Function to display startpage of the widget.
+ */
 export function makeWidgetButton() {
   const html = document.querySelector<HTMLDivElement>("#app")!;
   html.innerHTML = `

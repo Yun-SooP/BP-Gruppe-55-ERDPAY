@@ -15,8 +15,8 @@ let account: Account;
 let apphtml: HTMLDivElement;
 
 /**
- *
- * @param html
+ * Function to display selection between a new session and restoring old session.
+ * @param html HTML to display to
  */
 export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
   apphtml = html;
@@ -98,7 +98,7 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
 }
 
 /**
- *
+ * Function to display main transfer functionality. Displays minting and transfer.
  */
 async function htmlTransfer() {
   account = await session!.getAccount(session!.address);
@@ -248,12 +248,12 @@ async function htmlTransfer() {
 }
 
 /**
- *
- * @param session
- * @param token
- * @param amount
- * @param address
- * @returns
+ * Function to carry out transfer of tokens.
+ * @param session Session from which the transfer will happen
+ * @param token Token to transfer
+ * @param amount Amount of the token to transfer
+ * @param address Address to transfer to
+ * @returns Status and error message
  */
 async function transferTo(
   session: Session,
