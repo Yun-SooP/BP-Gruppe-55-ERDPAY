@@ -1,4 +1,3 @@
-import './style.css'
 import { setupClient } from './setup_client.ts'
 import { Address} from "@polycrypt/erdstall/ledger";
 import { Client } from '@polycrypt/erdstall';

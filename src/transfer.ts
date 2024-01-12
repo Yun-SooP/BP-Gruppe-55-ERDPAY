@@ -1,4 +1,3 @@
-import './style.css'
 import { Session } from "@polycrypt/erdstall";
 import { Address } from '@polycrypt/erdstall/ledger';
 import { Account } from '@polycrypt/erdstall/ledger';
