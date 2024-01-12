@@ -32,11 +32,22 @@ export async function htmlBalance(html: HTMLDivElement) {
     <form class = "balance-window__form">
       <input type="text" placeholder="account address" />
       <input type="button" value="view balance" />
+      
+      <div class="select">
+      <select size="5" name="tokens" id="" class="form-control">
+        <label id= "array"> </label>
+        <option value = array> "2"</option>
+        <option value = array> "3"</option>
+        <option value = array> "4"</option>
+        <option value = array> "5"</option>
+        <option value = array> "6"</option>
+
+      </select>
+    </div>
     </form>
     
-    <div>
-        <label id="array"></label>
-    </div>
+
+    
   </div>
   `;
 
@@ -93,6 +104,6 @@ async function viewBalance(
     if (entries.length == 0) array.innerHTML = "No assets";
     else array.innerHTML = assets;
   } catch (error) {
-    alert("Invalid address");
+    alert(error);
   }
 }
