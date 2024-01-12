@@ -151,13 +151,6 @@ async function htmlTransfer() {
     htmlCreateSessionForTransfer(apphtml)
   );
 
-  const address_recipient = document.querySelector<HTMLInputElement>(
-    '.transfer-form input[placeholder="recipient address"]'
-  )!;
-  const b_makeTransfer = document.querySelector<HTMLInputElement>(
-    '.transfer-form input[value="make transfer"]'
-  )!;
-
   const b_mint = document.querySelector<HTMLInputElement>(
     '.mint-form input[value="mint new token"]'
   )!;
@@ -184,7 +177,7 @@ async function htmlTransfer() {
       <form class="transfer-form">
         <input type = "text" class="transfer-form__token-amount" placeholder="amount of tokens to transfer"/>
         <span>Tokens</span>
-        <input type="text" class="transfer-formt__recipient-address"placeholder="recipient address" />
+        <input type="text" placeholder="recipient address" />
         <input type="button" value="make transfer" />
       </form>
     `;
@@ -201,6 +194,13 @@ async function htmlTransfer() {
         token[0] + " (amount: " + (<Tokens>token[1]).value.length + ")";
       select.add(option);
     }
+
+    const address_recipient = document.querySelector<HTMLInputElement>(
+      '.transfer-form input[placeholder="recipient address"]'
+    )!;
+    const b_makeTransfer = document.querySelector<HTMLInputElement>(
+      '.transfer-form input[value="make transfer"]'
+    )!;
 
     b_makeTransfer.addEventListener("click", async () => {
       if (select.value == "") {
