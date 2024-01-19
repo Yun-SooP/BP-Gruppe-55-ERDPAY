@@ -15,8 +15,8 @@ export async function newSession() {
     await session.initialize()
     await session.subscribe()
     return { session, privateKey }
-  } catch(err) {
-    alert(err)
+  } catch(error) {
+    alert(error)
   }
 }
 
@@ -31,7 +31,7 @@ export async function restoreSession(privateKey: string) {
     await session.initialize()
     await session.subscribe()
     return session
-  } catch(err) {
-    alert(err)
+  } catch(error) {
+    alert(error)
   }
 }

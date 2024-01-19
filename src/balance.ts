@@ -7,11 +7,11 @@ import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 
 /**
  * Function to change to the HTML of balance viewer.
- * @param html Main body of widget
+ * @param html_widget Main body of widget
  */
 
-export async function htmlBalance(html: HTMLDivElement) {
-  html.innerHTML = `
+export async function htmlBalance(html_widget: HTMLDivElement) {
+  html_widget.innerHTML = `
   <div class = "balance-window">
     <img 
       class = "erdstall-logo"
@@ -34,16 +34,8 @@ export async function htmlBalance(html: HTMLDivElement) {
       <input type="button" value="view balance" />
       
       <div class="select">
-      <select size="5" name="tokens" id="" class="form-control">
-        <label id= "array"> </label>
-        <option value = array> "2"</option>
-        <option value = array> "3"</option>
-        <option value = array> "4"</option>
-        <option value = array> "5"</option>
-        <option value = array> "6"</option>
-
-      </select>
-    </div>
+      <label id= "lbl_balance"> </label>
+      </div>
     </form>
     
 
@@ -60,20 +52,20 @@ export async function htmlBalance(html: HTMLDivElement) {
   }
 
   //add eventlistners
-  const button = document.querySelector<HTMLButtonElement>(
+  const btn_viewBalance = document.querySelector<HTMLButtonElement>(
     ".balance-window__form input[type='button']"
   )!;
-  let input = document.querySelector<HTMLInputElement>(
+  let txt_balanceAddress = document.querySelector<HTMLInputElement>(
     ".balance-window__form input[type='text']"
   )!;
-  const array = document.querySelector<HTMLBodyElement>("#array")!;
+  const lbl_balance = document.querySelector<HTMLBodyElement>("#lbl_balance")!;
 
-  button.addEventListener("click", () => {
-    viewBalance(client!, input, array);
+  btn_viewBalance.addEventListener("click", () => {
+    viewBalance(client!, txt_balanceAddress, lbl_balance);
   });
 
-  const b_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
-  b_return.addEventListener("click", () => widget(html));
+  const btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
+  btn_return.addEventListener("click", () => widget(html_widget));
 }
 
 /**
@@ -82,7 +74,7 @@ export async function htmlBalance(html: HTMLDivElement) {
 async function viewBalance(
   client: Client,
   input: HTMLInputElement,
-  array: HTMLBodyElement
+  lbl_balance: HTMLBodyElement
 ) {
   try {
     let account = await client.getAccount(Address.fromString(input.value));
@@ -101,8 +93,8 @@ async function viewBalance(
       }
       assets += "<br>";
     }
-    if (entries.length == 0) array.innerHTML = "No assets";
-    else array.innerHTML = assets;
+    if (entries.length == 0) lbl_balance.innerHTML = "No assets";
+    else lbl_balance.innerHTML = assets;
   } catch (error) {
     alert(error);
   }

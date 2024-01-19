@@ -3,10 +3,10 @@ import { htmlCreateSessionForTransfer } from "./transfer";
 
 /**
  * Function to display selection between transfer and view balance.
- * @param html HTML element to display to
+ * @param html_widget HTML element to display to
  */
-export function widget(html: HTMLDivElement) {
-  html.innerHTML = `
+export function widget(html_widget: HTMLDivElement) {
+  html_widget.innerHTML = `
     <div class="main-window">
     <img
         class="erdstall-logo"
@@ -25,14 +25,14 @@ export function widget(html: HTMLDivElement) {
     </div>
     `;
 
-  const transfer = document.querySelector('input[value="Transfer"]');
-  transfer?.addEventListener("click", () => {
-    htmlCreateSessionForTransfer(html);
+  const btn_transfer = document.querySelector('input[value="Transfer"]');
+  btn_transfer?.addEventListener("click", () => {
+    htmlCreateSessionForTransfer(html_widget);
   });
 
-  const balance = document.querySelector('input[value="View Balance"]');
-  balance?.addEventListener("click", () => {
-    htmlBalance(html);
+  const btn_balance = document.querySelector('input[value="View Balance"]');
+  btn_balance?.addEventListener("click", () => {
+    htmlBalance(html_widget);
   });
 }
 
@@ -40,17 +40,17 @@ export function widget(html: HTMLDivElement) {
  * Function to display startpage of the widget.
  */
 export function makeWidgetButton() {
-  const html = document.querySelector<HTMLDivElement>("#app")!;
-  html.innerHTML = `
+  const html_dummy = document.querySelector<HTMLDivElement>("#app")!;
+  html_dummy.innerHTML = `
     <div class="dummy">
         <button class="main-button" type="button">
             <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
         </button>
     </div>
     `;
-  const btn = document.querySelector(".main-button");
-  btn?.addEventListener("click", () => {
-    widget(html);
+  const btn_main = document.querySelector(".main-button");
+  btn_main?.addEventListener("click", () => {
+    widget(html_dummy);
   });
 }
 
