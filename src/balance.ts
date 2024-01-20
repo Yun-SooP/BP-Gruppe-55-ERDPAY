@@ -1,78 +1,104 @@
-import { setupClient } from './setup_client.ts'
-import { Address} from "@polycrypt/erdstall/ledger";
-import { Client } from '@polycrypt/erdstall';
-import { widget } from './widget.ts';
+import "./style.css";
+import { setupClient } from "./setup_client.ts";
+import { Address } from "@polycrypt/erdstall/ledger";
+import { Client } from "@polycrypt/erdstall";
+import { widget } from "./widget.ts";
+import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 
 /**
- * export function to change to balance viewer
- * @param html main body of widget
+ * Function to change to the HTML of balance viewer.
+ * @param html_widget Main body of widget
  */
-export async function htmlBalance(html : HTMLDivElement) {
-  html.innerHTML = `
-  <div>
-    <a href="https://github.com/perun-network/erdstall-ts-sdk" target="_blank">
-      <img src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>erdPay</h1>
-    <div class="card">
-      <button id="balance" type="button"></button>
-      <button id="back" type="button"></button>
-    </div>
-    <div>
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address">
-    </div>
-    <div>
-        <label id="array"></label>
-    </div>
+
+export async function htmlBalance(html_widget: HTMLDivElement) {
+  html_widget.innerHTML = `
+  <div class = "balance-window">
+    <img 
+      class = "erdstall-logo"
+      src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" 
+      alt="TypeScript" 
+    />
+    <button class="goback-button">
+        <i class="fa-solid fa-angle-left"></i>
+    </button>
+
+    <header class = "balance-window__header">
+      <h1>Balance</h1>
+      <p>
+          Enter the address of the account you want to view the balance
+      </p>
+    </header>
+
+    <form class = "balance-window__form">
+      <input type="text" placeholder="account address" />
+      <input type="button" value="view balance" />
+      
+      <div class="select">
+      <label id= "lbl_balance"> </label>
+      </div>
+    </form>
+    
+
+    
   </div>
-  `
+  `;
 
   // Try to set up client
-  let client
+  let client;
   try {
-    client = await setupClient()
+    client = await setupClient();
   } catch (error) {
-    alert(error)
+    alert(error);
   }
 
-  const back = document.querySelector<HTMLButtonElement>('#back')!
-  const button = document.querySelector<HTMLButtonElement>('#balance')!
-  let input = document.querySelector<HTMLInputElement>('#address')!
-  const array = document.querySelector<HTMLBodyElement>('#array')!
+  // Eventlistener for the buttons to return and to view the balance
+  const btn_viewBalance = document.querySelector<HTMLButtonElement>(
+    ".balance-window__form input[type='button']"
+  )!;
+  let txt_balanceAddress = document.querySelector<HTMLInputElement>(
+    ".balance-window__form input[type='text']"
+  )!;
+  const lbl_balance = document.querySelector<HTMLBodyElement>("#lbl_balance")!;
 
-  // initialize buttons
-  button.innerHTML = `View Balance`
-  button.addEventListener('click', () => {
-    viewBalance(client!, input, array)
-  })
+  btn_viewBalance.addEventListener("click", () => {
+    viewBalance(client!, txt_balanceAddress, lbl_balance);
+  });
 
-  back.innerHTML = `Return`
-  back.addEventListener('click', () => 
-    widget(html)
-  )
+  const btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
+  btn_return.addEventListener("click", () => widget(html_widget));
 }
 
 /**
- * Function to display current assets of the given address
+ * Function to display current assets of the given address.
+ * @param client Client to be used for the Erdstall connection
+ * @param input Address to view the balance of
+ * @param lbl_balance HTML body to display the balance to
  */
-async function viewBalance(client : Client, input : HTMLInputElement, array : HTMLBodyElement) {
+async function viewBalance(
+  client: Client,
+  input: HTMLInputElement,
+  lbl_balance: HTMLBodyElement
+) {
   try {
-    let account = await client.getAccount(Address.fromString(input.value))
-    let entries = Array.from(account.values.values.entries())
-    let assets = ""
+    let account = await client.getAccount(Address.fromString(input.value));
+    let entries = Array.from(account.values.values.entries());
+    let assets = "";
     for (let i = 0; i < entries.length; i++) {
-      let asset = entries[i]
-      assets += "Token: " + asset[0] + " IDs:"
-      for (const id of asset[1].toJSON()){
-          assets += " " + parseInt(id)
+      let asset = entries[i];
+      assets +=
+        "Token: " +
+        asset[0] +
+        " Amount: " +
+        (<Tokens>asset[1]).value.length +
+        " IDs:";
+      for (const id of asset[1].toJSON()) {
+        assets += " " + parseInt(id);
       }
-      assets += "<br>"
+      assets += "<br>";
     }
-    if (entries.length == 0) array.innerHTML = "No assets"
-    else array.innerHTML = assets
+    if (entries.length == 0) lbl_balance.innerHTML = "No assets";
+    else lbl_balance.innerHTML = assets;
   } catch (error) {
-    array.innerHTML = "Non valid address"
+    alert(error);
   }
 }
-
