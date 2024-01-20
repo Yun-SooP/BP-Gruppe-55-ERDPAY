@@ -11,10 +11,10 @@ const provider = new ethers.providers.JsonRpcProvider(url);
  */
 export async function setupClient() {
     try {
-        const erdClient = new Client(provider, erdOperatorUrl)
-        await erdClient.initialize()
-        await erdClient.subscribe()
-        return erdClient
+        const client = new Client(provider, erdOperatorUrl)
+        await client.initialize()
+        await client.subscribe()
+        return client
     } catch (error) {
         alert(error)
     }

@@ -1,74 +1,57 @@
 import { htmlBalance } from "./balance";
 import { htmlCreateSessionForTransfer } from "./transfer";
 
+/**
+ * Function to display selection between transfer and view balance.
+ * @param html_widget HTML element to display to
+ */
+export function widget(html_widget: HTMLDivElement) {
+  html_widget.innerHTML = `
+    <div class="main-window">
+    <img
+        class="erdstall-logo"
+        src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
+        alt="TypeScript"
+    />
+    <header class="main-window__header">
+        <h1>Welcome to ErdPay</h1>
+        <p>Select an action to perform</p>
+    </header>
 
-export function widget(html: HTMLDivElement) {
-    html.innerHTML = `
-        <div class="widget_body" id="widgetBodyMain">
-        </div>
+    <form class="main-window__form">
+        <input type="button" value="View Balance" />
+        <input type="button" value="Transfer" />
+    </form>
+    </div>
     `;
-    const body = document.querySelector<HTMLDivElement>('#widgetBodyMain')!
-    widgetBody(body)
-}
-export function widgetBody(html: HTMLDivElement){
-    html.innerHTML = `
-        <header class="widget__header">
-            <button class = "button logoButton" id="logoButton" type="button">
-                <img src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
-            </button>
 
-            <h3> Welcome to ErdPay</h3>
-            <p> Select an action to perform</p>
-        </header>
-        <div class="button_container">
-            <button class = "button sqrButton" id="transfer">Transfer</button>
-            <button class = "button sqrButton" id="balance">View Balance</button>
-        </div>
-    `;
-    const transfer = document.querySelector<HTMLButtonElement>('#transfer');
-    transfer?.addEventListener('click', () => {
-        htmlCreateSessionForTransfer(html)
+  const btn_transfer = document.querySelector('input[value="Transfer"]');
+  btn_transfer?.addEventListener("click", () => {
+    htmlCreateSessionForTransfer(html_widget);
+  });
 
-    });
-
-    const balance = document.querySelector<HTMLButtonElement>('#balance')
-    balance?.addEventListener('click', () => {
-        htmlBalance(html)
-    })
+  const btn_balance = document.querySelector('input[value="View Balance"]');
+  btn_balance?.addEventListener("click", () => {
+    htmlBalance(html_widget);
+  });
 }
 
+/**
+ * Function to display startpage of the widget.
+ */
 export function makeWidgetButton() {
-    const html = document.querySelector<HTMLDivElement>('#app')!
-    html.innerHTML = `
-    <div>
-        <button id="mainButton" type="button">
-            <img src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
+  const html_dummy = document.querySelector<HTMLDivElement>("#app")!;
+  html_dummy.innerHTML = `
+    <div class="dummy">
+        <button class="main-button" type="button">
+            <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
         </button>
     </div>
     `;
-    const btn = document.querySelector('#mainButton');
-    btn?.addEventListener('click', () => {
-        widget(html)
-    })
+  const btn_main = document.querySelector(".main-button");
+  btn_main?.addEventListener("click", () => {
+    widget(html_dummy);
+  });
 }
 
-makeWidgetButton()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+makeWidgetButton();
