@@ -54,7 +54,7 @@ export function htmlCreateSessionForTransfer(html_widget: HTMLDivElement) {
     // to fix
   )!;
 
-  var txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
+  const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
     ".session-window__form input[type=text]"
   )!;
 
@@ -186,7 +186,7 @@ async function htmlTransfer() {
     )!;
     for (let i = 0; i < tokens.length; i++) {
       const option = document.createElement("option");
-      let token = tokens[i];
+      const token = tokens[i];
       option.value = token[0];
       option.text =
         token[0] + " (Amount: " + (<Tokens>token[1]).value.length + ")";
@@ -270,10 +270,10 @@ async function transferTo(
     return { status, error };
   }
 
-  let tokens = <Tokens>account.values.values.get(token)!;
+  const tokens = <Tokens>account.values.values.get(token)!;
   tokens.value = tokens.value.slice(0, txt_amount);
   const asset = <Asset>tokens;
-  let assets_transfer = new Assets({ token: token, asset: asset });
+  const assets_transfer = new Assets({ token: token, asset: asset });
 
   try {
     transaction = await session.transferTo(
