@@ -51,7 +51,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
     alert(error);
   }
 
-  //add eventlistners
+  // Eventlistener for the buttons to return and to view the balance
   const btn_viewBalance = document.querySelector<HTMLButtonElement>(
     ".balance-window__form input[type='button']"
   )!;
@@ -71,6 +71,9 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
 
 /**
  * Function to display current assets of the given address.
+ * @param client Client to be used for the Erdstall connection
+ * @param input Address to view the balance of
+ * @param lbl_balance HTML body to display the balance to
  */
 async function viewBalance(
   client: Client,
