@@ -70,6 +70,9 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
 
 /**
  * Function to display current assets of the given address.
+ * @param client Client to be used for the Erdstall connection
+ * @param input Address to view the balance of
+ * @param lbl_balance HTML body to display the balance to
  */
 async function viewBalance(
   client: Client,
