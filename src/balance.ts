@@ -51,7 +51,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
     alert(error);
   }
 
-  //add eventlistners
+  // Eventlistener for the buttons to return and to view the balance
   const btn_viewBalance = document.querySelector<HTMLButtonElement>(
     ".balance-window__form input[type='button']"
   )!;
