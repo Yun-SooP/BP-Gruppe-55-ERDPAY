@@ -55,7 +55,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
   const btn_viewBalance = document.querySelector<HTMLButtonElement>(
     ".balance-window__form input[type='button']"
   )!;
-  let txt_balanceAddress = document.querySelector<HTMLInputElement>(
+  const txt_balanceAddress = document.querySelector<HTMLInputElement>(
     ".balance-window__form input[type='text']"
   )!;
   const lbl_balance = document.querySelector<HTMLBodyElement>("#lbl_balance")!;
@@ -64,7 +64,8 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
     viewBalance(client!, txt_balanceAddress, lbl_balance);
   });
 
-  const btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
+  const btn_return =
+    document.querySelector<HTMLButtonElement>(".goback-button")!;
   btn_return.addEventListener("click", () => widget(html_widget));
 }
 
@@ -80,11 +81,11 @@ async function viewBalance(
   lbl_balance: HTMLBodyElement
 ) {
   try {
-    let account = await client.getAccount(Address.fromString(input.value));
-    let entries = Array.from(account.values.values.entries());
+    const account = await client.getAccount(Address.fromString(input.value));
+    const entries = Array.from(account.values.values.entries());
     let assets = "";
     for (let i = 0; i < entries.length; i++) {
-      let asset = entries[i];
+      const asset = entries[i];
       assets +=
         "Token: " +
         asset[0] +
