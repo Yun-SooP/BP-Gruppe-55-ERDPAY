@@ -37,7 +37,7 @@
   filter: brightness(0) invert(1);
   position: relative;
   top: -20px;
-  right: -155px;
+  right: -220px;
   cursor: pointer;
 }
 
@@ -52,7 +52,7 @@
   width: 30px;
   height: 30px;
   position: relative;
-  left: -200px;
+  left: -300px;
   top: -70px;
   will-change: transform;
   border-radius: 10px;
@@ -83,7 +83,7 @@
 
   /* to do: responsive */
   width: 550px;
-  height: 400px;
+  height: 450px;
 
   border: solid 1px rgba(255, 255, 255, 0.25);
   border-radius: 16px;
@@ -96,34 +96,64 @@
 .transfer-window-container .transfer-window h2 {
   align-self: flex-start;
   margin-left: 20px;
+  margin-bottom: 15px;
+  font-size: 17px;
   color: rgba(255, 255, 255, 0.9);
 }
 
 .transfer-window-container .transfer-window header {
   display: flex;
-  width: 475px;
+  width: 525px;
   margin-top: 10px;
   margin-bottom: 5px;
   color: rgba(255, 255, 255, 0.7);
   justify-content: space-between;
 }
 
-.transfer-window-container .transfer-window select {
-  width: 500px;
-  height: 150px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 10px;
-  margin-bottom: 10px;
+.transfer-window header span:first-child {
+  margin-left: 25px;
+}
 
+.transfer-window header span:last-child {
+  margin-right: 20px;
+}
+
+.token-list {
+  display: flex;
+  height: 150px;
+  width: 500px;
+  justify-content: center;
+  gap: 10px;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
   background-color: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(30px);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
 
-  font-size: 16px;
+.transfer-window-container .transfer-window select {
+  border: 1px solid rgba(255, 255, 255, 0);
+  background-color: rgba(0, 0, 0, 0);
   color: rgba(255, 255, 255, 1);
-
-  cursor: text;
+  cursor: pointer;
   caret-color: rgba(255, 255, 255, 0.6);
   outline: none;
+}
+
+select option {
+  font-size: 18px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.token-list .token-list__tokens {
+  width: 450px;
+  padding: 10px;
+}
+
+.token-list .token-list__amount {
+  width: 50px;
+  padding: 10px;
 }
 
 .transfer-form {
@@ -134,9 +164,14 @@
   align-items: center;
 }
 
-/* amount input */
-.transfer-form div {
+.transfer-form .transfer-form__token-amount {
   align-self: self-end;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.transfer-form__token-amount input {
+  width: 80px;
 }
 
 .transfer-window-container .mint-form {

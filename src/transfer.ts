@@ -169,29 +169,66 @@ async function htmlTransfer() {
       <h2>Choose your token to send</h2>
       <header>
           <span>Available Tokens</span>
-          <span>Amount</span>
+          <span>amount</span>
       </header>
-      <select class="token-list" size = "5"></select>
+
+      <div class="token-list">
+          <select class="token-list__tokens" size = "5"></select>
+          <select class="token-list__amount" size = "5"></select>
+      </div>
+
       <form class="transfer-form">
-        <input type = "text" class="transfer-form__token-txt_amount" placeholder="Amount of tokens to transfer"/>
-        <span>Tokens</span>
+        <div class="transfer-form__token-amount">
+          <input type = "text" placeholder="amount"/>
+          <span>Tokens</span>
+        </div>
         <input type="text" placeholder="recipient address" />
         <input type="button" value="make transfer" />
       </form>
     `;
-    const select_tokens =
-      document.querySelector<HTMLSelectElement>(".token-list")!;
+    const select_tokens = document.querySelector<HTMLSelectElement>(
+      ".token-list__tokens"
+    )!;
+
+    const select_amount = document.querySelector<HTMLSelectElement>(
+      ".token-list__amount"
+    )!;
+
+    var isSyncingLeftScroll = false;
+    var isSyncingRightScroll = false;
+
+    select_tokens.onscroll = function () {
+      if (!isSyncingLeftScroll) {
+        isSyncingRightScroll = true;
+        select_amount.scrollTop = select_tokens.scrollTop;
+      }
+      isSyncingLeftScroll = false;
+    };
+
+    select_amount.onscroll = function () {
+      if (!isSyncingRightScroll) {
+        isSyncingLeftScroll = true;
+        select_tokens.scrollTop = select_amount.scrollTop;
+      }
+      isSyncingRightScroll = false;
+    };
+
     const tokens = Array.from(account.values.values.entries());
     const txt_amount = document.querySelector<HTMLInputElement>(
-      ".transfer-form__token-txt_amount"
+      ".transfer-form__token-amount input"
     )!;
     for (let i = 0; i < tokens.length; i++) {
-      const option = document.createElement("option");
+      const option_token = document.createElement("option");
       const token = tokens[i];
-      option.value = token[0];
-      option.text =
-        token[0] + " (Amount: " + (<Tokens>token[1]).value.length + ")";
-      select_tokens.add(option);
+      option_token.value = token[0];
+      option_token.text = token[0];
+      select_tokens.add(option_token);
+
+      const option_amount = document.createElement("option");
+      // check if selected "one more time"
+      option_amount.value = token[0];
+      option_amount.text = (<Tokens>token[1]).value.length + "";
+      select_amount.add(option_amount);
     }
 
     const txt_recipientAddress = document.querySelector<HTMLInputElement>(
