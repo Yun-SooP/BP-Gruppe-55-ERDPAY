@@ -167,10 +167,10 @@ async function htmlTransfer() {
   } else {
     body_transfer.innerHTML = `
       <h2>Choose your token to send</h2>
-      <div class="available-tokens-header">
+      <header>
           <span>Available Tokens</span>
           <span>Amount</span>
-      </div>
+      </header>
       <select class="token-list" size = "5"></select>
       <form class="transfer-form">
         <input type = "text" class="transfer-form__token-txt_amount" placeholder="Amount of tokens to transfer"/>
@@ -179,7 +179,8 @@ async function htmlTransfer() {
         <input type="button" value="make transfer" />
       </form>
     `;
-    const select_tokens = document.querySelector<HTMLSelectElement>(".token-list")!;
+    const select_tokens =
+      document.querySelector<HTMLSelectElement>(".token-list")!;
     const tokens = Array.from(account.values.values.entries());
     const txt_amount = document.querySelector<HTMLInputElement>(
       ".transfer-form__token-txt_amount"
@@ -264,7 +265,11 @@ async function transferTo(
   let status;
   let error;
 
-  if (Number.isNaN(txt_amount) || txt_amount <= 0 || !Number.isInteger(txt_amount)) {
+  if (
+    Number.isNaN(txt_amount) ||
+    txt_amount <= 0 ||
+    !Number.isInteger(txt_amount)
+  ) {
     status = 0;
     error = new Error("Please enter a valid txt_amount.");
     return { status, error };
