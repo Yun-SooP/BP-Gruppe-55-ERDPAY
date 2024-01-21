@@ -34,32 +34,23 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
       <input type="button" value="view balance" />
       
       <div class="select">
-        <select size="5" name="tokens" id="" class="balance-window__select">
-          <label id= "lbl_balance"> </label>
-          <option value = lbl_balance> "2"</option>
-          <option value = lbl_balance> "3"</option>
-          <option value = lbl_balance> "4"</option>
-          <option value = lbl_balance> "5"</option>
-          <option value = lbl_balance> "6"</option>
-
-        </select>
+        <select size="5" name="tokens" id="" class="balance-window__select"> </select>
 
         <form class = "balance-window__form">
           <label class = "label">
-            <label id= "IDs"> list of IDs</label>
+            <label id= "IDs"> IDs: <br></label>
+            <span id= "txt_ids"></span>
           </label>
           <label class = "label">
-            <label id= "IDs"> num of ids</label>
+            <label id= "Amount"> Amount: <br></label>
+            <span id= "txt_amount"></span>
           </label>
         </form>
   
       </div>
-
-      <label id= "lbl_balance"> </label>
       
     </form>
-    
-
+  
     
   </div>
   `;
@@ -72,18 +63,33 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
     alert(error);
   }
 
-  // Eventlistener for the buttons to return and to view the balance
   const btn_viewBalance = document.querySelector<HTMLButtonElement>(
     ".balance-window__form input[type='button']"
   )!;
   const txt_balanceAddress = document.querySelector<HTMLInputElement>(
     ".balance-window__form input[type='text']"
   )!;
-  const lbl_balance = document.querySelector<HTMLBodyElement>("#lbl_balance")!;
 
-  btn_viewBalance.addEventListener("click", () => {
-    viewBalance(client!, txt_balanceAddress, lbl_balance);
+  const txt_ids = document.querySelector<HTMLSpanElement>("#txt_ids")!;
+  const txt_amount = document.querySelector<HTMLSpanElement>("#txt_amount")!;
+  const select_tokens = document.querySelector<HTMLSelectElement>(".balance-window__select")!;
+
+  let tokens: string[], ids: number[][], amounts: number[];
+
+
+  // Event listener for the buttons to return, to view the balance and to select Token to view
+  btn_viewBalance.addEventListener("click", async () => {
+    txt_amount!.innerHTML= '';
+    txt_ids!.innerHTML = '';
+    [tokens, ids, amounts] = await viewBalance(client!, txt_balanceAddress, select_tokens);
   });
+
+  select_tokens.addEventListener('change', () => {
+    const index = tokens.indexOf(select_tokens.value);
+    txt_ids!.innerHTML = ids[index].toString();
+    txt_amount!.innerHTML = amounts[index].toString();
+
+  })
 
   const btn_return =
     document.querySelector<HTMLButtonElement>(".goback-button")!;
@@ -95,32 +101,39 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
  * @param client Client to be used for the Erdstall connection
  * @param input Address to view the balance of
  * @param lbl_balance HTML body to display the balance to
+ * @returns arrays with token names, ids and amounts of the tokens  
  */
 async function viewBalance(
   client: Client,
   input: HTMLInputElement,
-  lbl_balance: HTMLBodyElement
-) {
+  select_tokens: HTMLSelectElement
+) : Promise<[string[], number[][], number[]]> {
   try {
     const account = await client.getAccount(Address.fromString(input.value));
     const entries = Array.from(account.values.values.entries());
-    let assets = "";
+    const tokens: string[] = [];
+    const ids: number[][] = [];
+    const amounts: number[] = [];
+    select_tokens.options.length = 0;
     for (let i = 0; i < entries.length; i++) {
+      const option = document.createElement("option");
       const asset = entries[i];
-      assets +=
-        "Token: " +
-        asset[0] +
-        " Amount: " +
-        (<Tokens>asset[1]).value.length +
-        " IDs:";
+      option.text = asset[0];
+      option.value = asset[0];
+      select_tokens.add(option)
+      tokens.push(asset[0])
+      amounts.push((<Tokens>asset[1]).value.length);
+      const innerIds: number[] = [];
       for (const id of asset[1].toJSON()) {
-        assets += " " + parseInt(id);
+        innerIds.push(parseInt(id))
       }
-      assets += "<br>";
+      ids.push(innerIds);
     }
-    if (entries.length == 0) lbl_balance.innerHTML = "No assets";
-    else lbl_balance.innerHTML = assets;
+    
+    return [tokens, ids, amounts]
   } catch (error) {
     alert(error);
+    throw(error);
   }
 }
+
