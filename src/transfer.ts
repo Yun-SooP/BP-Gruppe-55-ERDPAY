@@ -127,6 +127,7 @@ async function htmlTransfer() {
       </form>
 
       <span class="private-key">your private key</span>
+      <span class="session-address">your address</span>
     </div>
     
   `;
@@ -134,6 +135,10 @@ async function htmlTransfer() {
   const btn_privateKey =
     document.querySelector<HTMLButtonElement>(".private-key")!;
   btn_privateKey.addEventListener("click", () => alert(privateKey));
+
+  const btn_sessionAddress =
+    document.querySelector<HTMLButtonElement>(".session-address")!;
+  btn_sessionAddress.addEventListener("click", () => alert(session!.address))
 
   // Event listener for going back one page
   const btn_return = document.querySelector<HTMLButtonElement>(
@@ -175,6 +180,7 @@ async function htmlTransfer() {
       <form class="transfer-form">
         <input type = "text" class="transfer-form__token-txt_amount" placeholder="Amount of tokens to transfer"/>
         <span>Tokens</span>
+        <input type = "checkbox" id = "advancedTransfer">advanced transfer with ID selection</input>
         <input type="text" placeholder="recipient address" />
         <input type="button" value="make transfer" />
       </form>
@@ -200,12 +206,51 @@ async function htmlTransfer() {
       '.transfer-form input[value="make transfer"]'
     )!;
 
+    const checkbox_advanced = document.querySelector<HTMLInputElement>("#advancedTransfer")!
+
     btn_makeTransfer.addEventListener("click", async () => {
       if (select_tokens.value == "") {
-        alert("Please select_tokens a token to transfer.");
+        alert("Please select the address of the token to transfer.");
+        return;
+      } else if (txt_amount.value == "") {
+        alert("Please input the amount of the tokens to transfer.")
+        return;
+      } else if (txt_recipientAddress.value == "") {
+        alert("Please input the address of the recipient.")
         return;
       }
-      const { status, error } = await transferTo(
+      const amount = parseFloat(txt_amount.value)
+      if (Number.isNaN(amount) || amount <= 0 || !Number.isInteger(amount)) {
+        alert("Please enter a valid amount.")
+        return
+      }
+      const selectedToken = select_tokens.value
+      const tokens = <Tokens>account.values.values.get(selectedToken)
+      if (amount > tokens.value.length){
+        alert("The selected token does not have enought amount of tokens. Please adjust the amount or select another token.")
+        return
+      }
+      if (checkbox_advanced.checked){
+        htmlAdvancedTransfer(selectedToken, parseInt(txt_amount.value), txt_recipientAddress.value)
+      } else {
+        transferEvent(false)
+      }
+    });
+
+    checkbox_advanced.addEventListener("click", () => {
+      btn_makeTransfer.value = checkbox_advanced.checked? "select IDs" : "make transfer"
+    })
+
+    async function transferEvent(advanced: boolean, tokenIDs?: bigint[]){
+      const { status, error } = advanced?
+      await transferTo(
+        session,
+        select_tokens.value,
+        parseFloat(txt_amount.value),
+        txt_recipientAddress.value,
+        tokenIDs
+      ) :
+      await transferTo(
         session,
         select_tokens.value,
         parseFloat(txt_amount.value),
@@ -218,9 +263,49 @@ async function htmlTransfer() {
         alert("Transfer failed!: " + err.message);
         return;
       }
-      await htmlTransfer();
-    });
+      htmlTransfer()
+    }
+
+    async function htmlAdvancedTransfer(tokenAddress: string, amount: number, addressRecipient: string){
+      body_transfer.innerHTML = `
+        <h2>Token: ${tokenAddress}<h2>
+        <h2>To: ${addressRecipient}<h2>
+        <h2>Choose ${amount} token ID(s) to send</h2>
+        <div id= checkboxesIDs></div>
+        <form class="transfer-form">
+          <input type="button" value="make transfer" />
+        </form>
+      `;
+      const availableTokenIDs = (<Tokens>account.values.values.get(tokenAddress)).value;
+      const div_checkboxesIDs = document.querySelector<HTMLDivElement>("#checkboxesIDs")!;
+      const checkboxes_IDs: HTMLInputElement[] = []
+      const btn_makeTransfer = document.querySelector<HTMLInputElement>(
+        '.transfer-form input[value="make transfer"]'
+      )!;
+      for (let i = 0; i < availableTokenIDs.length; i++) {
+        const tokenID = availableTokenIDs[i]
+        const checkbox = document.createElement("input")
+        checkbox.type = "checkbox"
+        checkbox.value = `${tokenID}`
+        checkbox.id = `${tokenID}`
+        checkboxes_IDs.push(checkbox)
+        const span =document.createElement("span");
+        span.innerHTML = `${tokenID} </br>`;
+        div_checkboxesIDs.appendChild(checkbox)
+        div_checkboxesIDs.appendChild(span)
+      }
+      btn_makeTransfer.addEventListener("click", async () => {
+        const checkboxes_checkedIDs = checkboxes_IDs.filter(checkbox => checkbox.checked)
+        if (checkboxes_checkedIDs.length != amount){
+          alert(`Please choose ${amount} token ID(s)! (currently ${checkboxes_checkedIDs.length} chosen)`)
+          return
+        }
+        const checkedIDs = checkboxes_checkedIDs.map(checkbox=>BigInt(checkbox.value))
+        transferEvent(true, checkedIDs)
+      })
+    }
   }
+
 
   btn_mint.addEventListener("click", async () => {
     const txt_tokenAddress = document.querySelector<HTMLInputElement>(
@@ -245,33 +330,41 @@ async function htmlTransfer() {
   });
 }
 
+
+
 /**
  * Function to carry out transfer of tokens.
  * @param session Session from which the transfer will happen
  * @param token Token to transfer
- * @param txt_amount Amount of the token to transfer
+ * @param amount Amount of the token to transfer
  * @param address Address to transfer to
+ * @param tokenIDs optional, IDs of token to transfer
  * @returns Status and error message
  */
 async function transferTo(
   session: Session,
   token: string,
-  txt_amount: number,
-  address: string
+  amount: number,
+  address: string,
+  tokenIDs?: bigint[]
 ) {
   let transaction;
   let receipt;
   let status;
   let error;
 
-  if (Number.isNaN(txt_amount) || txt_amount <= 0 || !Number.isInteger(txt_amount)) {
-    status = 0;
-    error = new Error("Please enter a valid txt_amount.");
-    return { status, error };
-  }
-
   const tokens = <Tokens>account.values.values.get(token)!;
-  tokens.value = tokens.value.slice(0, txt_amount);
+
+  if (typeof tokenIDs !== 'undefined'){
+    if (amount != tokenIDs.length){
+      status = 0
+      error = new Error("The amount of tokens does not match the amount of the IDs.")
+      return { status , error }
+    }
+    tokens.value = tokenIDs
+  } else {
+    tokens.value = tokens.value.slice(0, amount);
+  }
   const asset = <Asset>tokens;
   const assets_transfer = new Assets({ token: token, asset: asset });
 
