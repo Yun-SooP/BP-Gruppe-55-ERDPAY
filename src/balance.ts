@@ -43,6 +43,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
           <option value = lbl_balance> "6"</option>
 
         </select>
+
         <form class = "balance-window__form">
           <label class = "label">
             <label id= "IDs"> list of IDs</label>
@@ -51,10 +52,11 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
             <label id= "IDs"> num of ids</label>
           </label>
         </form>
-        
+  
       </div>
+
       <label id= "lbl_balance"> </label>
-      </div>
+      
     </form>
     
 
