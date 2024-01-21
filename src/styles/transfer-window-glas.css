@@ -143,6 +143,7 @@
 
 select option {
   font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
   background-color: rgba(0, 0, 0, 0);
 }
 
@@ -169,6 +170,7 @@ select option {
   display: flex;
   align-items: center;
   gap: 5px;
+  color: rgba(255, 255, 255, 0.7);
 }
 .transfer-form__token-amount input {
   width: 80px;
