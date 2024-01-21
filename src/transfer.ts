@@ -16,11 +16,11 @@ let apphtml: HTMLDivElement;
 
 /**
  * Function to display selection between a new session and restoring old session.
- * @param html HTML to display to
+ * @param html_widget HTML to display to
  */
-export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
-  apphtml = html;
-  html.innerHTML = `
+export function htmlCreateSessionForTransfer(html_widget: HTMLDivElement) {
+  apphtml = html_widget;
+  html_widget.innerHTML = `
       <div class="session-window">
       <img
         class="erdstall-logo"
@@ -46,15 +46,15 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
       </form>
     </div>
   `;
-  const b_newSession = document.querySelector<HTMLInputElement>(
+  const btn_newSession = document.querySelector<HTMLInputElement>(
     ".session-window__form input[value='New Session']"
   )!;
-  const b_restoreSession = document.querySelector<HTMLInputElement>(
+  const btn_restoreSession = document.querySelector<HTMLInputElement>(
     ".session-window__form input[value='Restore Session']"
     // to fix
   )!;
 
-  var privateKey_previous = document.querySelector<HTMLInputElement>(
+  const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
     ".session-window__form input[type=text]"
   )!;
 
@@ -65,12 +65,12 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
   logo_return.addEventListener("click", () => widget(apphtml));
 
-  const b_return = document.querySelector<HTMLButtonElement>(
+  const btn_return = document.querySelector<HTMLButtonElement>(
     ".session-window .goback-button"
   )!;
-  b_return.addEventListener("click", () => widget(apphtml));
+  btn_return.addEventListener("click", () => widget(apphtml));
 
-  b_newSession.addEventListener("click", async () => {
+  btn_newSession.addEventListener("click", async () => {
     let newSession_;
     try {
       newSession_ = await newSession();
@@ -83,8 +83,8 @@ export function htmlCreateSessionForTransfer(html: HTMLDivElement) {
     htmlTransfer();
   });
 
-  b_restoreSession.addEventListener("click", async () => {
-    privateKey = privateKey_previous.value;
+  btn_restoreSession.addEventListener("click", async () => {
+    privateKey = txt_previousPrivateKey.value;
     let restoredSession;
     try {
       restoredSession = await restoreSession(privateKey);
@@ -131,15 +131,15 @@ async function htmlTransfer() {
     
   `;
 
-  const b_privateKey =
+  const btn_privateKey =
     document.querySelector<HTMLButtonElement>(".private-key")!;
-  b_privateKey.addEventListener("click", () => alert(privateKey));
+  btn_privateKey.addEventListener("click", () => alert(privateKey));
 
   // Event listener for going back one page
-  const b_return = document.querySelector<HTMLButtonElement>(
+  const btn_return = document.querySelector<HTMLButtonElement>(
     ".transfer-window-container .goback-button"
   )!;
-  b_return.addEventListener("click", () =>
+  btn_return.addEventListener("click", () =>
     htmlCreateSessionForTransfer(apphtml)
   );
 
@@ -147,27 +147,25 @@ async function htmlTransfer() {
     document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
   logo_return.addEventListener("click", () => widget(apphtml));
 
-  b_return.addEventListener("click", () =>
+  btn_return.addEventListener("click", () =>
     htmlCreateSessionForTransfer(apphtml)
   );
 
-  const b_mint = document.querySelector<HTMLInputElement>(
+  const btn_mint = document.querySelector<HTMLInputElement>(
     '.mint-form input[value="mint new token"]'
   )!;
 
-  const transfer_window = document.querySelector<HTMLDivElement>(
+  const body_transfer = document.querySelector<HTMLDivElement>(
     ".transfer-window-container .transfer-window"
   )!;
 
   if (account.values.values.size == 0) {
-    transfer_window.innerHTML = `
+    body_transfer.innerHTML = `
       <p>You have no token available.</p>
     `;
-    transfer_window.style.height = "70px";
-    // address_recipient.disabled = true;
-    // b_makeTransfer.disabled = true;
+    body_transfer.style.height = "70px";
   } else {
-    transfer_window.innerHTML = `
+    body_transfer.innerHTML = `
       <h2>Choose your token to send</h2>
       <div class="available-tokens-header">
           <span>Available Tokens</span>
@@ -175,43 +173,43 @@ async function htmlTransfer() {
       </div>
       <select class="token-list" size = "5"></select>
       <form class="transfer-form">
-        <input type = "text" class="transfer-form__token-amount" placeholder="amount of tokens to transfer"/>
+        <input type = "text" class="transfer-form__token-txt_amount" placeholder="Amount of tokens to transfer"/>
         <span>Tokens</span>
         <input type="text" placeholder="recipient address" />
         <input type="button" value="make transfer" />
       </form>
     `;
-    const select = document.querySelector<HTMLSelectElement>(".token-list")!;
+    const select_tokens = document.querySelector<HTMLSelectElement>(".token-list")!;
     const tokens = Array.from(account.values.values.entries());
-    const amount = document.querySelector<HTMLInputElement>(
-      ".transfer-form__token-amount"
+    const txt_amount = document.querySelector<HTMLInputElement>(
+      ".transfer-form__token-txt_amount"
     )!;
     for (let i = 0; i < tokens.length; i++) {
       const option = document.createElement("option");
-      let token = tokens[i];
+      const token = tokens[i];
       option.value = token[0];
       option.text =
-        token[0] + " (amount: " + (<Tokens>token[1]).value.length + ")";
-      select.add(option);
+        token[0] + " (Amount: " + (<Tokens>token[1]).value.length + ")";
+      select_tokens.add(option);
     }
 
-    const address_recipient = document.querySelector<HTMLInputElement>(
+    const txt_recipientAddress = document.querySelector<HTMLInputElement>(
       '.transfer-form input[placeholder="recipient address"]'
     )!;
-    const b_makeTransfer = document.querySelector<HTMLInputElement>(
+    const btn_makeTransfer = document.querySelector<HTMLInputElement>(
       '.transfer-form input[value="make transfer"]'
     )!;
 
-    b_makeTransfer.addEventListener("click", async () => {
-      if (select.value == "") {
-        alert("Please select a token to transfer.");
+    btn_makeTransfer.addEventListener("click", async () => {
+      if (select_tokens.value == "") {
+        alert("Please select_tokens a token to transfer.");
         return;
       }
       const { status, error } = await transferTo(
         session,
-        select.value,
-        parseFloat(amount.value),
-        address_recipient.value
+        select_tokens.value,
+        parseFloat(txt_amount.value),
+        txt_recipientAddress.value
       );
       if (status == 1) {
         alert("Transfer succesful!");
@@ -224,17 +222,17 @@ async function htmlTransfer() {
     });
   }
 
-  b_mint.addEventListener("click", async () => {
-    const token_address = document.querySelector<HTMLInputElement>(
+  btn_mint.addEventListener("click", async () => {
+    const txt_tokenAddress = document.querySelector<HTMLInputElement>(
       ".mint-form input[placeholder='token address']"
     )!;
-    const token_id = document.querySelector<HTMLInputElement>(
+    const txt_tokenId = document.querySelector<HTMLInputElement>(
       ".mint-form input[placeholder='token ID']"
     )!;
     const { status, error } = await mint(
       session,
-      token_address.value,
-      parseFloat(token_id.value)
+      txt_tokenAddress.value,
+      parseFloat(txt_tokenId.value)
     );
     if (status == 0) {
       const err: Error = <Error>error;
@@ -251,14 +249,14 @@ async function htmlTransfer() {
  * Function to carry out transfer of tokens.
  * @param session Session from which the transfer will happen
  * @param token Token to transfer
- * @param amount Amount of the token to transfer
+ * @param txt_amount Amount of the token to transfer
  * @param address Address to transfer to
  * @returns Status and error message
  */
 async function transferTo(
   session: Session,
   token: string,
-  amount: number,
+  txt_amount: number,
   address: string
 ) {
   let transaction;
@@ -266,16 +264,16 @@ async function transferTo(
   let status;
   let error;
 
-  if (Number.isNaN(amount) || amount <= 0 || !Number.isInteger(amount)) {
+  if (Number.isNaN(txt_amount) || txt_amount <= 0 || !Number.isInteger(txt_amount)) {
     status = 0;
-    error = new Error("Please enter a valid amount.");
+    error = new Error("Please enter a valid txt_amount.");
     return { status, error };
   }
 
-  let tokens = <Tokens>account.values.values.get(token)!;
-  tokens.value = tokens.value.slice(0, amount);
+  const tokens = <Tokens>account.values.values.get(token)!;
+  tokens.value = tokens.value.slice(0, txt_amount);
   const asset = <Asset>tokens;
-  let assets_transfer = new Assets({ token: token, asset: asset });
+  const assets_transfer = new Assets({ token: token, asset: asset });
 
   try {
     transaction = await session.transferTo(

@@ -7,11 +7,11 @@ import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 
 /**
  * Function to change to the HTML of balance viewer.
- * @param html Main body of widget
+ * @param html_widget Main body of widget
  */
 
-export async function htmlBalance(html: HTMLDivElement) {
-  html.innerHTML = `
+export async function htmlBalance(html_widget: HTMLDivElement) {
+  html_widget.innerHTML = `
   <div class = "balance-window">
     <img 
       class = "erdstall-logo"
@@ -35,12 +35,12 @@ export async function htmlBalance(html: HTMLDivElement) {
       
       <div class="select">
         <select size="5" name="tokens" id="" class="balance-window__select">
-          <label id= "array"> </label>
-          <option value = array> "2"</option>
-          <option value = array> "3"</option>
-          <option value = array> "4"</option>
-          <option value = array> "5"</option>
-          <option value = array> "6"</option>
+          <label id= "lbl_balance"> </label>
+          <option value = lbl_balance> "2"</option>
+          <option value = lbl_balance> "3"</option>
+          <option value = lbl_balance> "4"</option>
+          <option value = lbl_balance> "5"</option>
+          <option value = lbl_balance> "6"</option>
 
         </select>
         <form class = "balance-window__form">
@@ -52,6 +52,8 @@ export async function htmlBalance(html: HTMLDivElement) {
           </label>
         </form>
         
+      </div>
+      <label id= "lbl_balance"> </label>
       </div>
     </form>
     
@@ -68,37 +70,41 @@ export async function htmlBalance(html: HTMLDivElement) {
     alert(error);
   }
 
-  //add eventlistners
-  const button = document.querySelector<HTMLButtonElement>(
+  // Eventlistener for the buttons to return and to view the balance
+  const btn_viewBalance = document.querySelector<HTMLButtonElement>(
     ".balance-window__form input[type='button']"
   )!;
-  let input = document.querySelector<HTMLInputElement>(
+  const txt_balanceAddress = document.querySelector<HTMLInputElement>(
     ".balance-window__form input[type='text']"
   )!;
-  const array = document.querySelector<HTMLBodyElement>("#array")!;
+  const lbl_balance = document.querySelector<HTMLBodyElement>("#lbl_balance")!;
 
-  button.addEventListener("click", () => {
-    viewBalance(client!, input, array);
+  btn_viewBalance.addEventListener("click", () => {
+    viewBalance(client!, txt_balanceAddress, lbl_balance);
   });
 
-  const b_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
-  b_return.addEventListener("click", () => widget(html));
+  const btn_return =
+    document.querySelector<HTMLButtonElement>(".goback-button")!;
+  btn_return.addEventListener("click", () => widget(html_widget));
 }
 
 /**
  * Function to display current assets of the given address.
+ * @param client Client to be used for the Erdstall connection
+ * @param input Address to view the balance of
+ * @param lbl_balance HTML body to display the balance to
  */
 async function viewBalance(
   client: Client,
   input: HTMLInputElement,
-  array: HTMLBodyElement
+  lbl_balance: HTMLBodyElement
 ) {
   try {
-    let account = await client.getAccount(Address.fromString(input.value));
-    let entries = Array.from(account.values.values.entries());
+    const account = await client.getAccount(Address.fromString(input.value));
+    const entries = Array.from(account.values.values.entries());
     let assets = "";
     for (let i = 0; i < entries.length; i++) {
-      let asset = entries[i];
+      const asset = entries[i];
       assets +=
         "Token: " +
         asset[0] +
@@ -110,8 +116,8 @@ async function viewBalance(
       }
       assets += "<br>";
     }
-    if (entries.length == 0) array.innerHTML = "No assets";
-    else array.innerHTML = assets;
+    if (entries.length == 0) lbl_balance.innerHTML = "No assets";
+    else lbl_balance.innerHTML = assets;
   } catch (error) {
     alert(error);
   }
