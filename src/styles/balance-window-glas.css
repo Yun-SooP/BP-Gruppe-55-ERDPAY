@@ -146,14 +146,14 @@
 .balance-window .goback-button:active {
   background-color: rgba(255, 255, 255, 0.02);
 }
-select {
+.balance-window__select {
   /*-webkit-appearance:none;*/
   -moz-appearance:none;
   -ms-appearance:none;
   appearance:none;
   outline:0;
   border:1px;
-  background: rgba(255, 255, 255, 0.101);;
+  background: rgba(255, 255, 255, 0.101);
   flex: 1;
   padding: .5em;
   color:#fff;
@@ -161,10 +161,10 @@ select {
   font-size: 1em;
   font-family: 'Open Sans', sans-serif;
 }
-select::-ms-expand {
+.balance-window__select::-ms-expand {
   display: none;
 }
-.select {
+.balance-window .select {
   position: relative;
   display: flex;
   width: 20em;
@@ -175,7 +175,21 @@ select::-ms-expand {
   border-radius: .25em;
   overflow-y: scroll;
 }
-.select::-webkit-scrollbar {
+.balance-window .select::-webkit-scrollbar {
   display: none;
+}
+.balance-window .label {
+  width: 25%;
+  height: 2.5em;
+
+  margin-left: 15px;
+  /*border: 1px solid rgba(255, 255, 255, 0.25);*/
+  border-radius: .25em;
+
+  background-color: rgba(255, 255, 255, 0.101);;
+  backdrop-filter: blur(30px);
+
+  font-size: 16px;
+  color: rgb(255, 255, 255);
 }
 

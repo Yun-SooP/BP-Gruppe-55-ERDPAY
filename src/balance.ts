@@ -34,16 +34,25 @@ export async function htmlBalance(html: HTMLDivElement) {
       <input type="button" value="view balance" />
       
       <div class="select">
-      <select size="5" name="tokens" id="" class="form-control">
-        <label id= "array"> </label>
-        <option value = array> "2"</option>
-        <option value = array> "3"</option>
-        <option value = array> "4"</option>
-        <option value = array> "5"</option>
-        <option value = array> "6"</option>
+        <select size="5" name="tokens" id="" class="balance-window__select">
+          <label id= "array"> </label>
+          <option value = array> "2"</option>
+          <option value = array> "3"</option>
+          <option value = array> "4"</option>
+          <option value = array> "5"</option>
+          <option value = array> "6"</option>
 
-      </select>
-    </div>
+        </select>
+        <form class = "balance-window__form">
+          <label class = "label">
+            <label id= "IDs"> list of IDs</label>
+          </label>
+          <label class = "label">
+            <label id= "IDs"> num of ids</label>
+          </label>
+        </form>
+        
+      </div>
     </form>
     
 
