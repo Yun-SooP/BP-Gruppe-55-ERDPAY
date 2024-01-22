@@ -150,11 +150,13 @@ select option {
 .token-list .token-list__tokens {
   width: 450px;
   padding: 10px;
+  overflow: hidden;
 }
 
 .token-list .token-list__amount {
   width: 50px;
   padding: 10px;
+  overflow: hidden;
 }
 
 .transfer-form {
