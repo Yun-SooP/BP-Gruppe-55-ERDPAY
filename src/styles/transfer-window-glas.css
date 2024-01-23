@@ -123,6 +123,7 @@
   height: 150px;
   width: 500px;
   justify-content: center;
+  padding: 0px 0px;
 
   border: 1px solid rgba(255, 255, 255, 0.25);
   background-color: rgba(0, 0, 0, 0.25);
@@ -132,21 +133,22 @@
 }
 
 .transfer-window-container .transfer-window select {
-  border: 1px solid rgba(255, 255, 255, 0);
   background-color: rgba(0, 0, 0, 0);
   color: rgba(255, 255, 255, 1);
-  cursor: pointer;
   caret-color: rgba(255, 255, 255, 0.6);
   outline: none;
 }
 
 .token-list .token-list__tokens {
+  border: 1px solid rgba(255, 255, 255, 0);
+  cursor: pointer;
   width: 460px;
   padding: 10px;
   overflow: hidden;
 }
 
 .token-list .token-list__amount {
+  border: 1px solid rgba(0, 0, 0, 0);
   display: flex;
   width: 60px;
   padding: 10px;
@@ -154,7 +156,7 @@
   overflow: hidden;
 }
 
-select option {
+.transfer-window select option {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.9);
   border-radius: 5px;
@@ -273,7 +275,7 @@ select option {
   background-color: #283048;
 }
 
-.balance-window__form input[type="text"]:focus {
+input[type="text"]:focus {
   border: 1px solid #2e2e2e;
 }
 
