@@ -28,6 +28,7 @@ async function eventMint(session: Session){
     const tokenId = parseFloat(txt_tokenId.value)
     if (Number.isNaN(tokenId) || tokenId <= 0 || !Number.isInteger(tokenId)){
         alert("Please enter a valid ID.")
+        return
     } 
     const { status, error } = await mint(
         session,
