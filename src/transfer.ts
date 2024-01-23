@@ -174,7 +174,7 @@ async function htmlTransfer() {
 
       <div class="token-list">
           <select class="token-list__tokens" size = "5"></select>
-          <select class="token-list__amount" size = "5"></select>
+          <select class="token-list__amount" disabled size = "5"></select>
       </div>
 
       <form class="transfer-form">
