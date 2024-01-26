@@ -22,39 +22,35 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
         <i class="fa-solid fa-angle-left"></i>
     </button>
 
-    <h1>Balance</h1>
-      
-    <div class = "group">
+    <header class = "balance-window__header">
+      <h1>Balance</h1>
+      <p>
+          Enter the address of the account you want to view the balance
+      </p>
+    </header>
+
+    <form class = "balance-window__form">
+      <input type="text" placeholder="account address" />
+      <input type="button" value="view balance" />
       
       <div class="select">
         <select size="5" name="tokens" id="" class="balance-window__select"> </select>
 
         <form class = "balance-window__form">
-          
-            <label class = "label">
-              <label id= "IDs"> IDs: <br></label>
-              <span id= "txt_ids"></span>
-            </label>
-
-            <label class = "label">
-              <label id= "Amount"> Amount: <br></label>
-              <span id= "txt_amount"></span>
-            </label>
+          <label class = "label">
+            <label id= "IDs"> IDs: <br></label>
+            <span id= "txt_ids"></span>
+          </label>
+          <label class = "label">
+            <label id= "Amount"> Amount: <br></label>
+            <span id= "txt_amount"></span>
+          </label>
         </form>
+  
       </div>
-
-      <form class = "balance-window__form">
-        <input type="text" placeholder="account address" />
-        <input type="button" value="view balance" />
-        
-        
-        
-          
-    
-        
-        
-      </form>
-    </div>
+      
+    </form>
+  
     
   </div>
   `;

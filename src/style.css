@@ -4,13 +4,8 @@
 @import "styles/transfer-window-glas.css";
 @import "styles/balance-window-glas.css";
 
-.dummy {
-  display: flex;
-  gap: 15px;
-}
-
 .main-button {
-  width: 275px;
+  width: 220px;
   height: 55px;
 
   display: flex;
@@ -28,24 +23,11 @@
   transition: transform 0.3s, border 0.2s;
 }
 
-.main-button div {
-  position: relative;
-  font-size: 16px;
-  left: 45px;
-  font-weight: bold;
-  color: white;
-}
-
 .dummy .erdstall-logo {
-  position: relative;
-  right: -30px;
-  transform: scale(0.5);
+  transform: scale(0.6);
   filter: brightness(0) invert(1);
 }
 
-.main-button:last-child .erdstall-logo {
-  transform: scale(0.6);
-}
 .dummy .main-button:hover {
   transform: perspective(1px) scale(1.04, 1.04);
   /* border: 0.5px solid rgba(255, 255, 255, 0.4); */

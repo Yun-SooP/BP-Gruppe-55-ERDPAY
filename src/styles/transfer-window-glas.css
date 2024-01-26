@@ -15,7 +15,7 @@
 }
 
 .transfer-window-container {
-  width: 700px;
+  width: 600px;
   height: 950px;
   display: flex;
   flex-direction: column;
@@ -37,7 +37,7 @@
   filter: brightness(0) invert(1);
   position: relative;
   top: -20px;
-  right: -220px;
+  right: -155px;
   cursor: pointer;
 }
 
@@ -52,7 +52,7 @@
   width: 30px;
   height: 30px;
   position: relative;
-  left: -300px;
+  left: -200px;
   top: -70px;
   will-change: transform;
   border-radius: 10px;
@@ -67,11 +67,11 @@
 .transfer-window-container h1 {
   position: relative;
   align-self: flex-start;
-  margin-left: 80px;
+  margin-left: 70px;
   top: -10px;
 
-  font-size: 23px;
-  color: rgba(255, 255, 255, 1);
+  font-size: 19px;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .transfer-window-container .transfer-window {
@@ -82,8 +82,8 @@
   margin-bottom: 50px;
 
   /* to do: responsive */
-  width: 550px;
-  height: 450px;
+  width: 450px;
+  height: 200px;
 
   border: solid 1px rgba(255, 255, 255, 0.25);
   border-radius: 16px;
@@ -96,103 +96,24 @@
 .transfer-window-container .transfer-window h2 {
   align-self: flex-start;
   margin-left: 20px;
-  margin-bottom: 15px;
-  font-size: 17px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.transfer-window-container .transfer-window header {
-  display: flex;
-  width: 525px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  color: rgba(255, 255, 255, 0.7);
-  justify-content: space-between;
-}
-
-.transfer-window header span:first-child {
-  margin-left: 25px;
-}
-
-.transfer-window header span:last-child {
-  margin-right: 20px;
-}
-
-.token-list {
-  display: flex;
-  height: 150px;
-  width: 500px;
-  justify-content: center;
-  padding: 0px 0px;
-
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background-color: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(30px);
-  border-radius: 10px;
-  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .transfer-window-container .transfer-window select {
-  background-color: rgba(0, 0, 0, 0);
+  width: 400px;
+  height: 150px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+
+  background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(30px);
+
+  font-size: 16px;
   color: rgba(255, 255, 255, 1);
+
+  cursor: text;
   caret-color: rgba(255, 255, 255, 0.6);
   outline: none;
-}
-
-.token-list .token-list__tokens {
-  border: 1px solid rgba(255, 255, 255, 0);
-  cursor: pointer;
-  width: 460px;
-  padding: 10px;
-  overflow: hidden;
-}
-
-.token-list .token-list__amount {
-  border: 1px solid rgba(0, 0, 0, 0);
-  display: flex;
-  width: 60px;
-  padding: 10px;
-  margin-right: 5px;
-  overflow: hidden;
-}
-
-.transfer-window select option {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.9);
-  border-radius: 5px;
-  transition: all 0.2s;
-}
-
-.token-list__tokens option {
-  width: 420px;
-}
-
-.token-list__tokens option:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 0.5px solid rgba(255, 255, 255, 0.25);
-}
-
-.token-list__amount option {
-  text-align: center;
-}
-
-.transfer-form {
-  display: flex;
-  width: 500px;
-  gap: 15px;
-  flex-direction: column;
-  align-items: center;
-}
-
-.transfer-form .transfer-form__token-amount {
-  align-self: self-end;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: rgba(255, 255, 255, 0.7);
-}
-.transfer-form__token-amount input {
-  width: 80px;
 }
 
 .transfer-window-container .mint-form {
@@ -205,7 +126,7 @@
   margin-bottom: 15px;
 
   /* to do: responsive */
-  width: 550px;
+  width: 450px;
   height: 200px;
 
   border: solid 1px rgba(255, 255, 255, 0.25);
@@ -217,7 +138,7 @@
 }
 
 .transfer-window-container input[type="text"] {
-  width: 400px;
+  width: 280px;
   height: 38px;
   padding-left: 15px;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -234,10 +155,6 @@
   outline: none;
 
   transition: 0.3s;
-}
-
-.transfer-form input[type="text"]:first-child {
-  width: 65px;
 }
 
 .transfer-window-container input[type="text"]::placeholder {
@@ -275,7 +192,7 @@
   background-color: #283048;
 }
 
-input[type="text"]:focus {
+.balance-window__form input[type="text"]:focus {
   border: 1px solid #2e2e2e;
 }
 
