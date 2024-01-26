@@ -30,6 +30,7 @@ export function htmlCreateSessionForTransfer(html_widget: HTMLDivElement) {
       <button class="goback-button">
         <i class="fa-solid fa-angle-left"></i>
       </button>
+      
       <header class="session-window__header">
         <h1>Transfer</h1>
         <p>
@@ -105,7 +106,7 @@ async function htmlTransfer() {
 
   apphtml.innerHTML = `
       
-  <div class="transfer-window-container">
+  <div class="inner-window-container">
       <img
         class="erdstall-logo"
         src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
@@ -116,7 +117,7 @@ async function htmlTransfer() {
       </button>
 
       <h1>Transfer</h1>
-      <div class="transfer-window">
+      <div class="inner-window">
       </div>
 
       <h1>Mint</h1>
@@ -137,7 +138,7 @@ async function htmlTransfer() {
 
   // Event listener for going back one page
   const btn_return = document.querySelector<HTMLButtonElement>(
-    ".transfer-window-container .goback-button"
+    ".inner-window-container .goback-button"
   )!;
   btn_return.addEventListener("click", () =>
     htmlCreateSessionForTransfer(apphtml)
@@ -156,7 +157,7 @@ async function htmlTransfer() {
   )!;
 
   const body_transfer = document.querySelector<HTMLDivElement>(
-    ".transfer-window-container .transfer-window"
+    ".inner-window-container .inner-window"
   )!;
 
   if (account.values.values.size == 0) {
@@ -177,8 +178,8 @@ async function htmlTransfer() {
           <select class="token-list__amount" size = "5"></select>
       </div>
 
-      <form class="transfer-form">
-        <div class="transfer-form__token-amount">
+      <form class="inner-form">
+        <div class="inner-form__token-amount">
           <input type = "text" placeholder="amount"/>
           <span>Tokens</span>
         </div>
@@ -215,7 +216,7 @@ async function htmlTransfer() {
 
     const tokens = Array.from(account.values.values.entries());
     const txt_amount = document.querySelector<HTMLInputElement>(
-      ".transfer-form__token-amount input"
+      ".inner-form__token-amount input"
     )!;
     for (let i = 0; i < tokens.length; i++) {
       const option_token = document.createElement("option");
@@ -232,10 +233,10 @@ async function htmlTransfer() {
     }
 
     const txt_recipientAddress = document.querySelector<HTMLInputElement>(
-      '.transfer-form input[placeholder="recipient address"]'
+      '.inner-form input[placeholder="recipient address"]'
     )!;
     const btn_makeTransfer = document.querySelector<HTMLInputElement>(
-      '.transfer-form input[value="make transfer"]'
+      '.inner-form input[value="make transfer"]'
     )!;
 
     btn_makeTransfer.addEventListener("click", async () => {

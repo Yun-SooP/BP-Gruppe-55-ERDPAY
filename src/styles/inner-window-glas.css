@@ -14,7 +14,7 @@
   background: linear-gradient(to right, #283048, #859398);
 }
 
-.transfer-window-container {
+.inner-window-container {
   width: 700px;
   height: 950px;
   display: flex;
@@ -31,7 +31,7 @@
   backdrop-filter: blur(5px);
 }
 
-.transfer-window-container .erdstall-logo {
+.inner-window-container .erdstall-logo {
   margin-top: 35px;
   transform: scale(0.7);
   filter: brightness(0) invert(1);
@@ -41,7 +41,7 @@
   cursor: pointer;
 }
 
-.transfer-window-container .fa-angle-left {
+.inner-window-container .fa-angle-left {
   transform: scale(1.2, 1.2);
   position: relative;
   filter: brightness(0) invert(1);
@@ -64,7 +64,7 @@
   cursor: pointer;
 }
 
-.transfer-window-container h1 {
+.inner-window-container h1 {
   position: relative;
   align-self: flex-start;
   margin-left: 80px;
@@ -74,7 +74,7 @@
   color: rgba(255, 255, 255, 1);
 }
 
-.transfer-window-container .transfer-window {
+.inner-window-container .inner-window {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -93,7 +93,7 @@
   backdrop-filter: blur(5px);
 }
 
-.transfer-window-container .transfer-window h2 {
+.inner-window-container .inner-window h2 {
   align-self: flex-start;
   margin-left: 20px;
   margin-bottom: 15px;
@@ -101,7 +101,7 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-.transfer-window-container .transfer-window header {
+.inner-window-container .inner-window header {
   display: flex;
   width: 525px;
   margin-top: 10px;
@@ -110,11 +110,11 @@
   justify-content: space-between;
 }
 
-.transfer-window header span:first-child {
+.inner-window header span:first-child {
   margin-left: 25px;
 }
 
-.transfer-window header span:last-child {
+.inner-window header span:last-child {
   margin-right: 20px;
 }
 
@@ -132,7 +132,7 @@
   margin-bottom: 10px;
 }
 
-.transfer-window-container .transfer-window select {
+.inner-window-container .inner-window select {
   border: 1px solid rgba(255, 255, 255, 0);
   background-color: rgba(0, 0, 0, 0);
   color: rgba(255, 255, 255, 1);
@@ -159,26 +159,85 @@ select option {
   overflow: hidden;
 }
 
-.transfer-form {
+.inner-form {
   display: flex;
   width: 500px;
   gap: 15px;
   flex-direction: column;
   align-items: center;
 }
+.inner-window .inner-form header {
+  display: flex;
+  width: 530px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  justify-content: space-between;
+}
 
-.transfer-form .transfer-form__token-amount {
+.inner-form header h1{
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  gap:0px;
+}
+
+.inner-form header h1:first-child{
+  margin-left: 15px;
+}
+
+.inner-form header h1:last-child{
+  margin-right: 30px;
+}
+
+.inner-window .inner-form h2{
+  align-self: flex-start;
+  margin-left: 0px;
+  margin-bottom: 10px;
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.inner-form .inner-form__token-amount {
   align-self: self-end;
   display: flex;
   align-items: center;
   gap: 5px;
   color: rgba(255, 255, 255, 0.7);
 }
-.transfer-form__token-amount input {
+.inner-form__token-amount input {
   width: 80px;
 }
 
-.transfer-window-container .mint-form {
+
+.balance-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  text-align: left;
+  margin-bottom: 15px;
+}
+.balance-form input[type="text"]{
+  width: 300px;
+  height: 38px;
+  padding-left: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+
+  background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(30px);
+
+  font-size: 16px;
+  color: rgba(255, 255, 255, 1);
+
+  cursor: text;
+  caret-color: rgba(255, 255, 255, 0.6);
+  outline: none;
+
+  transition: 0.3s;
+}
+
+.inner-window-container .mint-form {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -199,8 +258,8 @@ select option {
   backdrop-filter: blur(5px);
 }
 
-.transfer-window-container input[type="text"] {
-  width: 400px;
+.inner-window-container input[type="text"] {
+  width: 280px;
   height: 38px;
   padding-left: 15px;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -219,16 +278,16 @@ select option {
   transition: 0.3s;
 }
 
-.transfer-form input[type="text"]:first-child {
+.inner-form input[type="text"]:first-child {
   width: 65px;
 }
 
-.transfer-window-container input[type="text"]::placeholder {
+.inner-window-container input[type="text"]::placeholder {
   color: white;
   opacity: 0.6;
 }
 
-.transfer-window-container input[type="button"] {
+.inner-window-container input[type="button"] {
   width: 240px;
   height: 40px;
   border-radius: 15px;
@@ -247,38 +306,38 @@ select option {
   transition: transform 0.3s, border 0.2s;
 }
 
-.transfer-window-container .private-key {
+.inner-window-container .private-key {
   font-size: 13px;
   text-decoration: underline;
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
 }
 
-.transfer-form input[value="make transfer"] {
+.inner-form input[value="make transform"] {
   background-color: #283048;
 }
 
-.balance-window__form input[type="text"]:focus {
+.inner-window__form input[type="text"]:focus {
   border: 1px solid #2e2e2e;
 }
 
-.transfer-window-container input[type="button"]:hover,
+.inner-window-container input[type="button"]:hover,
 .goback-button:hover {
   transform: perspective(1px) scale(1.04, 1.04);
   background-color: rgba(255, 255, 255, 0.15);
   /* border: 0.5px solid rgba(255, 255, 255, 0.2); */
 }
 
-.transfer-window-container input[value="make transfer"]:hover {
+.inner-window-container input[value="make transfer"]:hover {
   transform: perspective(1px) scale(1.05, 1.05);
   background-color: #283048;
 }
 
-.transfer-window-container input[type="button"]:active,
+.inner-window-container input[type="button"]:active,
 .goback-button:active {
   background-color: rgba(255, 255, 255, 0.02);
 }
 
-.transfer-window-container input[value="make transfer"]:active {
+.inner-window-container input[value="make transfer"]:active {
   background-color: rgb(22, 26, 39);
 }

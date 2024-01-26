@@ -12,7 +12,7 @@ import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 
 export async function htmlBalance(html_widget: HTMLDivElement) {
   html_widget.innerHTML = `
-  <div class = "balance-window">
+  <div class = "inner-window-container">
     <img 
       class = "erdstall-logo"
       src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" 
@@ -24,36 +24,39 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
 
     <h1>Balance</h1>
       
-    <div class = "group">
-      
-      <div class="select">
-        <select size="5" name="tokens" id="" class="balance-window__select"> </select>
+    <div class = "inner-window">
+      <h2> Enter the address of the account to see the balance </h2>
+      <form class="inner-form">
+          <header> 
+            <h1> Tokens: </h1>
+            <h1> Amount: </h1>
+          </header>
+          <div class="token-list">
+            <select size="5" name="tokens" id="" class="token-list__tokens"> </select>
+            <select class="token-list__amount" size = "5"></select>
+          </div>
 
-        <form class = "balance-window__form">
-          
-            <label class = "label">
-              <label id= "IDs"> IDs: <br></label>
-              <span id= "txt_ids"></span>
-            </label>
-
-            <label class = "label">
-              <label id= "Amount"> Amount: <br></label>
-              <span id= "txt_amount"></span>
-            </label>
-        </form>
-      </div>
-
-      <form class = "balance-window__form">
-        <input type="text" placeholder="account address" />
-        <input type="button" value="view balance" />
-        
-        
-        
-          
-    
-        
-        
       </form>
+
+      <form class = "balance-window__formTopleft">
+          
+          <label class = "label">
+            <label id= "IDs"> IDs: <br></label>
+          <span id= "txt_ids"></span>
+          </label>
+          
+          <label class = "label">
+            <label id= "Amount"> Amount: <br></label>
+            <span id= "txt_amount"></span>
+          </label>
+      </form>
+      
+
+      <form class = "balance-form">
+        <input type="text"  placeholder="account address" />
+        <input type="button" value="view balance" />
+      </form>
+
     </div>
     
   </div>
@@ -68,15 +71,15 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
   }
 
   const btn_viewBalance = document.querySelector<HTMLButtonElement>(
-    ".balance-window__form input[type='button']"
+    ".inner-window-container input[type='button']"
   )!;
   const txt_balanceAddress = document.querySelector<HTMLInputElement>(
-    ".balance-window__form input[type='text']"
+    ".inner-window-container input[type='text']"
   )!;
 
   const txt_ids = document.querySelector<HTMLSpanElement>("#txt_ids")!;
-  const txt_amount = document.querySelector<HTMLSpanElement>("#txt_amount")!;
-  const select_tokens = document.querySelector<HTMLSelectElement>(".balance-window__select")!;
+  const txt_amount = document.querySelector<HTMLSelectElement>(".token-list__amount")!;
+  const select_tokens = document.querySelector<HTMLSelectElement>(".token-list__tokens")!;
 
   let tokens: string[], ids: number[][], amounts: number[];
 

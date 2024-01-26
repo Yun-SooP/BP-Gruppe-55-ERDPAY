@@ -1,7 +1,7 @@
 @import "styles/reset.css";
 @import "styles/main-window-glas.css";
 @import "styles/session-window-glas.css";
-@import "styles/transfer-window-glas.css";
+@import "styles/inner-window-glas.css";
 @import "styles/balance-window-glas.css";
 
 .dummy {
