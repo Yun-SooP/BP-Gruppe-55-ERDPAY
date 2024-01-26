@@ -166,11 +166,16 @@ export async function htmlTransfer(tokenAddress?: string, amount?: number, recip
   } else {
     div_transfer.innerHTML = `
       <h2>Choose your token to send</h2>
-      <div class="available-tokens-header">
+      <header>
           <span>Available Tokens</span>
-          <span>Amount</span>
+          <span>amount</span>
+      </header>
+
+      <div class="token-list">
+          <select class="token-list__tokens" size = "5"></select>
+          <select class="token-list__amount" disabled size = "5"></select>
       </div>
-      <select class="token-list" size = "5"></select>
+
       <form class="transfer-form">
         <input type = "text" class="transfer-form__token-txt_amount" placeholder="Amount of tokens to transfer"/>
         <span>Tokens</span>
@@ -179,7 +184,33 @@ export async function htmlTransfer(tokenAddress?: string, amount?: number, recip
         <input type="button" value="continue" />
       </form>
     `;
-    const select_tokens = document.querySelector<HTMLSelectElement>(".token-list")!;
+    const select_tokens = document.querySelector<HTMLSelectElement>(
+      ".token-list__tokens"
+    )!;
+
+    const select_amount = document.querySelector<HTMLSelectElement>(
+      ".token-list__amount"
+    )!;
+
+    var isSyncingLeftScroll = false;
+    var isSyncingRightScroll = false;
+
+    select_tokens.onscroll = function () {
+      if (!isSyncingLeftScroll) {
+        isSyncingRightScroll = true;
+        select_amount.scrollTop = select_tokens.scrollTop;
+      }
+      isSyncingLeftScroll = false;
+    };
+
+    select_amount.onscroll = function () {
+      if (!isSyncingRightScroll) {
+        isSyncingLeftScroll = true;
+        select_tokens.scrollTop = select_amount.scrollTop;
+      }
+      isSyncingRightScroll = false;
+    };
+
     const tokens = Array.from(account.values.values.entries());
     const txt_amount = 
       document.querySelector<HTMLInputElement>(".transfer-form__token-txt_amount")!;
@@ -202,14 +233,19 @@ export async function htmlTransfer(tokenAddress?: string, amount?: number, recip
   }
 }
 
-function makeTokensList(select_tokens: HTMLSelectElement, tokens: [string, Asset][]){
+function makeTokensList(select_tokens: HTMLSelectElement, select_amount: HTMLSelectElement, tokens: [string, Asset][]){
   for (let i = 0; i < tokens.length; i++) {
     const option = document.createElement("option");
     const token = tokens[i];
     option.value = token[0];
-    option.text =
-      token[0] + " (Amount: " + (<Tokens>token[1]).value.length + ")";
+    option.text = token[0];
     select_tokens.add(option);
+    
+    const option_amount = document.createElement("option");
+    // check if selected "one more time"
+    option_amount.value = token[0];
+    option_amount.text = (<Tokens>token[1]).value.length + "";
+    select_amount.add(option_amount);
   }
 }
 
@@ -402,7 +438,6 @@ async function transferTo(
   let error;
 
   const tokens = <Tokens>account.values.values.get(tokenAddress)!;
-
   tokens.value = tokenIDs
   
   const asset = <Asset>tokens;
