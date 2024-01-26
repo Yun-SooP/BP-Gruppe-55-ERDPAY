@@ -192,7 +192,7 @@ export async function htmlTransfer(tokenAddress?: string, amount?: number, recip
       </div>
 
       <form class="transfer-form">
-        <input type = "text" class="transfer-form__token_amount" placeholder="Amount of tokens to transfer"/>
+        <input type = "text" class="transfer-form__token-amount" placeholder="Amount of tokens to transfer"/>
         <span>Tokens</span>
         <input type = "checkbox" id = "advancedTransfer">advanced transfer with ID selection</input>
         <input type="text" placeholder="recipient address" />
@@ -228,7 +228,7 @@ export async function htmlTransfer(tokenAddress?: string, amount?: number, recip
 
     const tokens = Array.from(account.values.values.entries());
     const txt_amount = 
-      document.querySelector<HTMLInputElement>(".transfer-form__token-txt_amount")!;
+      document.querySelector<HTMLInputElement>(".transfer-form__token-amount")!;
     const txt_recipientAddress = 
       document.querySelector<HTMLInputElement>('.transfer-form input[placeholder="recipient address"]')!;
     
@@ -411,7 +411,7 @@ function htmlAdvancedTransfer(tokenAddress: string, amount: number, recipientAdd
  * @returns chk_IDs List of checkboxes for token IDs.
  */
 function makeTokenIDsCheckboxes(div_chkIDs: HTMLDivElement, availableTokenIDs:bigint[], checkedTokenIDs?:bigint[]) : HTMLInputElement[]{
-  const checkboxes_IDs: HTMLInputElement[] = []
+  const chk_IDs: HTMLInputElement[] = []
   for (let i = 0; i < availableTokenIDs.length; i++) {
     const tokenID = availableTokenIDs[i]
     const checkbox = document.createElement("input")
@@ -438,7 +438,7 @@ function makeTokenIDsCheckboxes(div_chkIDs: HTMLDivElement, availableTokenIDs:bi
  * @param chk_IDs List of checkboxes for token IDs.
  */
 function advancedTransferContinueButtonEvent(tokenAddress: string, amount: number, recipientAddress: string, chk_IDs: HTMLInputElement[]){
-  const chk_checkedIDs = checkboxes_IDs.filter(checkbox => checkbox.checked)
+  const chk_checkedIDs = chk_IDs.filter(checkbox => checkbox.checked)
   if (chk_checkedIDs.length != amount){
     alert(`Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`)
     return
