@@ -2,7 +2,11 @@ import { Session } from "@polycrypt/erdstall";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { htmlTransferAndMintWindow } from "./transfer";
 
-
+/**
+ * Function to display the functionality of minting.
+ * @param div_mint HTML to display to
+ * @param session The session in which the token will minted in.
+ */
 export async function htmlMint(div_mint:HTMLDivElement, session: Session){
     div_mint.innerHTML = `
     <form class="mint-form">

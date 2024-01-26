@@ -42,13 +42,23 @@ export function widget(html_widget: HTMLDivElement) {
 export function makeWidgetButton() {
   const html_dummy = document.querySelector<HTMLDivElement>("#app")!;
   html_dummy.innerHTML = `
+    
+
     <div class="dummy">
+
+        <button class="main-button" type="button">
+            <div>Pay with</div>
+            <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
+        </button>
+
         <button class="main-button" type="button">
             <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
         </button>
+
+        
     </div>
     `;
-  const btn_main = document.querySelector(".main-button");
+  const btn_main = document.querySelector(".main-button:last-child");
   btn_main?.addEventListener("click", () => {
     widget(html_dummy);
   });
