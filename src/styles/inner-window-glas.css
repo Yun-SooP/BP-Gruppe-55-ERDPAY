@@ -123,7 +123,7 @@
   height: 150px;
   width: 500px;
   justify-content: center;
-  gap: 10px;
+  padding: 0px 0px;
 
   border: 1px solid rgba(255, 255, 255, 0.25);
   background-color: rgba(0, 0, 0, 0.25);
@@ -132,31 +132,51 @@
   margin-bottom: 10px;
 }
 
+
 .inner-window-container .inner-window select {
-  border: 1px solid rgba(255, 255, 255, 0);
+  /*border: 1px solid rgba(255, 255, 255, 0);*/
   background-color: rgba(0, 0, 0, 0);
   color: rgba(255, 255, 255, 1);
-  cursor: pointer;
   caret-color: rgba(255, 255, 255, 0.6);
   outline: none;
 }
 
-select option {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.9);
-  background-color: rgba(0, 0, 0, 0);
-}
-
 .token-list .token-list__tokens {
-  width: 450px;
+  border: 1px solid rgba(255, 255, 255, 0);
+  cursor: pointer;
+  width: 460px;
   padding: 10px;
   overflow: hidden;
 }
 
 .token-list .token-list__amount {
-  width: 50px;
+  border: 1px solid rgba(0, 0, 0, 0);
+  display: flex;
+  width: 60px;
   padding: 10px;
+  margin-right: 5px;
   overflow: hidden;
+}
+
+
+.inner-window select option {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.token-list__tokens option {
+  width: 420px;
+}
+
+.token-list__tokens option:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 0.5px solid rgba(255, 255, 255, 0.25);
+}
+
+.token-list__amount option {
+  text-align: center;
 }
 
 .inner-form {
@@ -317,7 +337,8 @@ select option {
   background-color: #283048;
 }
 
-.inner-window__form input[type="text"]:focus {
+
+input[type="text"]:focus {
   border: 1px solid #2e2e2e;
 }
 

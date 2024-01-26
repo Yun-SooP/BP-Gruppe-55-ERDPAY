@@ -3,7 +3,7 @@ import { setupClient } from "./setup_client.ts";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { Client } from "@polycrypt/erdstall";
 import { widget } from "./widget.ts";
-import { Tokens } from "@polycrypt/erdstall/ledger/assets";
+import { Asset, Tokens } from "@polycrypt/erdstall/ledger/assets";
 
 /**
  * Function to change to the HTML of balance viewer.
@@ -116,31 +116,43 @@ async function viewBalance(
   select_tokens: HTMLSelectElement
 ) : Promise<[string[], number[][], number[]]> {
   try {
+    if (input.value.length != 42) throw new Error("invalid address");
     const account = await client.getAccount(Address.fromString(input.value));
-    const entries = Array.from(account.values.values.entries());
+    const entries = Array.from(account!.values.values.entries());
     const tokens: string[] = [];
     const ids: number[][] = [];
     const amounts: number[] = [];
     select_tokens.options.length = 0;
+    
     for (let i = 0; i < entries.length; i++) {
       const option = document.createElement("option");
       const asset = entries[i];
-      option.text = asset[0];
+      option.text = asset[0].substring(0,6) + "..." + asset[0].substring(38,42);
+      // TODO: design
+      // option.onmouseover()
       option.value = asset[0];
       select_tokens.add(option)
       tokens.push(asset[0])
       amounts.push((<Tokens>asset[1]).value.length);
-      const innerIds: number[] = [];
-      for (const id of asset[1].toJSON()) {
-        innerIds.push(parseInt(id))
-      }
-      ids.push(innerIds);
+      ids.push(getIds(asset));
     }
     
     return [tokens, ids, amounts]
   } catch (error) {
-    alert(error);
+    alert("Please enter a valid address. The address must be in hex and 40 characters long.");
     throw(error);
   }
 }
 
+/**
+ * Function to read ids of a token into an array
+ * @param asset Token to read the ids from
+ * @returns Array with ids of given Token
+ */
+function getIds (asset: [string, Asset]) : number[] {
+  const innerIds: number[] = [];
+  for (const id of asset[1].toJSON()) {
+    innerIds.push(parseInt(id));
+  }
+  return innerIds;
+}
