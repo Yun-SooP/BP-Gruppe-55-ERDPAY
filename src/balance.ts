@@ -11,6 +11,7 @@ let div_address: HTMLDivElement;
 let h1_title: HTMLHeadingElement;
 let div_balanceWindowContainer: HTMLDivElement;
 let btn_return: HTMLButtonElement;
+let logo_return: HTMLButtonElement;
 
 /**
  * Function to change to the HTML of balance viewer.
@@ -85,6 +86,9 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
   );
   btn_return.addEventListener("click", () => widget(html_widget));
 
+  logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
+  logo_return.addEventListener("click", () => widget(html_widget));
+
   // let tokens: string[], ids: number[][], amounts: number[];
 
   // Event listener for the buttons to return, to view the balance and to select Token to view
@@ -123,6 +127,7 @@ async function viewBalance(
     transformToTokenListWindow(input);
 
     btn_return.addEventListener("click", () => htmlBalance(html_widgetCopy));
+    logo_return.addEventListener("click", () => widget(html_widgetCopy));
 
     const select_tokens = document.querySelector<HTMLSelectElement>(
       ".token-list__tokens"
@@ -154,11 +159,10 @@ async function viewBalance(
     const account = await client.getAccount(Address.fromString(input.value));
     const entries = Array.from(account!.values.values.entries());
 
-    //얘도 리턴 할 필요 없으면 지워도 되는것들
+    //리턴 할 필요 없으면 지워도 되는것들
     const tokens: string[] = [];
     const amounts: number[] = [];
 
-    //요건 무슨 역할이여??
     select_tokens.options.length = 0;
     const ids: number[][] = [];
 
