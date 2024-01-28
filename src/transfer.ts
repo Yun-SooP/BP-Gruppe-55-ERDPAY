@@ -382,7 +382,7 @@ function checkInputsForTransfer(
   const tokens = <Tokens>account.values.values.get(tokenAddress);
   if (amountParsed > tokens.value.length) {
     message =
-      "The selected token does not have enought amount of tokens. Please adjust the amount or select another token.";
+      "The selected token does not have enough tokens available. Please adjust the amount or select another token.";
     valid = false;
     return { valid, message };
   }
