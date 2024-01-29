@@ -335,11 +335,13 @@ select option {
   transition: transform 0.3s, border 0.2s;
 }
 
-.inner-window-container .private-key {
+.inner-window-container .transfer-footer {
+  display: flex;
   font-size: 13px;
   text-decoration: underline;
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
+  gap: 40px;
 }
 
 .inner-form input[value="make transform"] {

@@ -134,9 +134,10 @@ export function htmlTransferAndMintWindow() {
       <h1>Mint</h1>
       <div class="mint-window">
       </div>
-
-      <span class="private-key">your private key</span>
-      <span class="session-address">your address</span>
+        <div class="transfer-footer">
+          <span class="private-key">your private key</span>
+          <span class="session-address">your address</span>
+        </div>
     </div>
     
   `;
