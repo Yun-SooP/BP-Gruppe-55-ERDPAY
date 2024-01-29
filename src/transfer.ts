@@ -197,7 +197,7 @@ export async function htmlTransfer(
     div_transfer.style.height = "70px";
   } else {
     div_transfer.innerHTML = `
-      <h2>Choose your token to send</h2>
+      <h2>Choose your token and the amount of tokens you want to send</h2>
       <header>
           <span>Available Tokens</span>
           <span>amount</span>
@@ -210,8 +210,10 @@ export async function htmlTransfer(
 
 
       <form class="inner-form">
-        <input type = "text" class="inner-form__token-amount" placeholder="Amount of tokens to transfer"/>
-        <span>Tokens</span>
+         <div class="inner-form__token-amount">
+              <input type = "text" placeholder="amount"/>
+              <span>Tokens</span>
+        </div>
         <input type = "checkbox" id = "advancedTransfer">advanced transfer with ID selection</input>
         <input type="text" placeholder="recipient address" />
         <input type="button" value="continue" />
@@ -248,7 +250,7 @@ export async function htmlTransfer(
     const tokens = Array.from(account.values.values.entries());
 
     const txt_amount = document.querySelector<HTMLInputElement>(
-      ".inner-form__token-amount"
+      ".inner-form__token-amount input"
     )!;
     const txt_recipientAddress = document.querySelector<HTMLInputElement>(
       '.inner-form input[placeholder="recipient address"]'
