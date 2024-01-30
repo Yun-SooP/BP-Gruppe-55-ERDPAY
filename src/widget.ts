@@ -47,11 +47,6 @@ export function makeWidgetButton() {
     <div class="dummy">
 
         <button class="main-button" type="button">
-            <div>Pay with</div>
-            <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
-        </button>
-
-        <button class="main-button" type="button">
             <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
         </button>
 
