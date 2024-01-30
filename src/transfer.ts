@@ -77,27 +77,24 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
 }
 
 async function eventNewSession() {
-  let newSession_;
-    newSession_ = await newSession();
-    if (newSession_.message != undefined) {
-      alert(newSession_.message)
-      return
-    }
-    session = newSession_.session!;
-    privateKey = newSession_.privateKey!;
-    htmlTransferAndMintWindow();
+  const newSession_ = await newSession();
+  if (newSession_.message != undefined) {
+    alert(newSession_.message)
+    return
+  }
+  session = newSession_.session!;
+  privateKey = newSession_.privateKey!;
+  htmlTransferAndMintWindow();
 }
 
 async function eventRestoreSession(privateKey: string) {
-    let restoredSession;
-    restoredSession = await restoreSession(privateKey);
+    const restoredSession = await restoreSession(privateKey);
     if (restoredSession.message != undefined) {
       alert(restoredSession.message)
       return
     }
     session = restoredSession.session!;
     htmlTransferAndMintWindow();
-
 }
 
 /**
