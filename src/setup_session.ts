@@ -9,15 +9,20 @@ const provider = new ethers.providers.JsonRpcProvider(url);
  * Function to create a new session. Will provide private key and the session
  * @returns Initialized session and the private key
  */
-export async function newSession() {
+export async function newSession()  {
+  let session
+  let privateKey
+  let message
   try {
-    const { session, privateKey } = Session.generateCustodial(provider, erdOperatorUrl);
+    const newSession_ = Session.generateCustodial(provider, erdOperatorUrl);
+    session = newSession_.session
+    privateKey = newSession_.privateKey
     await session.initialize()
     await session.subscribe()
-    return { session, privateKey }
   } catch(error) {
-    alert(error)
+    message = error
   }
+  return { session, privateKey, message }
 }
 
 /**
@@ -26,12 +31,15 @@ export async function newSession() {
  * @returns Initialized session
  */
 export async function restoreSession(privateKey: string) {
+  let session
+  let message
   try {
-    const session = Session.restoreCustodial(provider, erdOperatorUrl, privateKey)
+    session = Session.restoreCustodial(provider, erdOperatorUrl, privateKey)
     await session.initialize()
     await session.subscribe()
-    return session
   } catch(error) {
-    alert(error)
+    message = error
   }
+  return { session, message }
+
 }

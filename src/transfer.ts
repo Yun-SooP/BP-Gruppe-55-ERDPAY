@@ -90,16 +90,14 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
  * Function for new session event.
  */
 async function eventNewSession() {
-  let newSession_;
-  try {
-    newSession_ = await newSession();
-  } catch (err) {
-    alert(err);
-    return;
-  }
-  session = newSession_!.session;
-  privateKey = newSession_!.privateKey;
-  htmlTransferAndMintWindow();
+  const newSession_ = await newSession();
+    if (newSession_.message != undefined) {
+      alert(newSession_.message)
+      return
+    }
+    session = newSession_.session!;
+    privateKey = newSession_.privateKey!;
+    htmlTransferAndMintWindow();
 }
 
 /**
@@ -107,15 +105,14 @@ async function eventNewSession() {
  * @param privateKey Private key to restore the session.
  */
 async function eventRestoreSession(privateKey: string) {
-  let restoredSession;
-  try {
-    restoredSession = await restoreSession(privateKey);
-  } catch (err) {
-    alert(err);
-    return;
+  const restoredSession = await restoreSession(privateKey);
+  if (restoredSession.message != undefined) {
+    alert(restoredSession.message)
+    return
   }
-  session = restoredSession!;
+  session = restoredSession.session!;
   htmlTransferAndMintWindow();
+
 }
 
 /**
