@@ -466,7 +466,7 @@ function htmlAdvancedTransfer(
     <h2>To: ${recipientAddress}<h2>
     <h2>Choose ${amount} token ID(s) to send</h2>
     <div id= checkboxesIDs></div>
-    <form class="transfer-form">
+    <form class="inner-form">
       <input type="button" value="continue" />
       <input type="button" value="return" />
     </form>
