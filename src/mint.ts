@@ -16,9 +16,9 @@ function htmlSingleMint(div_mint:HTMLDivElement, session:Session){
         <input type="button" value="mint new token" />
     </form>
     `
-    const btn_mint = 
+    const btn_singleMint = 
         document.querySelector<HTMLInputElement>('.mint-form input[value="mint new token"]' )!;
-    btn_mint.addEventListener("click", async () => eventSingleMint(session));
+    btn_singleMint.addEventListener("click", async () => eventSingleMint(session));
 
     const btn_multipleMint = 
         document.querySelector<HTMLInputElement>('.mint-form input[value="mint multiple tokens"]' )!;
@@ -33,9 +33,9 @@ function htmlMultipleMint(div_mint:HTMLDivElement, session:Session){
         <input type="button" value="mint new tokens with random ID" />
     </form>
     `
-    const btn_mint = 
+    const btn_multipleMint = 
         document.querySelector<HTMLInputElement>('.mint-form input[value="mint new tokens with random ID"]' )!;
-    btn_mint.addEventListener("click", async () => eventSingleMint(session));
+    btn_multipleMint.addEventListener("click", async () => eventMultipleMint(session));
 
     const btn_singleMint = 
         document.querySelector<HTMLInputElement>('.mint-form input[value="mint single token"]' )!;
@@ -46,18 +46,20 @@ async function eventSingleMint(session: Session){
     const txt_tokenAddress = document.querySelector<HTMLInputElement>(
         ".mint-form input[placeholder='token address']"
     )!;
-    const txt_tokenId = document.querySelector<HTMLInputElement>(
+    const txt_tokenID = document.querySelector<HTMLInputElement>(
         ".mint-form input[placeholder='token ID']"
     )!;
-    const { valid, message } = checkInputsForMint(txt_tokenAddress.value, "1", txt_tokenId.value)
+    const tokenAddress = txt_tokenAddress.value
+    const tokenID = txt_tokenID.value
+    const { valid, message } = checkInputsForMint(tokenAddress, "1", tokenID)
     if (!valid){
         alert(message)
         return
     }
     const { status, error } = await mint(
         session,
-        txt_tokenAddress.value,
-        parseFloat(txt_tokenId.value)
+        tokenAddress,
+        BigInt(parseFloat(tokenID))
     );
     if (status == 0) {
         const err: Error = <Error>error;
@@ -69,19 +71,24 @@ async function eventSingleMint(session: Session){
     await htmlTransferAndMintWindow();
 }
 
-// async function eventMultipleMint(session: Session){
-//     const txt_tokenAddress = document.querySelector<HTMLInputElement>(
-//         ".mint-form input[placeholder='token address']"
-//     )!;
-//     const txt_amount = document.querySelector<HTMLInputElement>(
-//         ".mint-form input[placeholder='amount']"
-//     )!;
-//     const { valid, message } = checkInputsForMint(txt_tokenAddress.value, txt_amount.value)
-//     if (!valid){
-//         alert(message)
-//         return
-//     }
-// }
+async function eventMultipleMint(session: Session){
+    const txt_tokenAddress = document.querySelector<HTMLInputElement>(
+        ".mint-form input[placeholder='token address']"
+    )!;
+    const txt_amount = document.querySelector<HTMLInputElement>(
+        ".mint-form input[placeholder='amount']"
+    )!;
+    const tokenAddress = txt_tokenAddress.value
+    const amount = txt_amount.value
+    const { valid, message } = checkInputsForMint(tokenAddress, amount)
+    if (!valid){
+        alert(message)
+        return
+    }
+    await multipleMint(session, tokenAddress, parseFloat(amount))
+    alert("Tokens succesfully minted!")
+    await htmlTransferAndMintWindow()
+}
 
 function checkInputsForMint(tokenAddress:string, amount:string, tokenID?:string) : { valid: boolean, message: string }{
     let valid = true
@@ -117,13 +124,13 @@ function checkInputsForMint(tokenAddress:string, amount:string, tokenID?:string)
  * @param id Token ID to mint. Has to be non existing ID.
  * @returns Status and error message
  */
-async function mint(session: Session, tokenAddress: string, tokenID: number){
+async function mint(session: Session, tokenAddress: string, tokenID: bigint){
     let transaction
     let receipt
     let status
     let error
     try {
-        transaction = await session.mint(Address.fromString(tokenAddress), BigInt(tokenID))
+        transaction = await session.mint(Address.fromString(tokenAddress), tokenID)
         receipt = await transaction.receipt
         status = receipt.status
         error = receipt.error
@@ -140,9 +147,19 @@ async function mint(session: Session, tokenAddress: string, tokenID: number){
     return { status, error }
 }
 
-// async function multipleMint(session: Session, tokenAddress: string, amount: number){
-//     for(let i = 0; i < amount; i++){
-//         const buffer = new BigUint64Array(amount)
-//         const tokenID = crypto.getRandomValues(buffer)
-//     }
-// }
+async function multipleMint(session: Session, tokenAddress: string, amount: number) : Promise<bigint[]>{
+    const tokenIDs : bigint[] = []
+    for(let i = 0; i < amount; i++){
+        let status = 0
+        let tokenID
+        while (status == 0){
+            const array = new BigUint64Array(1)
+            const random = crypto.getRandomValues(array)
+            tokenID = random[0]
+            const transaction = await mint(session, tokenAddress, tokenID)
+            status = <number> transaction.status
+        }
+        tokenIDs.push(tokenID!)
+    }
+    return tokenIDs
+}
