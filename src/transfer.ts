@@ -74,6 +74,13 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
 
   btn_newSession.addEventListener("click", () => eventNewSession());
 
+  txt_previousPrivateKey.addEventListener("keypress", (event) => {
+    if (event.key == "Enter") {
+      event.preventDefault();
+      btn_restoreSession.click();
+    }
+  })
+  
   btn_restoreSession.addEventListener("click", () =>
     eventRestoreSession(txt_previousPrivateKey.value)
   );
@@ -236,8 +243,8 @@ export async function htmlTransfer(
     )!;
 
     //Synchronize scroll of select_tokens and select_amount
-    var isSyncingLeftScroll = false;
-    var isSyncingRightScroll = false;
+    let isSyncingLeftScroll = false;
+    let isSyncingRightScroll = false;
 
     select_tokens.onscroll = function () {
       if (!isSyncingLeftScroll) {

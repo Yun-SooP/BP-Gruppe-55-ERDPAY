@@ -40,7 +40,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
 
       <!-- <h2>Enter the address of the account to see the balance</h2>  (not visible)-->
       <form class="balance-window__address-form">
-        <input type="text" placeholder="account address" />
+        <input type="text" placeholder="account address"/>
         <input type="button" value="View Balance" />
       </form>
 
@@ -64,6 +64,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
     ".balance-window__address-form input[type='text']"
   )!;
   btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
+  logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
 
   //Used in viewBalance() to change the content
 
@@ -84,10 +85,16 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
   btn_viewBalance.addEventListener("click", async () =>
     viewBalance(client!, txt_balanceAddress)
   );
+  txt_balanceAddress.addEventListener("keypress", (event) => {
+    if (event.key == "Enter") {
+      event.preventDefault();
+      btn_viewBalance.click();
+    }
+  })
   btn_return.addEventListener("click", () => widget(html_widget));
-
-  logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
   logo_return.addEventListener("click", () => widget(html_widget));
+
+
 
   // let tokens: string[], ids: number[][], amounts: number[];
 
@@ -119,17 +126,16 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
 async function viewBalance(
   client: Client,
   input: HTMLInputElement
-): Promise<[string[], number[][], number[]]> {
+) {
   try {
-    //조건 이걸로 충분한가?? (진짜 몰라서 물어보는거) -재광
     if (input.value.length != 42) throw new Error("invalid address");
+
+    const account = await client.getAccount(Address.fromString(input.value));
+    const entries = Array.from(account!.values.values.entries());
 
     transformToTokenListWindow(input);
 
-    btn_return.addEventListener("click", () => htmlBalance(html_widgetCopy));
-    logo_return.addEventListener("click", () => widget(html_widgetCopy));
-
-    const select_tokens = document.querySelector<HTMLSelectElement>(
+    const select_tokens = document.querySelector<HTMLSelectElement>( 
       ".token-list__tokens"
     )!;
     const select_amount = document.querySelector<HTMLSelectElement>(
@@ -137,8 +143,8 @@ async function viewBalance(
     )!;
 
     //Synchronize scroll of select_tokens and select_amount
-    var isSyncingLeftScroll = false;
-    var isSyncingRightScroll = false;
+    let isSyncingLeftScroll = false;
+    let isSyncingRightScroll = false;
 
     select_tokens.onscroll = function () {
       if (!isSyncingLeftScroll) {
@@ -155,9 +161,6 @@ async function viewBalance(
       }
       isSyncingRightScroll = false;
     };
-
-    const account = await client.getAccount(Address.fromString(input.value));
-    const entries = Array.from(account!.values.values.entries());
 
     //리턴 할 필요 없으면 지워도 되는것들
     const tokens: string[] = [];
@@ -221,17 +224,17 @@ async function viewBalance(
         select_id.add(option);
       }
     });
-
-    return [tokens, ids, amounts]; //이건 미래에 쓸 곳이 따로 또 있어서 리턴하는건가??
   } catch (error) {
     alert(
       "Please enter a valid address. The address must be in hex and 40 characters long."
     );
-    throw error;
   }
 }
 
 function transformToTokenListWindow(input: HTMLInputElement) {
+  btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
+  btn_return.addEventListener("click", () => htmlBalance(html_widgetCopy));
+
   div_balanceWindowContainer.style.height = "580px";
   div_balanceWindow.style.height = "270px";
   // div_balanceWindow.style.width = "450px";
