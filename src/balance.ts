@@ -22,6 +22,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
   html_widgetCopy = html_widget;
   html_widget.innerHTML = `
   <div class = "balance-window-container">
+   
     <img 
       class = "erdstall-logo"
       src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" 
