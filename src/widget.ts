@@ -19,18 +19,22 @@ export function widget(html_widget: HTMLDivElement) {
     </header>
 
     <form class="main-window__form">
-        <input type="button" value="View Balance" />
-        <input type="button" value="Transfer" />
+        <button type="button" class="view-balance-btn">View Balance</button>
+        <button type="button" class="transfer-btn">Transfer</button>
     </form>
     </div>
     `;
 
-  const btn_transfer = document.querySelector('input[value="Transfer"]');
+  const btn_transfer = document.querySelector(
+    ".main-window__form .transfer-btn"
+  );
   btn_transfer?.addEventListener("click", () => {
     htmlCreateSessionForTransfer(html_widget);
   });
 
-  const btn_balance = document.querySelector('input[value="View Balance"]');
+  const btn_balance = document.querySelector(
+    ".main-window__form .view-balance-btn"
+  );
   btn_balance?.addEventListener("click", () => {
     htmlBalance(html_widget);
   });

@@ -41,18 +41,18 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
       </header>
 
       <form class="session-window__form">
-        <input type="button" value="New Session" />
+        <button type="button" class="new-session-btn">New Session</button>
         <span>or</span>
         <input type="text" placeholder="your private key" />
-        <input type="button" value="Restore Session" />
+        <button type="button" class="restore-session-btn">Restore Session</button>
       </form>
     </div>
   `;
-  const btn_newSession = document.querySelector<HTMLInputElement>(
-    ".session-window__form input[value='New Session']"
+  const btn_newSession = document.querySelector<HTMLButtonElement>(
+    ".session-window__form .new-session-btn"
   )!;
-  const btn_restoreSession = document.querySelector<HTMLInputElement>(
-    ".session-window__form input[value='Restore Session']"
+  const btn_restoreSession = document.querySelector<HTMLButtonElement>(
+    ".session-window__form .restore-session-btn"
     // to fix
   )!;
 
@@ -216,7 +216,7 @@ export async function htmlTransfer(
         </div>
         <input type = "checkbox" id = "advancedTransfer">advanced transfer with ID selection</input>
         <input type="text" placeholder="recipient address" />
-        <input type="button" value="continue" />
+        <button type="button" class="inner-form__continue-btn">continue</button>
       </form>
     `;
     const select_tokens = document.querySelector<HTMLSelectElement>(
@@ -259,7 +259,7 @@ export async function htmlTransfer(
     makeTokensList(select_tokens, select_amount, tokens);
 
     const btn_continue = document.querySelector<HTMLInputElement>(
-      '.inner-form input[value="continue"]'
+      ".inner-form__continue-btn"
     )!;
     btn_continue.addEventListener("click", async () =>
       transferContinueButtonEvent(
@@ -431,11 +431,11 @@ function htmlTransferSuccesful() {
   div_transfer.innerHTML = `
     <h2>transfer succesful!</h2>
     <form class="transfer-form">
-      <input type="button" value="return" />
+      <button type="button" class="return-btn">return</button>
     </form>
   `;
   const btn_return = document.querySelector<HTMLInputElement>(
-    '.transfer-form input[value="return"]'
+    ".transfer-form .return-btn"
   )!;
   btn_return.addEventListener("click", () => htmlTransfer());
 }
@@ -458,9 +458,9 @@ function htmlAdvancedTransfer(
     <h2>To: ${recipientAddress}<h2>
     <h2>Choose ${amount} token ID(s) to send</h2>
     <div id= checkboxesIDs></div>
-    <form class="transfer-form">
-      <input type="button" value="continue" />
-      <input type="button" value="return" />
+    <form class="advanced-transfer-form">
+      <button type="button" class="advanced-transfer-form__continue-btn">continue</button>
+      <button type="button" class="advanced-transfer-form__return-btn">return</button>
     </form>
   `;
   const availableTokenIDs = (<Tokens>account.values.values.get(tokenAddress))
@@ -477,7 +477,7 @@ function htmlAdvancedTransfer(
         );
 
   const btn_continue = document.querySelector<HTMLInputElement>(
-    '.transfer-form input[value="continue"]'
+    ".advanced-transfer-form__continue-btn"
   )!;
   btn_continue.addEventListener("click", () =>
     advancedTransferContinueButtonEvent(
@@ -489,7 +489,7 @@ function htmlAdvancedTransfer(
   );
 
   const btn_return = document.querySelector<HTMLInputElement>(
-    '.transfer-form input[value="return"]'
+    ".advanced-transfer-form__return-btn"
   )!;
   btn_return.addEventListener("click", () =>
     htmlTransfer(tokenAddress, amount, recipientAddress, true)
@@ -582,9 +582,9 @@ function htmlTransferConfirmation(
     <h2>token ids:<h2>
     <div id= tokenIDs>
     </div>
-    <form class="transfer-form">
-      <input type="button" value="make transfer" />
-      <input type="button" value="return" />
+    <form class="confirm-transfer-form">
+      <button type="button" class="confirm-transfer-btn">confirm transfer</button>
+      <button type="button" class="return-btn">return</button>
     </form>
 
   `;
@@ -596,14 +596,14 @@ function htmlTransferConfirmation(
     div_tokenIDs.appendChild(span);
   }
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
-    '.transfer-form input[value="make transfer"]'
+    ".confirm-transfer-form .confirm-transfer-btn"
   )!;
   btn_makeTransfer.addEventListener("click", () =>
     transferEvent(tokenAddress, amount, recipientAddress, tokenIDs)
   );
 
   const btn_return = document.querySelector<HTMLInputElement>(
-    '.transfer-form input[value="return"]'
+    ".confirm-transfer-form .return-btn"
   )!;
   btn_return.addEventListener("click", () =>
     typeof chk_IDs != "undefined"
