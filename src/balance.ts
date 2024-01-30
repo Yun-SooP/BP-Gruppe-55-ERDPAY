@@ -231,6 +231,10 @@ async function viewBalance(
   }
 }
 
+/**
+ * Function to display token list
+ * @param input Account address
+ */
 function transformToTokenListWindow(input: HTMLInputElement) {
   btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
   btn_return.addEventListener("click", () => htmlBalance(html_widgetCopy));

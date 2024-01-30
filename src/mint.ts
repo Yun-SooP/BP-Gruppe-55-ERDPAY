@@ -22,6 +22,11 @@ export async function htmlMint(div_mint:HTMLDivElement, session: Session){
     btn_mint.addEventListener("click", async () => eventMint(session));
 }
 
+/**
+ * Function in development
+ * @param session 
+ * @returns 
+ */
 async function eventMint(session: Session){
     const txt_tokenAddress = document.querySelector<HTMLInputElement>(
         ".mint-form input[placeholder='token address']"
@@ -48,6 +53,7 @@ async function eventMint(session: Session){
     }
     await htmlTransferAndMintWindow();
 }
+
 /**
  * Function to mint a token. 
  * @param session The session in which the token will minted in.
