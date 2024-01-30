@@ -132,12 +132,25 @@
   background-color: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(30px);
   border-radius: 10px;
+
+  overflow: hidden;
+  
 }
+
+/* scrollbar erase for safari & chrome */
+.token-list .token-list__tokens::-webkit-scrollbar {
+  display:none;
+}
+.token-list .token-list__amount::-webkit-scrollbar {
+  display:none;
+}
+
 
 .inner-window .token-list {
   height: 150px;
   width: 500px;
   margin-bottom: 10px;
+  
 }
 
 select {
@@ -153,7 +166,13 @@ select {
   border: 1px solid rgba(255, 255, 255, 0);
   cursor: pointer;
   padding: 10px;
-  overflow: hidden;
+
+  /* scrollbar erase for Internet Explorer 10+ */
+  -ms-overflow-style: none; 
+  /* scrollbar erase for Firefox */
+  scrollbar-width: none;    
+ 
+  
 }
 .inner-window .token-list__tokens {
   width: 470px;
@@ -164,7 +183,13 @@ select {
   display: flex;
   padding: 10px;
   margin-right: 5px;
-  overflow: hidden;
+
+  /* scrollbar erase for Internet Explorer 10+ */
+  -ms-overflow-style: none; 
+  /* scrollbar erase for Firefox */
+  scrollbar-width: none;   
+  
+  
 }
 
 .inner-window .token-list__amount {
@@ -380,12 +405,12 @@ input[type="text"]:focus {
   background-color: rgb(22, 26, 39);
 }
 
+/*toggle checkbox css*/
 .toggle {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
- 
 }
 .toggle input {
   opacity: 0;
@@ -403,7 +428,6 @@ input[type="text"]:focus {
   -webkit-transition: .4s;
   transition: .4s;
 }
-
 .slider:before {
   position: absolute;
   content: "";
@@ -415,15 +439,12 @@ input[type="text"]:focus {
   -webkit-transition: .4s;
   transition: .4s;
 }
-
 input:checked + .slider {
   background-color: #6f8898;
 }
-
 input:focus + .slider {
   box-shadow: 0 0 1px #6f8898;
 }
-
 input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
@@ -434,11 +455,11 @@ input:checked + .slider:before {
 .slider.round {
   border-radius: 34px;
 }
-
 .slider.round:before {
   border-radius: 50%;
 }
 
+/*div to put elements next to each other*/
 .side{
   display: flex;
 }
