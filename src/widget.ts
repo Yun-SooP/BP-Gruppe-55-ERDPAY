@@ -7,7 +7,7 @@ import { htmlCreateSessionForTransfer } from "./transfer";
  */
 export function widget(html_widget: HTMLDivElement) {
   html_widget.innerHTML = `
-    <div class="main-window">
+    <div class="outer-window main-window">
     <img
         class="erdstall-logo"
         src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"

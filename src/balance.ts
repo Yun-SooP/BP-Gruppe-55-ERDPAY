@@ -21,17 +21,18 @@ let logo_return: HTMLButtonElement;
 export async function htmlBalance(html_widget: HTMLDivElement) {
   html_widgetCopy = html_widget;
   html_widget.innerHTML = `
-  <div class = "balance-window-container">
-   
+  <div class = "window-container balance-window-container">
+   <div class="widget-header">
+    <button class="goback-button">
+        <i class="fa-solid fa-angle-left"></i>
+    </button>
+
     <img 
       class = "erdstall-logo"
       src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" 
       alt="TypeScript" 
     />
-    <button class="goback-button">
-        <i class="fa-solid fa-angle-left"></i>
-    </button>
-
+  </div>
 
     <h1>Balance</h1>
 
@@ -42,7 +43,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
       <!-- <h2>Enter the address of the account to see the balance</h2>  (not visible)-->
       <form class="balance-window__address-form">
         <input type="text" placeholder="account address" />
-        <input type="button" value="View Balance" />
+        <button type="button" class="view-balance-btn" />View Balance</button>
       </form>
 
     </div>
@@ -59,7 +60,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
 
   //Selecting HTML Elements
   const btn_viewBalance = document.querySelector<HTMLButtonElement>(
-    ".balance-window__address-form input[type='button']"
+    ".balance-window__address-form .view-balance-btn"
   )!;
   const txt_balanceAddress = document.querySelector<HTMLInputElement>(
     ".balance-window__address-form input[type='text']"
