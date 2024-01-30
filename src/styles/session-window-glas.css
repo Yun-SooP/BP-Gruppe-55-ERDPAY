@@ -28,21 +28,31 @@
   background-color: rgba(255, 255, 255, 0.05);
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
+
+  transition: all 0.5s ease-in-out;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0px 35px 0px;
 }
 
 .session-window .erdstall-logo {
-  margin-top: 35px;
   transform: scale(0.7);
   filter: brightness(0) invert(1);
-  position: relative;
+  /* position: relative;
   top: -20px;
-  right: -155px;
+  right: -155px; */
+  margin-right: 20px;
   cursor: pointer;
 }
 
 .session-window .fa-angle-left {
   transform: scale(1.2, 1.2);
-  position: relative;
+  /* position: relative; */
   filter: brightness(0) invert(1);
   opacity: 0.8;
 }
@@ -50,9 +60,10 @@
 .session-window .goback-button {
   width: 30px;
   height: 30px;
-  position: relative;
+  /* position: relative;
   left: -200px;
-  top: -70px;
+  top: -70px; */
+  margin-left: 50px;
   will-change: transform;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -117,7 +128,7 @@
   height: 50px;
 }
 
-.session-window__form input[type="text"] {
+.session-window__form input[type="password"] {
   width: 280px;
   height: 38px;
 
@@ -135,15 +146,15 @@
   caret-color: rgba(255, 255, 255, 0.6);
   outline: none;
 
-  transition: 0.3s;
+  transition: border 0.3s, width 0.5s ease-in-out;
 }
 
-.session-window__form input[type="text"]::placeholder {
+.session-window__form input[type="password"]::placeholder {
   color: white;
   opacity: 0.4;
 }
 
-.session-window__form input[type="text"]:focus {
+.session-window__form input[type="password"]:focus {
   border: 1px solid #2e2e2e;
 }
 

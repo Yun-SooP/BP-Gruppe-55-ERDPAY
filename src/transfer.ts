@@ -23,29 +23,31 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
   div_app = div_widget;
   div_app.innerHTML = `
       <div class="session-window">
-      <img
-        class="erdstall-logo"
-        src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
-        alt="TypeScript"
-      />
-      <button class="goback-button">
-        <i class="fa-solid fa-angle-left"></i>
-      </button>
+        <div class="header">
+          <button class="goback-button">
+            <i class="fa-solid fa-angle-left"></i>
+          </button>
+          <img
+            class="erdstall-logo"
+            src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
+            alt="TypeScript"
+          />
+        </div>
       
-      <header class="session-window__header">
-        <h1>Transfer</h1>
-        <p>
-          Create a new session or<br />
-          restore your previous session with your private key
-        </p>
-      </header>
+        <header class="session-window__header">
+          <h1>Transfer</h1>
+          <p>
+            Create a new session or<br />
+            restore your previous session with your private key
+          </p>
+        </header>
 
-      <form class="session-window__form">
-        <input type="button" value="New Session" />
-        <span>or</span>
-        <input type="text" placeholder="your private key" />
-        <input type="button" value="Restore Session" />
-      </form>
+        <form class="session-window__form">
+          <input type="button" value="New Session" />
+          <span>or</span>
+          <input type="password" placeholder="your private key" />
+          <input type="button" value="Restore Session" />
+        </form>
     </div>
   `;
   const btn_newSession = document.querySelector<HTMLInputElement>(
@@ -56,8 +58,11 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
     // to fix
   )!;
 
+  const div_sessionWindow =
+    document.querySelector<HTMLDivElement>(".session-window")!;
+
   const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
-    ".session-window__form input[type=text]"
+    ".session-window__form input[type=password]"
   )!;
 
   /**
@@ -79,8 +84,13 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
       event.preventDefault();
       btn_restoreSession.click();
     }
-  })
-  
+  });
+
+  txt_previousPrivateKey.addEventListener("click", () => {
+    div_sessionWindow.style.width = "550px";
+    txt_previousPrivateKey.style.width = "380px";
+  });
+
   btn_restoreSession.addEventListener("click", () =>
     eventRestoreSession(txt_previousPrivateKey.value)
   );
@@ -91,13 +101,13 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
  */
 async function eventNewSession() {
   const newSession_ = await newSession();
-    if (newSession_.message != undefined) {
-      alert(newSession_.message)
-      return
-    }
-    session = newSession_.session!;
-    privateKey = newSession_.privateKey!;
-    htmlTransferAndMintWindow();
+  if (newSession_.message != undefined) {
+    alert(newSession_.message);
+    return;
+  }
+  session = newSession_.session!;
+  privateKey = newSession_.privateKey!;
+  htmlTransferAndMintWindow();
 }
 
 /**
@@ -107,12 +117,11 @@ async function eventNewSession() {
 async function eventRestoreSession(privateKey: string) {
   const restoredSession = await restoreSession(privateKey);
   if (restoredSession.message != undefined) {
-    alert(restoredSession.message)
-    return
+    alert(restoredSession.message);
+    return;
   }
   session = restoredSession.session!;
   htmlTransferAndMintWindow();
-
 }
 
 /**
@@ -228,7 +237,7 @@ export async function htmlTransfer(
         </div> 
 
         <input type="text" placeholder="recipient address" />
-        <input type="button" value="continue" />
+        <input type="button" value="continue to confirmation" />
       </form>
     `;
     const select_tokens = document.querySelector<HTMLSelectElement>(
@@ -271,7 +280,7 @@ export async function htmlTransfer(
     makeTokensList(select_tokens, select_amount, tokens);
 
     const btn_continue = document.querySelector<HTMLInputElement>(
-      '.inner-form input[value="continue"]'
+      '.inner-form input[value="continue to confirmation"]'
     )!;
     btn_continue.addEventListener("click", async () =>
       transferContinueButtonEvent(
@@ -284,6 +293,14 @@ export async function htmlTransfer(
 
     const chk_advanced =
       document.querySelector<HTMLInputElement>("#advancedTransfer")!;
+
+    chk_advanced.addEventListener("click", async () => {
+      if (btn_continue.value == "continue to confirmation") {
+        btn_continue.value = "continue to ID selection";
+      } else {
+        btn_continue.value = "continue to confirmation";
+      }
+    });
 
     select_tokens.value =
       typeof tokenAddress == "undefined" ? "" : tokenAddress;

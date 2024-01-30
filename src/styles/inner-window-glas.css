@@ -48,7 +48,7 @@
   opacity: 0.8;
 }
 
-.goback-button {
+.inner-window-container .goback-button {
   width: 30px;
   height: 30px;
   position: relative;
@@ -134,23 +134,20 @@
   border-radius: 10px;
 
   overflow: hidden;
-  
 }
 
 /* scrollbar erase for safari & chrome */
 .token-list .token-list__tokens::-webkit-scrollbar {
-  display:none;
+  display: none;
 }
 .token-list .token-list__amount::-webkit-scrollbar {
-  display:none;
+  display: none;
 }
-
 
 .inner-window .token-list {
   height: 150px;
   width: 500px;
   margin-bottom: 10px;
-  
 }
 
 select {
@@ -168,11 +165,9 @@ select {
   padding: 10px;
 
   /* scrollbar erase for Internet Explorer 10+ */
-  -ms-overflow-style: none; 
+  -ms-overflow-style: none;
   /* scrollbar erase for Firefox */
-  scrollbar-width: none;    
- 
-  
+  scrollbar-width: none;
 }
 .inner-window .token-list__tokens {
   width: 470px;
@@ -185,11 +180,9 @@ select {
   margin-right: 5px;
 
   /* scrollbar erase for Internet Explorer 10+ */
-  -ms-overflow-style: none; 
+  -ms-overflow-style: none;
   /* scrollbar erase for Firefox */
-  scrollbar-width: none;   
-  
-  
+  scrollbar-width: none;
 }
 
 .inner-window .token-list__amount {
@@ -207,7 +200,6 @@ select option {
 .inner-window .token-list__tokens option {
   width: 420px;
 }
-
 
 .token-list__tokens option:hover,
 .visible-id-list option:hover {
@@ -319,7 +311,7 @@ select option {
 }
 
 .inner-window-container input[type="text"] {
-  width: 280px;
+  width: 380px;
   height: 38px;
   padding-left: 15px;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -362,8 +354,12 @@ select option {
   cursor: pointer;
   outline: none;
 
-  will-change: transform;
-  transition: transform 0.3s, border 0.2s;
+  will-change: transform width;
+  transition: all 0.3s;
+}
+
+.inner-window-container input[type="button"]:first-child {
+  width: 270px;
 }
 
 .inner-window-container .transfer-footer {
@@ -426,8 +422,8 @@ input[type="text"]:focus {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 .slider:before {
   position: absolute;
@@ -437,8 +433,8 @@ input[type="text"]:focus {
   left: 4px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 input:checked + .slider {
   background-color: #6f8898;
@@ -461,7 +457,7 @@ input:checked + .slider:before {
 }
 
 /*div to put elements next to each other*/
-.side{
+.side {
   display: flex;
 }
 .side label {
