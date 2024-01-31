@@ -129,6 +129,7 @@ async function eventRestoreSession(privateKey: string) {
  */
 
 export function htmlTransferAndMintWindow() {
+  div_app.style.height = "130vh";
   div_app.innerHTML = `
   <div class="inner-window-container">
       <img
@@ -172,13 +173,19 @@ export function htmlTransferAndMintWindow() {
   const btn_return = document.querySelector<HTMLButtonElement>(
     ".inner-window-container .goback-button"
   )!;
-  btn_return.addEventListener("click", () =>
+  btn_return.addEventListener("click", () =>{
+    div_app.style.height = "100vh";
     htmlCreateSessionForTransfer(div_app)
+  }
+   
   );
 
   const logo_return =
     document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
-  logo_return.addEventListener("click", () => widget(div_app));
+  logo_return.addEventListener("click", () => {
+    div_app.style.height = "100vh";
+    widget(div_app)}
+    );
 
   /*const btn_mint = document.querySelector<HTMLInputElement>(
     '.mint-form input[value="mint new token"]'
