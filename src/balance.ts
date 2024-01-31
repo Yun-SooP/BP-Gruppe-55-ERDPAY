@@ -40,7 +40,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
 
       <!-- <h2>Enter the address of the account to see the balance</h2>  (not visible)-->
       <form class="balance-window__address-form">
-        <input type="text" placeholder="account address"/>
+        <input type="text" placeholder="account address" spellcheck="false"/>
         <input type="button" value="View Balance" />
       </form>
 
@@ -90,11 +90,9 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
       event.preventDefault();
       btn_viewBalance.click();
     }
-  })
+  });
   btn_return.addEventListener("click", () => widget(html_widget));
   logo_return.addEventListener("click", () => widget(html_widget));
-
-
 
   // let tokens: string[], ids: number[][], amounts: number[];
 
@@ -123,10 +121,7 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
  * @param lbl_balance HTML body to display the balance to
  * @returns arrays with token names, ids and amounts of the tokens
  */
-async function viewBalance(
-  client: Client,
-  input: HTMLInputElement
-) {
+async function viewBalance(client: Client, input: HTMLInputElement) {
   try {
     if (input.value.length != 42) throw new Error("invalid address");
 
@@ -135,7 +130,7 @@ async function viewBalance(
 
     transformToTokenListWindow(input);
 
-    const select_tokens = document.querySelector<HTMLSelectElement>( 
+    const select_tokens = document.querySelector<HTMLSelectElement>(
       ".token-list__tokens"
     )!;
     const select_amount = document.querySelector<HTMLSelectElement>(

@@ -224,7 +224,7 @@ export async function htmlTransfer(
 
       <form class="inner-form">
          <div class="inner-form__token-amount">
-              <input type = "text" placeholder="amount"/>
+              <input type = "text" placeholder="amount" spellcheck="false"/>
               <span>Tokens</span>
         </div>
 
@@ -236,7 +236,7 @@ export async function htmlTransfer(
           <p>advanced transfer with ID selection</p>
         </div> 
 
-        <input type="text" placeholder="recipient address" />
+        <input type="text" placeholder="recipient address" spellcheck="false"/>
         <input type="button" value="continue to confirmation" />
       </form>
     `;
@@ -458,7 +458,7 @@ async function transferEvent(
  */
 function htmlTransferSuccesful() {
   div_transfer.innerHTML = `
-    <h2>transfer succesful!</h2>
+    <div class="successful-div">Transfer Succesful!</div>
     <form class="inner-form">
       <input type="button" value="return" />
     </form>
@@ -483,11 +483,14 @@ function htmlAdvancedTransfer(
   checkedTokenIDs?: bigint[]
 ) {
   div_transfer.innerHTML = `
-    <h2>Token: ${tokenAddress}<h2>
-    <h2>To: ${recipientAddress}<h2>
+
+    <h2>Token:</h2>
+    <div class="token-address-div">${tokenAddress}</div>
+    <h2>To recipient:</h2>
+    <div class="recipient-address-div">${recipientAddress}</div>
     <h2>Choose ${amount} token ID(s) to send</h2>
     <div id= checkboxesIDs></div>
-    <form class="inner-form">
+    <form class="advanced-transfer-form">
       <input type="button" value="continue" />
       <input type="button" value="return" />
     </form>
@@ -506,7 +509,7 @@ function htmlAdvancedTransfer(
         );
 
   const btn_continue = document.querySelector<HTMLInputElement>(
-    '.inner-form input[value="continue"]'
+    '.advanced-transfer-form input[value="continue"]'
   )!;
   btn_continue.addEventListener("click", () =>
     advancedTransferContinueButtonEvent(
@@ -518,7 +521,7 @@ function htmlAdvancedTransfer(
   );
 
   const btn_return = document.querySelector<HTMLInputElement>(
-    '.inner-form input[value="return"]'
+    '.advanced-transfer-form input[value="return"]'
   )!;
   btn_return.addEventListener("click", () =>
     htmlTransfer(tokenAddress, amount, recipientAddress, true)
@@ -605,12 +608,15 @@ function htmlTransferConfirmation(
 ) {
   div_transfer.innerHTML = `
     <h2>Please confirm the transfer</h2>
-    <h2>token address: ${tokenAddress}</h2>
-    <h2>amount: ${amount}</h2>
-    <h2>recipient address: ${recipientAddress}</h2>
-    <h2>token ids:<h2>
-    <div id= tokenIDs>
+    <h2>${amount} Token${amount > 1 ? "s" : ""} of:</h2>
+    <div class="token-address-div">${tokenAddress}</div>
+    <h2>token ID:<h2>
+    <div id="tokenIDs">
     </div>
+
+    <h2>To recipient:</h2>
+    <div class="recipient-address-div">${recipientAddress}</div>
+    
     <form class="inner-form">
       <input type="button" value="make transfer" />
       <input type="button" value="return" />
@@ -621,7 +627,7 @@ function htmlTransferConfirmation(
 
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
-    span.innerHTML = `${tokenIDs[i]} </br>`;
+    span.innerHTML = `${tokenIDs[i]}`;
     div_tokenIDs.appendChild(span);
   }
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(

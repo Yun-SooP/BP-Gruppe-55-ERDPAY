@@ -155,6 +155,10 @@
   transition: all 0.3s;
 }
 
+.goback-button:active {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
 /* From here css for Window with Token-List and ID-List */
 .address-in-token-list-window {
   display: flex;
@@ -256,9 +260,17 @@
   backdrop-filter: blur(30px);
   border-radius: 10px;
   padding: 10px;
-  overflow: hidden;
   height: 150px;
   width: 75px;
   margin-left: 15px;
   cursor: pointer;
+
+  /* scrollbar erase for Internet Explorer 10+ */
+  -ms-overflow-style: none;
+  /* scrollbar erase for Firefox */
+  scrollbar-width: none;
+}
+
+.visible-id-list::-webkit-scrollbar {
+  display: none;
 }

@@ -340,7 +340,7 @@ select option {
 }
 
 .inner-window-container input[type="button"] {
-  width: 240px;
+  width: 270px;
   height: 40px;
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -355,11 +355,7 @@ select option {
   outline: none;
 
   will-change: transform width;
-  transition: all 0.3s;
-}
-
-.inner-window-container input[type="button"]:first-child {
-  width: 270px;
+  transition: all 0.2s;
 }
 
 .inner-window-container .transfer-footer {
@@ -371,7 +367,7 @@ select option {
   gap: 40px;
 }
 
-.inner-form input[value="make transform"] {
+.inner-form input[value="make transfer"] {
   background-color: #283048;
 }
 
@@ -422,8 +418,8 @@ input[type="text"]:focus {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
 }
 .slider:before {
   position: absolute;
@@ -433,8 +429,8 @@ input[type="text"]:focus {
   left: 4px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
 }
 input:checked + .slider {
   background-color: #6f8898;
@@ -466,5 +462,69 @@ input:checked + .slider:before {
 .side p {
   align-self: center;
   padding-left: 10px;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.token-address-div,
+.recipient-address-div,
+.successful-div,
+#tokenIDs span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: rgba(255, 255, 255, 0.8);
+  border: solid 1px rgba(255, 255, 255, 0.3);
+
+  background-color: rgba(255, 255, 255, 0.02);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.token-address-div,
+.recipient-address-div,
+.successful-div {
+  border-radius: 16px;
+  width: 480px;
+  height: 38px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+#tokenIDs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+}
+
+#tokenIDs span {
+  border-radius: 12px;
+  width: 45px;
+  height: 33px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.token-address-div + h2 {
+  margin-top: 10px;
+}
+
+.advanced-transfer-form {
+  display: flex;
+  width: 500px;
+  gap: 15px;
+  flex-direction: column;
+  align-items: center;
+
+  margin: 10px;
+}
+
+input[type="checkbox"] {
+  margin-right: 7px;
+}
+
+input[type="checkbox"] + span {
+  color: rgba(255, 255, 255, 0.9);
 }
