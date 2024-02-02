@@ -63,6 +63,11 @@ export function checkRecipientAddress(recipientAddress: string) : {valid: boolea
     }
     return { valid, message }
 }
+export function generateRandomAddress() : string {
+    const values = crypto.getRandomValues(new Uint8Array(20));
+    const hexString = Array.from(values, byte => byte.toString(16).padStart(2, '0')).join('')
+    return hexString
+}
 
 export function getTokenIDs(account: Account, tokenAddress: string, amount: number) : bigint[] {
     const tokens = <Tokens>account.values.values.get(tokenAddress)!;
