@@ -1,0 +1,33 @@
+.outer-window {
+  width: 500px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  border: solid 1px rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 
+Session-window 
+height:550
+
+Balance-window
+width:700
+height:455
+position:absolue
+text align:left
+
+transfer-window
+width:700
+height:1000
+position:absolut
+text-align:left
+
+*/
