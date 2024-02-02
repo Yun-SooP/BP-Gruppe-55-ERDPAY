@@ -3,43 +3,33 @@ import { Address } from "@polycrypt/erdstall/ledger";
 import { htmlTransferAndMintWindow } from "./transfer";
 import * as utils from "./utils.ts";
 
-export async function htmlMint(div_mint:HTMLDivElement, session: Session){
-    htmlSingleMint(div_mint,session)
-}
-
-function htmlSingleMint(div_mint:HTMLDivElement, session:Session){
+export function htmlMint(div_mint:HTMLDivElement, session: Session){
     div_mint.innerHTML = `
     <form class="mint-form">
-        <input type="button" value="mint multiple tokens">
+        <input type="checkbox" id="multiple">mint multiple tokens</checkbox>
         <input type="text" placeholder="token address (ex. 0x1234...)" />
+        <input type="button" value="generate random address">
         <input type="text" placeholder="token ID" />
         <input type="button" value="mint new token" />
     </form>
     `
-    const btn_singleMint = 
+    const txt_tokenAddress = 
+        document.querySelector<HTMLInputElement>(".mint-form input[placeholder='token address (ex. 0x1234...)']")!;
+
+    const txt_tokenID = 
+        document.querySelector<HTMLInputElement>(".mint-form input[placeholder='token ID']")!;
+
+    const chk_multiple = 
+        document.querySelector<HTMLInputElement>("#multiple")!;
+    chk_multiple.addEventListener('click', () => txt_tokenID.placeholder = chk_multiple.checked ? "amount" : "token ID")
+    
+    const btn_mint = 
         document.querySelector<HTMLInputElement>('.mint-form input[value="mint new token"]' )!;
-    btn_singleMint.addEventListener("click", async () => eventSingleMint(session));
-
-    const btn_multipleMint = 
-        document.querySelector<HTMLInputElement>('.mint-form input[value="mint multiple tokens"]' )!;
-    btn_multipleMint.addEventListener("click", async () => htmlMultipleMint(div_mint, session));
-}
-function htmlMultipleMint(div_mint:HTMLDivElement, session:Session){
-    div_mint.innerHTML = `
-    <form class="mint-form">
-        <input type="button" value="mint single token">
-        <input type="text" placeholder="token address (ex. 0x1234...)" />
-        <input type="text" placeholder="amount" />
-        <input type="button" value="mint new tokens with random ID" />
-    </form>
-    `
-    const btn_multipleMint = 
-        document.querySelector<HTMLInputElement>('.mint-form input[value="mint new tokens with random ID"]' )!;
-    btn_multipleMint.addEventListener("click", async () => eventMultipleMint(session));
-
-    const btn_singleMint = 
-        document.querySelector<HTMLInputElement>('.mint-form input[value="mint single token"]' )!;
-    btn_singleMint.addEventListener("click", async () => htmlSingleMint(div_mint, session));
+    btn_mint.addEventListener("click", async () => chk_multiple.checked ? eventMultipleMint(session) : eventSingleMint(session));
+    
+    const btn_randomAddress = 
+        document.querySelector<HTMLInputElement>('.mint-form input[value="generate random address"]' )!;
+    btn_randomAddress.addEventListener("click", () => txt_tokenAddress.value = utils.generateRandomAddress());
 }
 
 async function eventSingleMint(session: Session){
