@@ -11,7 +11,7 @@ function htmlSingleMint(div_mint:HTMLDivElement, session:Session){
     div_mint.innerHTML = `
     <form class="mint-form">
         <input type="button" value="mint multiple tokens">
-        <input type="text" placeholder="token address" />
+        <input type="text" placeholder="token address (ex. 0x1234...)" />
         <input type="text" placeholder="token ID" />
         <input type="button" value="mint new token" />
     </form>
@@ -28,7 +28,7 @@ function htmlMultipleMint(div_mint:HTMLDivElement, session:Session){
     div_mint.innerHTML = `
     <form class="mint-form">
         <input type="button" value="mint single token">
-        <input type="text" placeholder="token address" />
+        <input type="text" placeholder="token address (ex. 0x1234...)" />
         <input type="text" placeholder="amount" />
         <input type="button" value="mint new tokens with random ID" />
     </form>
@@ -44,7 +44,7 @@ function htmlMultipleMint(div_mint:HTMLDivElement, session:Session){
 
 async function eventSingleMint(session: Session){
     const txt_tokenAddress = document.querySelector<HTMLInputElement>(
-        ".mint-form input[placeholder='token address']"
+        ".mint-form input[placeholder='token address (ex. 0x1234...)']"
     )!;
     const txt_tokenID = document.querySelector<HTMLInputElement>(
         ".mint-form input[placeholder='token ID']"
@@ -73,7 +73,7 @@ async function eventSingleMint(session: Session){
 
 async function eventMultipleMint(session: Session){
     const txt_tokenAddress = document.querySelector<HTMLInputElement>(
-        ".mint-form input[placeholder='token address']"
+        ".mint-form input[placeholder='token address (ex. 0x1234...)']"
     )!;
     const txt_amount = document.querySelector<HTMLInputElement>(
         ".mint-form input[placeholder='amount']"

@@ -171,7 +171,7 @@ export async function htmlTransfer(tokenAddress?: string, amount?: number, recip
         <input type = "text" class="transfer-form__token-txt_amount" placeholder="Amount of tokens to transfer"/>
         <span>Tokens</span>
         <input type = "checkbox" id = "advancedTransfer">advanced transfer with ID selection</input>
-        <input type="text" placeholder="recipient address" />
+        <input type="text" placeholder="recipient address (ex. 0x1234...)" />
         <input type="button" value="continue" />
       </form>
     `;
@@ -180,7 +180,7 @@ export async function htmlTransfer(tokenAddress?: string, amount?: number, recip
     const txt_amount = 
       document.querySelector<HTMLInputElement>(".transfer-form__token-txt_amount")!;
     const txt_recipientAddress = 
-      document.querySelector<HTMLInputElement>('.transfer-form input[placeholder="recipient address"]')!;
+      document.querySelector<HTMLInputElement>('.transfer-form input[placeholder="recipient address (ex. 0x1234...)"]')!;
     
     utils.makeTokensList(select_tokens, tokens)
     
@@ -281,7 +281,7 @@ function htmlAdvancedTransfer(tokenAddress: string, amount: number, recipientAdd
     <div id= checkboxesIDs></div>
     <form class="transfer-form">
       <input type="button" value="continue" />
-      <input type="button" value="return" />
+      <input type="button" value="cancel" />
     </form>
   `;
   const availableTokenIDs = (<Tokens>account.values.values.get(tokenAddress)).value;
@@ -294,9 +294,9 @@ function htmlAdvancedTransfer(tokenAddress: string, amount: number, recipientAdd
     document.querySelector<HTMLInputElement>( '.transfer-form input[value="continue"]')!;
   btn_continue.addEventListener("click", () => advancedTransferContinueButtonEvent(tokenAddress, amount, recipientAddress, checkboxes_IDs!))
   
-  const btn_return = 
-    document.querySelector<HTMLInputElement>( '.transfer-form input[value="return"]')!;
-  btn_return.addEventListener("click", () => htmlTransfer(tokenAddress, amount, recipientAddress, true))
+  const btn_cancel = 
+    document.querySelector<HTMLInputElement>( '.transfer-form input[value="cancel"]')!;
+  btn_cancel.addEventListener("click", () => htmlTransfer(tokenAddress, amount, recipientAddress, true))
 }
 
 function makeTokenIDsCheckboxes(div_checkboxesIDs: HTMLDivElement, availableTokenIDs:bigint[], checkedTokenIDs?:bigint[]) : HTMLInputElement[]{
@@ -341,7 +341,7 @@ function htmlTransferConfirmation(tokenAddress: string, amount: number, recipien
     </div>
     <form class="transfer-form">
       <input type="button" value="make transfer" />
-      <input type="button" value="return" />
+      <input type="button" value="cancel" />
     </form>
 
   `
@@ -356,9 +356,9 @@ function htmlTransferConfirmation(tokenAddress: string, amount: number, recipien
   document.querySelector<HTMLInputElement>( '.transfer-form input[value="make transfer"]')!;
   btn_makeTransfer.addEventListener("click", () => transferEvent(tokenAddress, amount, recipientAddress, tokenIDs))
 
-  const btn_return = 
-    document.querySelector<HTMLInputElement>( '.transfer-form input[value="return"]')!;
-  btn_return.addEventListener("click", () => 
+  const btn_cancel = 
+    document.querySelector<HTMLInputElement>( '.transfer-form input[value="cancel"]')!;
+  btn_cancel.addEventListener("click", () => 
     typeof checkboxes_IDs != 'undefined' ? 
     htmlAdvancedTransfer(tokenAddress, amount, recipientAddress, tokenIDs) :
     htmlTransfer(tokenAddress, amount, recipientAddress)
