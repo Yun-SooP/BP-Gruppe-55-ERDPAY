@@ -69,6 +69,12 @@ export function generateRandomAddress() : string {
     return '0x' + hexString
 }
 
+export function generateRandomTokenID() : bigint {
+    const randomBytesArray = crypto.getRandomValues(new Uint8Array(32));
+    const tokenID = BigInt('0x' + Array.from(randomBytesArray).map(byte => byte.toString(16).padStart(2, '0')).join(''));
+    return tokenID
+}
+
 export function getTokenIDs(account: Account, tokenAddress: string, amount: number) : bigint[] {
     const tokens = <Tokens>account.values.values.get(tokenAddress)!;
     return tokens.value.slice(0, amount);

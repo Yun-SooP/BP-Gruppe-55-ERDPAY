@@ -143,10 +143,7 @@ async function multipleMint(session: Session, tokenAddress: string, amount: numb
         let status = 0
         let tokenID
         while (status == 0){
-            const array = new BigUint64Array(1)
-            const random = crypto.getRandomValues(array)
-            tokenID = random[0]
-            const transaction = await mint(session, tokenAddress, tokenID)
+            const transaction = await mint(session, tokenAddress, utils.generateRandomTokenID())
             status = <number> transaction.status
         }
         tokenIDs.push(tokenID!)
