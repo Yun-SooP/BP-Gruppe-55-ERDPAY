@@ -1,0 +1,66 @@
+.widget-header {
+  width: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.widget-header .erdstall-logo {
+  transform: scale(0.7);
+  position: relative;
+  right: -25px;
+  cursor: pointer;
+}
+/* 
+
+
+
+
+*/
+/* Main */
+.l-main-window {
+  width: 500px;
+  height: 400px;
+}
+
+.l-main-logo {
+  margin-top: 50px;
+  position: relative;
+  left: -8px;
+  transform: scale(0.7);
+}
+
+.l-main-window__header {
+  margin-top: 15px;
+}
+
+.l-main-window__form {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+/* 
+
+
+
+
+*/
+/* Balance */
+.l-balance-window-container {
+  width: 700px;
+  height: 410px;
+}
+
+.l-balance-title {
+  align-self: self-start;
+  margin-left: 80px;
+  margin-top: 20px;
+}
+
+.l-balance-window {
+  width: 550px;
+  height: 160px;
+  margin-top: 10px;
+}

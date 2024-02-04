@@ -23,7 +23,8 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
   div_app = div_widget;
   div_app.innerHTML = `
       <div class="session-window">
-        <div class="header">
+
+        <div class="widget-header">
           <button class="goback-button">
             <i class="fa-solid fa-angle-left"></i>
           </button>

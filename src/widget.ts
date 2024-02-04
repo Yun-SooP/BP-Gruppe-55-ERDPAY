@@ -7,18 +7,19 @@ import { htmlCreateSessionForTransfer } from "./transfer";
  */
 export function widget(html_widget: HTMLDivElement) {
   html_widget.innerHTML = `
-    <div class="outer-window main-window">
+    <div class="main-window l-main-window first-layer-window">
+
     <img
-        class="erdstall-logo"
+        class="l-main-logo erdstall-logo"
         src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
         alt="TypeScript"
     />
-    <header class="main-window__header">
+    <header class="main-window__header l-main-window__header">
         <h1>Welcome to ErdPay</h1>
         <p>Select an action to perform</p>
     </header>
 
-    <form class="main-window__form">
+    <form class="main-window__form l-main-window__form">
         <button type="button" class="view-balance-btn">View Balance</button>
         <button type="button" class="transfer-btn">Transfer</button>
     </form>
@@ -50,6 +51,10 @@ export function makeWidgetButton() {
 
     <div class="dummy">
 
+        <button class="main-button" type="button">
+            <div>Pay with</div>
+            <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
+        </button>
         <button class="main-button" type="button">
             <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
         </button>
