@@ -8,6 +8,7 @@ import { newSession, restoreSession } from "./setup_session.ts";
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 import { widget } from "./widget.ts";
 import { htmlMint } from "./mint.ts";
+import * as utils from "./utils.ts";
 
 let session: Session;
 let privateKey: string;
@@ -109,10 +110,6 @@ async function eventNewSession() {
   htmlTransferAndMintWindow();
 }
 
-/**
- * Function for restore session event.
- * @param privateKey Private key to restore the session.
- */
 async function eventRestoreSession(privateKey: string) {
   const restoredSession = await restoreSession(privateKey);
   if (restoredSession.message != undefined) {
@@ -221,14 +218,13 @@ export async function htmlTransfer(
       <h2>Choose your token and the amount of tokens you want to send</h2>
       <header class="token-list-header">
           <span>Available Tokens</span>
-          <span>amount</span>
+          <span>Amount</span>
       </header>
 
       <div class="token-list">
-          <select class="token-list__tokens" size = "5"></select>
-          <select class="token-list__amount" disabled size = "5"></select>
+      <select class="token-list__tokens" size = "5"></select>
+      <select class="token-list__amount" disabled size = "5"></select>
       </div>
-
 
       <form class="transfer-form">
          <div class="transfer-form__token-amount">
@@ -244,7 +240,7 @@ export async function htmlTransfer(
           <p>advanced transfer with ID selection</p>
         </div> 
 
-        <input type="text" class="transfer-form__recipient-address" placeholder="recipient address" spellcheck="false"/>
+        <input type="text" class="transfer-form__recipient-address" placeholder="recipient address (ex. 0x1234...)" spellcheck="false"/>
         <button type="button" class="transfer-form__continue-btn">continue to confirmation</button>
       </form>
     `;
@@ -282,15 +278,18 @@ export async function htmlTransfer(
       ".transfer-form__token-amount input"
     )!;
     const txt_recipientAddress = document.querySelector<HTMLInputElement>(
-      '.transfer-form input[placeholder="recipient address"]'
+      '.transfer-form input[placeholder="recipient address (ex. 0x1234...)"]'
     )!;
 
-    makeTokensList(select_tokens, select_amount, tokens);
+    utils.makeTokensList(select_tokens, select_amount, tokens);
 
     const btn_continue = document.querySelector<HTMLInputElement>(
       ".transfer-form__continue-btn"
     )!;
-    btn_continue.addEventListener("click", async () =>
+    const chk_advanced =
+      document.querySelector<HTMLInputElement>("#advancedTransfer")!;
+
+    btn_continue.addEventListener("click", () =>
       transferContinueButtonEvent(
         chk_advanced.checked,
         select_tokens.value,
@@ -299,15 +298,8 @@ export async function htmlTransfer(
       )
     );
 
-    const chk_advanced =
-      document.querySelector<HTMLInputElement>("#advancedTransfer")!;
-
-    chk_advanced.addEventListener("click", async () => {
-      if (btn_continue.value == "continue to confirmation") {
-        btn_continue.value = "continue to ID selection";
-      } else {
-        btn_continue.value = "continue to confirmation";
-      }
+    chk_advanced.addEventListener("click", () => {
+      btn_continue.innerText = btn_continue.innerText == "continue to confirmation" ? "continue to ID selection" : "continue to confirmation";
     });
 
     select_tokens.value =
@@ -319,49 +311,8 @@ export async function htmlTransfer(
   }
 }
 
-/**
- * Function to fill token address selection list with token addresses.
- * @param select_tokens HTMLSelectElement to display token addresses to.
- * @param tokens Available tokens.
- */
-function makeTokensList(
-  select_tokens: HTMLSelectElement,
-  select_amount: HTMLSelectElement,
-  tokens: [string, Asset][]
-) {
-  for (let i = 0; i < tokens.length; i++) {
-    const option = document.createElement("option");
-    const token = tokens[i];
-    option.value = token[0];
-    option.text = token[0];
-    select_tokens.add(option);
-
-    const option_amount = document.createElement("option");
-    // check if selected "one more time"
-    option_amount.value = token[0];
-    option_amount.text = (<Tokens>token[1]).value.length + "";
-    select_amount.add(option_amount);
-  }
-}
-
-/**
- * Function for continue event in transfer.
- * @param advanced Selection of advanced transfer functionality.
- * @param tokenAddress Token address for transfer.
- * @param amount Amount of tokens to transfer.
- * @param recipientAddress Recipient address for transfer.
- */
-function transferContinueButtonEvent(
-  advanced: boolean,
-  tokenAddress: string,
-  amount: string,
-  recipientAddress: string
-) {
-  const { valid, message } = checkInputsForTransfer(
-    tokenAddress,
-    amount,
-    recipientAddress
-  );
+function transferContinueButtonEvent(advanced: boolean, tokenAddress: string, amount: string, recipientAddress: string){
+  const { valid, message } = checkInputsForTransfer(tokenAddress, amount, recipientAddress)
 
   if (!valid) {
     alert(message);
@@ -370,83 +321,45 @@ function transferContinueButtonEvent(
     if (advanced) {
       htmlAdvancedTransfer(tokenAddress, amountParsed, recipientAddress);
     } else {
-      const tokenIDs = getTokenIDsForTransfer(tokenAddress, amountParsed);
-      htmlTransferConfirmation(
-        tokenAddress,
-        amountParsed,
-        recipientAddress,
-        tokenIDs
-      );
+      const tokenIDs = utils.getTokenIDs(account, tokenAddress, amountParsed)
+      htmlTransferConfirmation(tokenAddress, amountParsed, recipientAddress, tokenIDs)
     }
   }
 }
 
-/**
- * Functionality to check the inputs for the transfer.
- * @param tokenAddress Token address for transfer.
- * @param amount Amount of tokens to transfer.
- * @param recipientAddress Recipient address for transfer.
- * @returns valid If the transfer inputs are valid.
- * @returns message If input is unvalid.
- */
-function checkInputsForTransfer(
-  tokenAddress: string,
-  amount: string,
-  recipientAddress: string
-): { valid: boolean; message: string } {
-  let valid = true;
-  let message = "";
-  if (tokenAddress == "") {
-    message = "Please select the address of the token to transfer.";
-    valid = false;
-    return { valid, message };
-  } else if (amount == "") {
-    message = "Please input the amount of the tokens to transfer.";
-    valid = false;
-    return { valid, message };
-  } else if (recipientAddress == "") {
-    message = "Please input the address of the recipient.";
-    valid = false;
-    return { valid, message };
+function checkInputsForTransfer(tokenAddress: string, amount: string, recipientAddress: string) : {valid: boolean, message: string} {
+  let valid = true
+  let message = ""
+  let result
+  result = utils.checkTokenAddress(tokenAddress)
+  if(!result.valid){
+    valid = result.valid
+    message = result.message
+    return { valid, message }
   }
-  const amountParsed = parseFloat(amount);
-  if (
-    Number.isNaN(amountParsed) ||
-    amountParsed <= 0 ||
-    !Number.isInteger(amountParsed)
-  ) {
-    message = "Please enter a valid amount.";
-    valid = false;
-    return { valid, message };
+  result = utils.checkAmount(amount)
+  if(!result.valid){
+    valid = result.valid
+    message = result.message
+    return { valid, message }
   }
-  const tokens = <Tokens>account.values.values.get(tokenAddress);
-  if (amountParsed > tokens.value.length) {
-    message =
-      "The selected token does not have enough tokens available. Please adjust the amount or select another token.";
-    valid = false;
-    return { valid, message };
+  result = utils.checkRecipientAddress(recipientAddress)
+  if(!result.valid){
+    valid = result.valid
+    message = result.message
+    return { valid, message }
+  }
+  const tokens = <Tokens>account.values.values.get(tokenAddress)
+  if (parseFloat(amount) > tokens.value.length){
+    message = "The selected token does not have enough tokens available. Please adjust the amount or select another token."
+    valid = false
+    return { valid, message }
   }
   return { valid, message };
 }
 
-/**
- * Function for transfer event.
- * Execute the transfer and display whether the transfer was successful or not.
- * @param tokenAddress Token address for transfer.
- * @param amount Amount of tokens to transfer.
- * @param recipientAddress Recipient address for transfer.
- * @param tokenIDs Optional, IDs to transfer.
- */
-async function transferEvent(
-  tokenAddress: string,
-  amount: number,
-  recipientAddress: string,
-  tokenIDs?: bigint[]
-) {
-  tokenIDs =
-    typeof tokenIDs == "undefined"
-      ? getTokenIDsForTransfer(tokenAddress, amount)
-      : tokenIDs;
+async function transferEvent(tokenAddress: string, amount: number, recipientAddress: string, tokenIDs?: bigint[]){
+  tokenIDs = typeof tokenIDs == "undefined" ? utils.getTokenIDs(account, tokenAddress, amount) : tokenIDs
   const { status, error } = await transferTo(
     session,
     tokenAddress,
@@ -695,18 +608,4 @@ async function transferTo(
     error = err;
   }
   return { status, error };
-}
-
-/**
- * Function to get token IDs for the transfer.
- * @param tokenAddress Token address for transfer.
- * @param amount Amount of tokens to transfer.
- * @returns Token IDs for the transfer.
- */
-function getTokenIDsForTransfer(
-  tokenAddress: string,
-  amount: number
-): bigint[] {
-  const tokens = <Tokens>account.values.values.get(tokenAddress)!;
-  return tokens.value.slice(0, amount);
 }
