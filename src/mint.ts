@@ -3,14 +3,19 @@ import { Address } from "@polycrypt/erdstall/ledger";
 import { htmlTransferAndMintWindow } from "./transfer";
 import * as utils from "./utils.ts";
 
-export function htmlMint(div_mint:HTMLDivElement, session: Session){
-    div_mint.innerHTML = `
+/**
+ * Function to display the functionality of minting.
+ * @param div_mint HTML to display to
+ * @param session The session in which the token will minted in.
+ */
+export async function htmlMint(div_mint: HTMLDivElement, session: Session) {
+  div_mint.innerHTML = `
     <form class="mint-form">
         <input type="checkbox" id="multiple">mint multiple tokens</checkbox>
         <input type="text" placeholder="token address (ex. 0x1234...)" />
         <input type="button" value="generate random address">
         <input type="text" placeholder="token ID" />
-        <input type="button" value="mint new token" />
+        <button type="button" class="mint-btn">mint new token</button>
     </form>
     `
     const txt_tokenAddress = 
@@ -24,7 +29,7 @@ export function htmlMint(div_mint:HTMLDivElement, session: Session){
     chk_multiple.addEventListener('click', () => txt_tokenID.placeholder = chk_multiple.checked ? "amount" : "token ID")
     
     const btn_mint = 
-        document.querySelector<HTMLInputElement>('.mint-form input[value="mint new token"]' )!;
+        document.querySelector<HTMLButtonElement>('.mint-form .mint-btn')!;
     btn_mint.addEventListener("click", async () => chk_multiple.checked ? eventMultipleMint(session) : eventSingleMint(session));
     
     const btn_randomAddress = 
@@ -107,8 +112,9 @@ function checkInputsForMint(tokenAddress:string, amount:string, tokenID?:string)
     return { valid, message }
 }
 
+
 /**
- * Function to mint a token. 
+ * Function to mint a token.
  * @param session The session in which the token will minted in.
  * @param token Token address to mint of.
  * @param id Token ID to mint. Has to be non existing ID.
@@ -134,7 +140,8 @@ async function mint(session: Session, tokenAddress: string, tokenID: bigint){
             error = new Error("Please enter a valid token address.")
         }
     }
-    return { status, error }
+  
+  return { status, error };
 }
 
 async function multipleMint(session: Session, tokenAddress: string, amount: number) : Promise<bigint[]>{
