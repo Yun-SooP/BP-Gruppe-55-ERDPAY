@@ -64,3 +64,59 @@
   height: 160px;
   margin-top: 10px;
 }
+/* 
+
+
+
+
+*/
+/* Account */
+.l-session-window {
+  width: 550px;
+  height: 550px;
+}
+
+.l-session-window__header {
+  margin-top: 25px;
+}
+
+.l-session-window__form {
+  margin-top: 50px;
+}
+/* 
+
+
+
+
+*/
+/* Transfer */
+.l-transfer-window-container {
+  width: 700px;
+  height: 1000px;
+}
+
+.l-transfer-title {
+  align-self: self-start;
+  margin-left: 80px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.l-transfer-title:last-child {
+  /*for Title: Mint*/
+  margin-top: 50px;
+}
+
+.l-transfer-window {
+  width: 550px;
+  height: 70px;
+}
+
+.l-mint-window {
+  width: 550px;
+  height: 200px;
+}
+
+.l-transfer-footer {
+  margin-top: 15px;
+}

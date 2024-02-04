@@ -22,7 +22,7 @@ let div_transfer: HTMLDivElement;
 export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
   div_app = div_widget;
   div_app.innerHTML = `
-      <div class="session-window">
+      <div class="session-window l-session-window first-layer-window">
 
         <div class="widget-header">
           <button class="goback-button">
@@ -35,7 +35,7 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
           />
         </div>
       
-        <header class="session-window__header">
+        <header class="session-window__header l-session-window__header">
           <h1>Transfer</h1>
           <p>
             Create a new session or<br />
@@ -43,7 +43,7 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
           </p>
         </header>
 
-      <form class="session-window__form">
+      <form class="session-window__form l-session-window__form">
         <button type="button" class="new-session-btn">New Session</button>
         <span>or</span>
         <input type="password" placeholder="your private key" />
@@ -59,11 +59,8 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
     // to fix
   )!;
 
-  const div_sessionWindow =
-    document.querySelector<HTMLDivElement>(".session-window")!;
-
   const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
-    ".session-window__form input[type=password]"
+    ".session-window__form input[type='password']"
   )!;
 
   /**
@@ -87,10 +84,11 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
     }
   });
 
-  txt_previousPrivateKey.addEventListener("click", () => {
-    div_sessionWindow.style.width = "550px";
-    txt_previousPrivateKey.style.width = "380px";
-  });
+  //stretch window and password input, if click password input
+  // txt_previousPrivateKey.addEventListener("click", () => {
+  //   div_sessionWindow.style.width = "550px";
+  //   txt_previousPrivateKey.style.width = "380px";
+  // });
 
   btn_restoreSession.addEventListener("click", () =>
     eventRestoreSession(txt_previousPrivateKey.value)
@@ -132,24 +130,28 @@ async function eventRestoreSession(privateKey: string) {
 export function htmlTransferAndMintWindow() {
   div_app.style.height = "130vh";
   div_app.innerHTML = `
-  <div class="inner-window-container">
-      <img
-        class="erdstall-logo"
-        src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
-        alt="TypeScript"
-      />
-      <button class="goback-button">
-        <i class="fa-solid fa-angle-left"></i>
-      </button>
+  <div class="transfer-window-container l-transfer-window-container first-layer-window">
 
-      <h1>Transfer</h1>
-      <div class="inner-window">
+      <div class="widget-header">
+          <button class="goback-button">
+            <i class="fa-solid fa-angle-left"></i>
+          </button>
+          <img
+            class="erdstall-logo"
+            src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
+            alt="TypeScript"
+          />
       </div>
 
-      <h1>Mint</h1>
-      <div class="mint-window">
+      <h1 class="l-transfer-title">Transfer</h1>
+
+      <div class="transfer-window l-transfer-window second-layer-window">
       </div>
-        <div class="transfer-footer">
+
+      <h1 class="l-transfer-title">Mint</h1>
+      <div class="mint-window l-mint-window second-layer-window">
+      </div>
+        <div class="transfer-footer l-transfer-footer">
           <span class="private-key">your private key</span>
           <span class="session-address">your address</span>
         </div>
@@ -157,7 +159,7 @@ export function htmlTransferAndMintWindow() {
     
   `;
   div_transfer = document.querySelector<HTMLDivElement>(
-    ".inner-window-container .inner-window"
+    ".transfer-window-container .transfer-window"
   )!;
   const div_mint = document.querySelector<HTMLDivElement>(".mint-window")!;
 
@@ -172,7 +174,7 @@ export function htmlTransferAndMintWindow() {
   // Event listener for going back one page
 
   const btn_return = document.querySelector<HTMLButtonElement>(
-    ".inner-window-container .goback-button"
+    ".transfer-window-container .goback-button"
   )!;
   btn_return.addEventListener("click", () => {
     div_app.style.height = "100vh";
@@ -213,11 +215,11 @@ export async function htmlTransfer(
     div_transfer.innerHTML = `
       <p>You have no token available.</p>
     `;
-    div_transfer.style.height = "70px";
   } else {
+    div_transfer.style.height = "500px";
     div_transfer.innerHTML = `
       <h2>Choose your token and the amount of tokens you want to send</h2>
-      <header>
+      <header class="token-list-header">
           <span>Available Tokens</span>
           <span>amount</span>
       </header>
@@ -228,13 +230,13 @@ export async function htmlTransfer(
       </div>
 
 
-      <form class="inner-form">
-         <div class="inner-form__token-amount">
+      <form class="transfer-form">
+         <div class="transfer-form__token-amount">
               <input type = "text" placeholder="amount" spellcheck="false"/>
               <span>Tokens</span>
         </div>
 
-        <div class="side">
+        <div class="transer-form__advanced-transfer">
           <label class="toggle">
             <input type = "checkbox" id = "advancedTransfer"></input>
             <span class="slider round"></span>
@@ -242,8 +244,8 @@ export async function htmlTransfer(
           <p>advanced transfer with ID selection</p>
         </div> 
 
-        <input type="text" placeholder="recipient address" spellcheck="false"/>
-        <button type="button" class="inner-form__continue-btn">continue to confirmation</button>
+        <input type="text" class="transfer-form__recipient-address" placeholder="recipient address" spellcheck="false"/>
+        <button type="button" class="transfer-form__continue-btn">continue to confirmation</button>
       </form>
     `;
     const select_tokens = document.querySelector<HTMLSelectElement>(
@@ -277,16 +279,16 @@ export async function htmlTransfer(
     const tokens = Array.from(account.values.values.entries());
 
     const txt_amount = document.querySelector<HTMLInputElement>(
-      ".inner-form__token-amount input"
+      ".transfer-form__token-amount input"
     )!;
     const txt_recipientAddress = document.querySelector<HTMLInputElement>(
-      '.inner-form input[placeholder="recipient address"]'
+      '.transfer-form input[placeholder="recipient address"]'
     )!;
 
     makeTokensList(select_tokens, select_amount, tokens);
 
     const btn_continue = document.querySelector<HTMLInputElement>(
-      ".inner-form__continue-btn"
+      ".transfer-form__continue-btn"
     )!;
     btn_continue.addEventListener("click", async () =>
       transferContinueButtonEvent(
@@ -464,13 +466,13 @@ async function transferEvent(
  */
 function htmlTransferSuccesful() {
   div_transfer.innerHTML = `
-    <div class="successful-div">Transfer Succesful!</div>
-    <form class="transfer-form">
+    <div class="successful-div third-layer-window">Transfer Succesful!</div>
+    <form class="successful-transfer-form">
       <button type="button" class="return-btn">return</button>
     </form>
   `;
   const btn_return = document.querySelector<HTMLInputElement>(
-    ".transfer-form .return-btn"
+    ".successful-transfer-form .return-btn"
   )!;
   btn_return.addEventListener("click", () => htmlTransfer());
 }
@@ -491,20 +493,20 @@ function htmlAdvancedTransfer(
   div_transfer.innerHTML = `
 
     <h2>Token:</h2>
-    <div class="token-address-div">${tokenAddress}</div>
+    <div class="token-address-div third-layer-window">${tokenAddress}</div>
     <h2>To recipient:</h2>
-    <div class="recipient-address-div">${recipientAddress}</div>
+    <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
     <h2>Choose ${amount} token ID${amount > 1 ? "s" : ""} to send</h2>
-    <div id= checkboxesIDs></div>
+    <div class= checkboxesIDs></div>
     <form class="advanced-transfer-form">
-      <button type="button" class="advanced-transfer-form__continue-btn">continue</button>
       <button type="button" class="advanced-transfer-form__return-btn">return</button>
+      <button type="button" class="advanced-transfer-form__continue-btn">continue</button>
     </form>
   `;
   const availableTokenIDs = (<Tokens>account.values.values.get(tokenAddress))
     .value;
   const div_checkboxesIDs =
-    document.querySelector<HTMLDivElement>("#checkboxesIDs")!;
+    document.querySelector<HTMLDivElement>(".checkboxesIDs")!;
   const checkboxes_IDs =
     typeof checkedTokenIDs == "undefined"
       ? makeTokenIDsCheckboxes(div_checkboxesIDs, availableTokenIDs)
@@ -615,13 +617,13 @@ function htmlTransferConfirmation(
   div_transfer.innerHTML = `
     <h2>Please confirm the transfer</h2>
     <h2>${amount} Token${amount > 1 ? "s" : ""} of:</h2>
-    <div class="token-address-div">${tokenAddress}</div>
-    <h2>token ID:<h2>
+    <div class="token-address-div third-layer-window">${tokenAddress}</div>
+    <h2>token ID:</h2>
     <div id="tokenIDs">
     </div>
 
     <h2>To recipient:</h2>
-    <div class="recipient-address-div">${recipientAddress}</div>
+    <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
     
     <form class="confirm-transfer-form">
       <button type="button" class="confirm-transfer-btn">confirm transfer</button>
@@ -633,6 +635,7 @@ function htmlTransferConfirmation(
 
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
+    span.classList.add("token-id", "third-layer-window");
     span.innerHTML = `${tokenIDs[i]}`;
     div_tokenIDs.appendChild(span);
   }

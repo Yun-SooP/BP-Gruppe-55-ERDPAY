@@ -1,5 +1,5 @@
 @import "styles/reset.css";
-@import "smacss/base.css";
-@import "smacss/layout.css";
-@import "smacss/module.css";
-@import "smacss/state.css";
+@import "styles/base.css";
+@import "styles/layout.css";
+@import "styles/module.css";
+@import "styles/state.css";

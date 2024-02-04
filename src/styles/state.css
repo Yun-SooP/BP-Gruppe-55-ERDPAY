@@ -1,6 +1,6 @@
 .visible-balance-window__address {
   flex-direction: row;
-  /* to do: responsive */
+  justify-content: center;
   width: 550px;
   height: 38px;
   margin-top: 10px;
