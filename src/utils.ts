@@ -2,6 +2,11 @@ import { Account } from "@polycrypt/erdstall/ledger"
 import { Tokens } from "@polycrypt/erdstall/ledger/assets"
 import { Asset } from "@polycrypt/erdstall/ledger/assets"
 
+/**
+ * 
+ * @param tokenAddress 
+ * @returns 
+ */
 export function checkTokenAddress(tokenAddress: string) : {valid: boolean, message: string} {
     let valid = true
     let message = ""
@@ -19,6 +24,11 @@ export function checkTokenAddress(tokenAddress: string) : {valid: boolean, messa
     return { valid, message }
 }
 
+/**
+ * 
+ * @param tokenID 
+ * @returns 
+ */
 export function checkTokenID(tokenID: string) : {valid: boolean, message: string} {
     let valid = true
     let message = ""
@@ -33,6 +43,11 @@ export function checkTokenID(tokenID: string) : {valid: boolean, message: string
     return { valid, message }
 }
 
+/**
+ * 
+ * @param amount 
+ * @returns 
+ */
 export function checkAmount(amount: string) : {valid: boolean, message: string} {
     let valid = true
     let message = ""
@@ -47,6 +62,11 @@ export function checkAmount(amount: string) : {valid: boolean, message: string} 
     return { valid, message }
 }
 
+/**
+ * 
+ * @param recipientAddress 
+ * @returns 
+ */
 export function checkRecipientAddress(recipientAddress: string) : {valid: boolean, message: string} {
     let valid = true
     let message = ""
@@ -63,29 +83,52 @@ export function checkRecipientAddress(recipientAddress: string) : {valid: boolea
     }
     return { valid, message }
 }
+
+/**
+ * 
+ * @returns 
+ */
 export function generateRandomAddress() : string {
     const values = crypto.getRandomValues(new Uint8Array(20));
     const hexString = Array.from(values, byte => byte.toString(16).padStart(2, '0')).join('')
     return '0x' + hexString
 }
 
+/**
+ * 
+ * @returns 
+ */
 export function generateRandomTokenID() : bigint {
     const randomBytesArray = crypto.getRandomValues(new Uint8Array(32));
     const tokenID = BigInt('0x' + Array.from(randomBytesArray).map(byte => byte.toString(16).padStart(2, '0')).join(''));
     return tokenID
 }
 
-export function getTokenIDs(account: Account, tokenAddress: string, amount: number) : bigint[] {
+/**
+ * 
+ * @param account 
+ * @param tokenAddress 
+ * @param amount 
+ * @returns 
+ */
+export function getTokenIDs(account: Account, tokenAddress: string, amount?: number) : bigint[] {
     const tokens = <Tokens>account.values.values.get(tokenAddress)!;
+    if (amount == undefined) return tokens.value
     return tokens.value.slice(0, amount);
 }
 
+/**
+ * 
+ * @param select_tokens 
+ * @param select_amount 
+ * @param tokens 
+ */
 export function makeTokensList(select_tokens: HTMLSelectElement, select_amount: HTMLSelectElement, tokens: [string, Asset][]){
     for (let i = 0; i < tokens.length; i++) {
       const option = document.createElement("option");
       const token = tokens[i];
       option.value = token[0];
-      option.text = token[0];
+      option.text = token[0].substring(0,6) + "..." + token[0].substring(38,42)
       select_tokens.add(option);
 
       const option_amount = document.createElement("option");
