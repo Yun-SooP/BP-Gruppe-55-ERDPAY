@@ -92,13 +92,13 @@
 /* Transfer */
 .l-transfer-window-container {
   width: 700px;
-  height: 1000px;
+  height: 1150px;
 }
 
 .l-transfer-title {
   align-self: self-start;
   margin-left: 80px;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-bottom: 10px;
 }
 
@@ -114,7 +114,7 @@
 
 .l-mint-window {
   width: 550px;
-  height: 200px;
+  height: 350px;
 }
 
 .l-transfer-footer {
