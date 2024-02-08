@@ -106,7 +106,7 @@ async function eventNewSession() {
     alert(newSession_.message);
 
     //when does this error message appear?
-    //displayErrorMessage(newSession_.message,'errRestoreSession','inputPrivateKey');
+    //displayErrorMessage(newSession_.message,'','');
 
     return;
   }
@@ -118,7 +118,7 @@ async function eventNewSession() {
 async function eventRestoreSession(privateKey: string) {
   const restoredSession = await restoreSession(privateKey);
   if (restoredSession.message != undefined) {
-    utils.displayErrorMessageForTransfer(restoredSession.message,'errRestoreSession','inputPrivateKey');
+    utils.displayErrorMessage(restoredSession.message,'errRestoreSession','inputPrivateKey');
     //alert(restoredSession.message);
     return;
   }
@@ -326,8 +326,8 @@ function transferContinueButtonEvent(advanced: boolean, tokenAddress: string, am
 
     //there is no separation of amount error message and recipient address error message,
     //so for now they are displayed at the same time together.
-    utils.displayErrorMessageForTransfer(message,'errTokenAmount','tokenAmount');
-    utils.displayErrorMessageForTransfer(message,'errRecipientAddr','recipientAddr');
+    utils.displayErrorMessage(message,'errTokenAmount','tokenAmount');
+    utils.displayErrorMessage(message,'errRecipientAddr','recipientAddr');
     //alert(message);
 
   } else {
@@ -518,7 +518,7 @@ function advancedTransferContinueButtonEvent(
     //   `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
     // );
     let message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
-    utils.displayErrorMessageForTransfer(message, 'errTransferConfirm','tokenCheckBox')
+    utils.displayErrorMessage(message, 'errTransferConfirm','tokenCheckBox')
     return;
   }
   const tokenIDs = chk_checkedIDs.map((checkbox) => BigInt(checkbox.value));

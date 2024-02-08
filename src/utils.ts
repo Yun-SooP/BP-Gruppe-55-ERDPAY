@@ -158,12 +158,12 @@ export function errorMessageSpan(id:string, msg:string) {
   }
 
 /**
- * 
+ * function to display error message and red borders for transfer
  * @param message message to display in errDisplay
  * @param errDisplay span element's id to show error message
  * @param inputBox input box's id to outline in red
  */
-export function displayErrorMessageForTransfer(message:unknown|string, errDisplay:string, inputBox:string){
+export function displayErrorMessage(message:unknown|string, errDisplay:string, inputBox:string){
     let msg = 
     `
     <span class="error-message-span">
