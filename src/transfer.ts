@@ -106,7 +106,7 @@ async function eventNewSession() {
     alert(newSession_.message);
 
     //when does this error message appear?
-    //displayErrorMessage(newSession_.message,'','');
+    /*displayErrorMessage(newSession_.message,'',''); */
 
     return;
   }
@@ -328,6 +328,7 @@ function transferContinueButtonEvent(advanced: boolean, tokenAddress: string, am
     //so for now they are displayed at the same time together.
     utils.displayErrorMessage(message,'errTokenAmount','tokenAmount');
     utils.displayErrorMessage(message,'errRecipientAddr','recipientAddr');
+    
     //alert(message);
 
   } else {

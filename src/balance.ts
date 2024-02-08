@@ -3,7 +3,7 @@ import { setupClient } from "./setup_client.ts";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { Client } from "@polycrypt/erdstall";
 import { widget } from "./widget.ts";
-import { getTokenIDs, makeTokensList, errorHighlight, errorMessageSpan, displayErrorMessage } from "./utils.ts";
+import { getTokenIDs, makeTokensList, displayErrorMessage, setWindowHeight } from "./utils.ts";
 
 let html_widgetCopy: HTMLDivElement;
 let div_balanceWindow: HTMLDivElement;
@@ -55,6 +55,8 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
   try {
     client = await setupClient();
   } catch (error) {
+
+    //what error is this, and when does it show?
     alert(error);
   }
 
@@ -185,7 +187,7 @@ async function viewBalance(client: Client, input: HTMLInputElement) {
     // );
     
     //resize window height
-    document.getElementById('balanceAddressEnterWindow')!.style.height = "210px";
+    setWindowHeight('balanceAddressEnterWindow', 210);
 
     //display error message 
     let msg = `Please enter a valid address. <br> The address must be in hex and 40 characters long.`

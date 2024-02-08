@@ -11,8 +11,9 @@ import * as utils from "./utils.ts";
 export async function htmlMint(div_mint: HTMLDivElement, session: Session) {
   div_mint.innerHTML = `
     <form class="mint-form">
-        
-        <input type="text" class="token-address-txt" placeholder="token address (ex. 0x1234...)" />
+
+        <span id="errMintTokenAddr"></span>
+        <input type="text" class="token-address-txt" placeholder="token address (ex. 0x1234...)" id="mintTokenAddr"/>
         <button type="button" class="random-address-btn">generate random address</button>
 
         <div class="mint-form__multiple-tokens">
@@ -23,8 +24,8 @@ export async function htmlMint(div_mint: HTMLDivElement, session: Session) {
           <p>mint multiple tokens</p>
         </div> 
 
-        
-        <input type="text" placeholder="token ID" />
+        <span id="errMintTokenId"></span>
+        <input type="text" placeholder="token ID" id="mintTokenId"/>
         <button type="button" class="mint-btn">mint new token</button>
     </form>
     `;
@@ -68,9 +69,16 @@ async function eventSingleMint(session: Session) {
   )!;
   const tokenAddress = txt_tokenAddress.value;
   const tokenID = txt_tokenID.value;
+
+  //cannot differenciate if error is for token address or amount
   const { valid, message } = checkInputsForMint(tokenAddress, "1", tokenID);
   if (!valid) {
-    alert(message);
+
+    /*utils.setWindowHeight('l-mint-window', 420);*/
+    utils.displayErrorMessage(message, 'errMintTokenAddr','mintTokenAddr');
+    utils.displayErrorMessage(message, 'errMintTokenId','mintTokenId');
+    //alert(message);
+
     return;
   }
   const { status, error } = await mint(
@@ -99,7 +107,16 @@ async function eventMultipleMint(session: Session) {
   const amount = txt_amount.value;
   const { valid, message } = checkInputsForMint(tokenAddress, amount);
   if (!valid) {
-    alert(message);
+
+    //displayed error message for both token address and token amount/id
+    //since the error message is not divided yet
+
+    /*utils.setWindowHeight('l-mint-window', 420);*/
+    utils.displayErrorMessage(message, 'errMintTokenAddr','mintTokenAddr');
+    utils.displayErrorMessage(message, 'errMintTokenId','mintTokenId');
+    
+    //alert(message);
+
     return;
   }
   await multipleMint(session, tokenAddress, parseFloat(amount));
@@ -107,6 +124,7 @@ async function eventMultipleMint(session: Session) {
   await htmlTransferAndMintWindow();
 }
 
+//split into checking address and checking other inputs, or even into 3.
 function checkInputsForMint(
   tokenAddress: string,
   amount: string,

@@ -58,6 +58,8 @@ export function checkAmount(amount: string) : {valid: boolean, message: string} 
         message = "Please input the amount."
     }
     const amountParsed = parseFloat(amount)
+
+    //alert somewhere else
     if (Number.isNaN(amountParsed) || amountParsed <= 0 || !Number.isInteger(amountParsed)){
         alert("Please enter a valid ID.")
     } 
@@ -160,8 +162,8 @@ export function errorMessageSpan(id:string, msg:string) {
 /**
  * function to display error message and red borders for transfer
  * @param message message to display in errDisplay
- * @param errDisplay span element's id to show error message
- * @param inputBox input box's id to outline in red
+ * @param errDisplay span element's id from html to show error message
+ * @param inputBox input box's id from html to outline in red
  */
 export function displayErrorMessage(message:unknown|string, errDisplay:string, inputBox:string){
     let msg = 
@@ -174,5 +176,12 @@ export function displayErrorMessage(message:unknown|string, errDisplay:string, i
     `
     errorMessageSpan(errDisplay, msg);
     errorHighlight(inputBox);
-    
   }
+/**
+ * function to change the height of the height of an element.
+ * @param id id of the window in html to change its height
+ * @param pixel the size of the window you want 
+ */
+export function setWindowHeight(id:string, pixel:number){
+    document.getElementById(id)!.style.height = `${pixel}px`;
+}
