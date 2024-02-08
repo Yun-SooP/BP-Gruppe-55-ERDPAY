@@ -2,6 +2,8 @@ import { Account } from "@polycrypt/erdstall/ledger"
 import { Tokens } from "@polycrypt/erdstall/ledger/assets"
 import { Asset } from "@polycrypt/erdstall/ledger/assets"
 
+let errorRed = '#ff7979';
+
 /**
  * 
  * @param tokenAddress 
@@ -137,3 +139,40 @@ export function makeTokensList(select_tokens: HTMLSelectElement, select_amount: 
         select_amount.add(option_amount);
     }
 }
+
+/**
+ * function to show red borders around the element
+ * @param id id of the css element to have red borders
+ */
+export function errorHighlight(id :string) {
+    document.getElementById(id)!.style.border = "1px solid var(--errorRed)";
+}
+/**
+ * function to display error message
+ * @param id id of the css element
+ * @param msg html span element; needs to be written between ``
+ */
+export function errorMessageSpan(id:string, msg:string) {
+    let errorMsg = document.getElementById(id);
+    errorMsg!.innerHTML = msg;
+  }
+
+/**
+ * 
+ * @param message message to display in errDisplay
+ * @param errDisplay span element's id to show error message
+ * @param inputBox input box's id to outline in red
+ */
+export function displayErrorMessageForTransfer(message:unknown|string, errDisplay:string, inputBox:string){
+    let msg = 
+    `
+    <span class="error-message-span">
+      <font color= ${errorRed}>
+        ${message}
+      </font>
+    </span>
+    `
+    errorMessageSpan(errDisplay, msg);
+    errorHighlight(inputBox);
+    
+  }

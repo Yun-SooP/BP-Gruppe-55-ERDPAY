@@ -39,7 +39,7 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
         <header class="session-window__header l-session-window__header">
           <h1>Transfer</h1>
           <p>
-            Create a new session or<br />
+            Create a new session or <br/>
             restore your previous session with your private key
           </p>
         </header>
@@ -47,8 +47,9 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
       <form class="session-window__form l-session-window__form">
         <button type="button" class="new-session-btn">New Session</button>
         <span>or</span>
-        <input type="password" placeholder="your private key" />
-        <button type="button" class="restore-session-btn">Restore Session</button>
+        <span id="errRestoreSession"></span>
+        <input type="password" placeholder="your private key" id="inputPrivateKey"/>
+        <button type="button" class="restore-session-btn" >Restore Session</button>
       </form>
     </div>
   `;
@@ -103,6 +104,10 @@ async function eventNewSession() {
   const newSession_ = await newSession();
   if (newSession_.message != undefined) {
     alert(newSession_.message);
+
+    //when does this error message appear?
+    //displayErrorMessage(newSession_.message,'errRestoreSession','inputPrivateKey');
+
     return;
   }
   session = newSession_.session!;
@@ -113,7 +118,8 @@ async function eventNewSession() {
 async function eventRestoreSession(privateKey: string) {
   const restoredSession = await restoreSession(privateKey);
   if (restoredSession.message != undefined) {
-    alert(restoredSession.message);
+    utils.displayErrorMessageForTransfer(restoredSession.message,'errRestoreSession','inputPrivateKey');
+    //alert(restoredSession.message);
     return;
   }
   session = restoredSession.session!;
@@ -152,7 +158,7 @@ export function htmlTransferAndMintWindow() {
           <span class="private-key">your private key</span>
           <span class="session-address">your address</span>
         </div>
-    </div>
+  </div>
     
   `;
   div_transfer = document.querySelector<HTMLDivElement>(
@@ -228,7 +234,8 @@ export async function htmlTransfer(
 
       <form class="transfer-form">
          <div class="transfer-form__token-amount">
-              <input type = "text" placeholder="amount" spellcheck="false"/>
+              <span id="errTokenAmount"></span>
+              <input type = "text" placeholder="amount" spellcheck="false" id="tokenAmount"/>
               <span>Tokens</span>
         </div>
 
@@ -239,8 +246,9 @@ export async function htmlTransfer(
           </label>
           <p>advanced transfer with ID selection</p>
         </div> 
-
-        <input type="text" class="transfer-form__recipient-address" placeholder="recipient address (ex. 0x1234...)" spellcheck="false"/>
+        <span id="errRecipientAddr"></span>
+        <input type="text" class="transfer-form__recipient-address" placeholder="recipient address (ex. 0x1234...)" spellcheck="false" id="recipientAddr"/>
+        
         <button type="button" class="transfer-form__continue-btn">continue to confirmation</button>
       </form>
     `;
@@ -315,7 +323,13 @@ function transferContinueButtonEvent(advanced: boolean, tokenAddress: string, am
   const { valid, message } = checkInputsForTransfer(tokenAddress, amount, recipientAddress)
 
   if (!valid) {
-    alert(message);
+
+    //there is no separation of amount error message and recipient address error message,
+    //so for now they are displayed at the same time together.
+    utils.displayErrorMessageForTransfer(message,'errTokenAmount','tokenAmount');
+    utils.displayErrorMessageForTransfer(message,'errRecipientAddr','recipientAddr');
+    //alert(message);
+
   } else {
     const amountParsed = parseFloat(amount);
     if (advanced) {
@@ -370,6 +384,8 @@ async function transferEvent(tokenAddress: string, amount: number, recipientAddr
     htmlTransferSuccesful();
   } else {
     const err: Error = <Error>error;
+
+    //when does this appear?
     alert("Transfer failed!: " + err.message);
   }
 }
@@ -410,7 +426,8 @@ function htmlAdvancedTransfer(
     <h2>To recipient:</h2>
     <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
     <h2>Choose ${amount} token ID${amount > 1 ? "s" : ""} to send</h2>
-    <div class= checkboxesIDs></div>
+    <div class= checkboxesIDs id="tokenCheckBox"></div>
+    <span id="errTransferConfirm"></span>
     <form class="advanced-transfer-form">
       <button type="button" class="advanced-transfer-form__return-btn">return</button>
       <button type="button" class="advanced-transfer-form__continue-btn">continue</button>
@@ -497,9 +514,11 @@ function advancedTransferContinueButtonEvent(
 ) {
   const chk_checkedIDs = chk_IDs.filter((checkbox) => checkbox.checked);
   if (chk_checkedIDs.length != amount) {
-    alert(
-      `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
-    );
+    // alert(
+    //   `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
+    // );
+    let message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
+    utils.displayErrorMessageForTransfer(message, 'errTransferConfirm','tokenCheckBox')
     return;
   }
   const tokenIDs = chk_checkedIDs.map((checkbox) => BigInt(checkbox.value));

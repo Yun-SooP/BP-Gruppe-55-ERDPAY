@@ -3,7 +3,7 @@ import { setupClient } from "./setup_client.ts";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { Client } from "@polycrypt/erdstall";
 import { widget } from "./widget.ts";
-import { getTokenIDs, makeTokensList } from "./utils.ts";
+import { getTokenIDs, makeTokensList, errorHighlight, errorMessageSpan } from "./utils.ts";
 
 let html_widgetCopy: HTMLDivElement;
 let div_balanceWindow: HTMLDivElement;
@@ -37,11 +37,15 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
     <h1 class="l-balance-title">Balance</h1>
     <div class="balance-window-container__address"></div>
 
-    <div class="balance-window l-balance-window second-layer-window">
+    <div class="balance-window l-balance-window second-layer-window"  id="balanceAddressEnterWindow">
       <form class="balance-window__address-form">
-        <input type="text" placeholder="account address" spellcheck="false"/>
-        <button type="button" class="view-balance-btn" />View Balance</button>
+        <span id="errBalanceAccAddr"></span>
+        <input type="text" placeholder="account address" spellcheck="false" id="inputAddress"/>
+        <button type="button" class="view-balance-btn">
+          View Balance
+        </button>
       </form>
+
     </div>
   </div>
   `;
@@ -176,11 +180,20 @@ async function viewBalance(client: Client, input: HTMLInputElement) {
       }
     });
   } catch (error) {
-    alert(
-      "Please enter a valid address. The address must be in hex and 40 characters long."
-    );
+    // alert(
+    //   "Please enter a valid address. The address must be in hex and 40 characters long."
+    // );
+    
+    document.getElementById('balanceAddressEnterWindow')!.style.height = "210px";
+    let msg = `
+    <span class="error-message-span">
+      Please enter a valid address. <br> The address must be in hex and 40 characters long.
+    </span>`
+    errorHighlight('inputAddress');
+    errorMessageSpan('errBalanceAccAddr', msg);
   }
 }
+
 
 /**
  * Function to display token list
