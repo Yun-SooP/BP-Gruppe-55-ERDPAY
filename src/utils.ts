@@ -2,7 +2,7 @@ import { Account } from "@polycrypt/erdstall/ledger"
 import { Tokens } from "@polycrypt/erdstall/ledger/assets"
 import { Asset } from "@polycrypt/erdstall/ledger/assets"
 
-let errorRed = '#ff7979';
+const errorRed = '#ff7979';
 
 /**
  * 
@@ -155,7 +155,7 @@ export function errorHighlight(id :string) {
  * @param msg html span element; needs to be written between ``
  */
 export function errorMessageSpan(id:string, msg:string) {
-    let errorMsg = document.getElementById(id);
+    const errorMsg = document.getElementById(id);
     errorMsg!.innerHTML = msg;
   }
 
@@ -166,7 +166,7 @@ export function errorMessageSpan(id:string, msg:string) {
  * @param inputBox input box's id from html to outline in red
  */
 export function displayErrorMessage(message:unknown|string, errDisplay:string, inputBox:string){
-    let msg = 
+    const msg = 
     `
     <span class="error-message-span">
       <font color= ${errorRed}>

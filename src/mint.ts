@@ -1,6 +1,5 @@
 import { Session } from "@polycrypt/erdstall";
 import { Address } from "@polycrypt/erdstall/ledger";
-import { htmlTransferAndMintWindow } from "./transfer";
 import * as utils from "./utils.ts";
 
 /**
@@ -8,7 +7,9 @@ import * as utils from "./utils.ts";
  * @param div_mint HTML to display to
  * @param session The session in which the token will minted in.
  */
-export async function htmlMint(div_mint: HTMLDivElement, session: Session) {
+let div_mint : HTMLDivElement;
+export async function htmlMint(div: HTMLDivElement, session: Session) {
+  div_mint = div;
   div_mint.innerHTML = `
     <form class="mint-form">
 
@@ -72,13 +73,12 @@ async function eventSingleMint(session: Session) {
 
   //cannot differenciate if error is for token address or amount
   const { valid, message } = checkInputsForMint(tokenAddress, "1", tokenID);
+  
   if (!valid) {
-
     /*utils.setWindowHeight('l-mint-window', 420);*/
     utils.displayErrorMessage(message, 'errMintTokenAddr','mintTokenAddr');
     utils.displayErrorMessage(message, 'errMintTokenId','mintTokenId');
     //alert(message);
-
     return;
   }
   const { status, error } = await mint(
@@ -93,7 +93,7 @@ async function eventSingleMint(session: Session) {
   } else if (status == 1) {
     alert("Token succesfully minted!");
   }
-  await htmlTransferAndMintWindow();
+  await htmlMint(div_mint, session);
 }
 
 async function eventMultipleMint(session: Session) {
@@ -121,7 +121,7 @@ async function eventMultipleMint(session: Session) {
   }
   await multipleMint(session, tokenAddress, parseFloat(amount));
   alert("Tokens succesfully minted!");
-  await htmlTransferAndMintWindow();
+  await htmlMint(div_mint, session);
 }
 
 //split into checking address and checking other inputs, or even into 3.

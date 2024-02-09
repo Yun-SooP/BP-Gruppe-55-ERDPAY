@@ -1,5 +1,5 @@
 import { htmlBalance } from "./balance";
-import { htmlCreateSessionForTransfer } from "./transfer";
+import { htmlCreateSession } from "./dashboard";
 
 /**
  * Function to display selection between transfer and view balance.
@@ -21,7 +21,7 @@ export function widget(html_widget: HTMLDivElement) {
 
     <form class="main-window__form l-main-window__form">
         <button type="button" class="view-balance-btn">View Balance</button>
-        <button type="button" class="transfer-btn">Transfer</button>
+        <button type="button" class="transfer-btn">Dashboard</button>
     </form>
     </div>
     `;
@@ -30,7 +30,7 @@ export function widget(html_widget: HTMLDivElement) {
     ".main-window__form .transfer-btn"
   );
   btn_transfer?.addEventListener("click", () => {
-    htmlCreateSessionForTransfer(html_widget);
+    htmlCreateSession(html_widget);
   });
 
   const btn_balance = document.querySelector(
