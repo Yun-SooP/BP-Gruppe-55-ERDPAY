@@ -43,7 +43,7 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
           <button type="button" class="new-session-btn">New Account</button>
           <span>or</span>
           <span id="errRestoreSession"></span>
-          <input type="password" placeholder="your private key" id="inputPrivateKey"/>
+          <input type="password" placeholder="your private key (ex. 0x1234...)" id="inputPrivateKey"/>
           <button type="button" class="restore-session-btn" >Log-in</button>
         </form>
       </div>

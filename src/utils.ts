@@ -29,7 +29,7 @@ export function checkPrivateKey(privateKey: string, errDisplay: string, inputBox
     }
     const hex = /[0-9A-Fa-f]{64}/g;
     if (privateKey.slice(0,2) != "0x" || !hex.test(privateKey.slice(2))) {
-        displayErrorMessage("Please enter a valid private key. (hexnumber of length 64, starting with 0x)", errDisplay, inputBox);
+        displayErrorMessage(`Please enter a valid private key. <br> The private key must be in hex and 64 characters long.`, errDisplay, inputBox);
         return false;
     }
     return true;
