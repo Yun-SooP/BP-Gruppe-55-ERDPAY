@@ -42,10 +42,10 @@ export async function htmlTransfer(
           <span>Available Tokens</span>
           <span>Amount</span>
       </header>
-
-      <div class="token-list">
-      <select class="token-list__tokens" size = "5"></select>
-      <select class="token-list__amount" disabled size = "5"></select>
+      <span id="errTokenAddress"></span>
+      <div id="token-list" class="token-list">
+        <select class="token-list__tokens" size = "5"></select>
+        <select class="token-list__amount" disabled size = "5"></select>
       </div>
 
       <form class="transfer-form">
@@ -136,57 +136,34 @@ export async function htmlTransfer(
 }
 
 function transferContinueButtonEvent(advanced: boolean, tokenAddress: string, amount: string, recipientAddress: string){
-  const { valid, message } = checkInputsForTransfer(tokenAddress, amount, recipientAddress)
+  const valid = checkInputsForTransfer(tokenAddress, amount, recipientAddress)
 
-  if (!valid) {
-
-    //there is no separation of amount error message and recipient address error message,
-    //so for now they are displayed at the same time together.
-    utils.displayErrorMessage(message,'errTokenAmount','tokenAmount');
-    utils.displayErrorMessage(message,'errRecipientAddr','recipientAddr');
-    
-    //alert(message);
-
-  } else {
-    const amountParsed = parseFloat(amount);
-    if (advanced) {
-      htmlAdvancedTransfer(tokenAddress, amountParsed, recipientAddress);
-    } else {
-      const tokenIDs = utils.getTokenIDs(account, tokenAddress, amountParsed)
-      htmlTransferConfirmation(tokenAddress, amountParsed, recipientAddress, tokenIDs)
-    }
+  if(!valid){
+    return;
   }
+
+  const amountParsed = parseFloat(amount);
+  if (advanced) {
+    htmlAdvancedTransfer(tokenAddress, amountParsed, recipientAddress);
+  } else {
+    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amountParsed)
+    htmlTransferConfirmation(tokenAddress, amountParsed, recipientAddress, tokenIDs)
+  }
+  
 }
 
-function checkInputsForTransfer(tokenAddress: string, amount: string, recipientAddress: string) : {valid: boolean, message: string} {
+function checkInputsForTransfer(tokenAddress: string, amount: string, recipientAddress: string) : boolean {
   let valid = true
-  let message = ""
-  let result
-  result = utils.checkTokenAddress(tokenAddress)
-  if(!result.valid){
-    valid = result.valid
-    message = result.message
-    return { valid, message }
-  }
-  result = utils.checkAmount(amount)
-  if(!result.valid){
-    valid = result.valid
-    message = result.message
-    return { valid, message }
-  }
-  result = utils.checkRecipientAddress(recipientAddress)
-  if(!result.valid){
-    valid = result.valid
-    message = result.message
-    return { valid, message }
-  }
+  valid = !utils.checkTokenAddress(tokenAddress, 'errTokenAddress', "token-list") ? false : valid;
+  valid = !utils.checkAmount(amount, 'errTokenAmount','tokenAmount') ? false : valid;
+  valid = !utils.checkRecipientAddress(recipientAddress, 'errRecipientAddr','recipientAddr') ? false : valid;
   const tokens = <Tokens>account.values.values.get(tokenAddress)
   if (parseFloat(amount) > tokens.value.length){
-    message = "The selected token does not have enough tokens available. Please adjust the amount or select another token."
+    const message = "The selected token does not have enough tokens available. Please adjust the amount or select another token.";
+    utils.displayErrorMessage(message, 'errTokenAmount', 'tokenAmount')
     valid = false
-    return { valid, message }
   }
-  return { valid, message };
+  return valid;
 }
 
 async function transferEvent(tokenAddress: string, amount: number, recipientAddress: string, tokenIDs?: bigint[]){

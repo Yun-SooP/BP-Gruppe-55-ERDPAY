@@ -112,9 +112,11 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
   
   async function eventRestoreSession(privateKey: string) {
     const restoredSession = await restoreSession(privateKey);
-    if (restoredSession.message != undefined) {
+    const valid = utils.checkPrivateKey(privateKey, 'errRestoreSession','inputPrivateKey')
+    if (!valid){
+      return;
+    } else if (restoredSession.message != undefined) { // there might be unexpected errors (ex. session does not exist)
       utils.displayErrorMessage(restoredSession.message,'errRestoreSession','inputPrivateKey');
-      //alert(restoredSession.message);
       return;
     }
     session = restoredSession.session!;

@@ -72,13 +72,9 @@ async function eventSingleMint(session: Session) {
   const tokenID = txt_tokenID.value;
 
   //cannot differenciate if error is for token address or amount
-  const { valid, message } = checkInputsForMint(tokenAddress, "1", tokenID);
+  const valid = checkInputsForMint(tokenAddress, "1", tokenID);
   
   if (!valid) {
-    /*utils.setWindowHeight('l-mint-window', 420);*/
-    utils.displayErrorMessage(message, 'errMintTokenAddr','mintTokenAddr');
-    utils.displayErrorMessage(message, 'errMintTokenId','mintTokenId');
-    //alert(message);
     return;
   }
   const { status, error } = await mint(
@@ -105,18 +101,8 @@ async function eventMultipleMint(session: Session) {
   )!;
   const tokenAddress = txt_tokenAddress.value;
   const amount = txt_amount.value;
-  const { valid, message } = checkInputsForMint(tokenAddress, amount);
+  const valid = checkInputsForMint(tokenAddress, amount);
   if (!valid) {
-
-    //displayed error message for both token address and token amount/id
-    //since the error message is not divided yet
-
-    /*utils.setWindowHeight('l-mint-window', 420);*/
-    utils.displayErrorMessage(message, 'errMintTokenAddr','mintTokenAddr');
-    utils.displayErrorMessage(message, 'errMintTokenId','mintTokenId');
-    
-    //alert(message);
-
     return;
   }
   await multipleMint(session, tokenAddress, parseFloat(amount));
@@ -129,31 +115,14 @@ function checkInputsForMint(
   tokenAddress: string,
   amount: string,
   tokenID?: string
-): { valid: boolean; message: string } {
-  let valid = true;
-  let message = "";
-  let result;
-  result = utils.checkTokenAddress(tokenAddress);
-  if (!result.valid) {
-    valid = result.valid;
-    message = result.message;
-    return { valid, message };
-  }
-  result = utils.checkAmount(amount);
-  if (!result.valid) {
-    valid = result.valid;
-    message = result.message;
-    return { valid, message };
-  }
+): boolean {
+  let valid = true
+  valid = !utils.checkTokenAddress(tokenAddress, 'errMintTokenAddr', 'mintTokenAddr') ? false : valid;
+  valid = !utils.checkAmount(amount, 'errMintTokenId', 'mintTokenId') ? false : valid;
   if (tokenID != undefined) {
-    result = utils.checkTokenID(tokenID);
-    if (!result.valid) {
-      valid = result.valid;
-      message = result.message;
-      return { valid, message };
-    }
+    valid = !utils.checkTokenID(tokenID, 'errMintTokenId', 'mintTokenId') ? false : valid;
   }
-  return { valid, message };
+  return valid;
 }
 
 /**

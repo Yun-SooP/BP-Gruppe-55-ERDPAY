@@ -9,21 +9,30 @@ const errorRed = '#ff7979';
  * @param tokenAddress 
  * @returns 
  */
-export function checkTokenAddress(tokenAddress: string) : {valid: boolean, message: string} {
-    let valid = true
-    let message = ""
-
+export function checkTokenAddress(tokenAddress: string, errDisplay: string, inputBox: string) : boolean {
     if (tokenAddress == ""){
-        valid = false
-        message = "Please input the tokenAddress."
+        displayErrorMessage("Please select a token address.", errDisplay, inputBox);
+        return false;
     }
-
     const hex = /[0-9A-Fa-f]{40}/g;
     if (tokenAddress.slice(0,2) != "0x" || !hex.test(tokenAddress.slice(2))) {
-        valid = false
-        message = "Please enter a valid address. (hexnumber of length 40, starting with 0x)"
+        displayErrorMessage("Please enter a valid address. (hexnumber of length 40, starting with 0x)", errDisplay, inputBox);
+        return false;
     }
-    return { valid, message }
+    return true;
+}
+
+export function checkPrivateKey(privateKey: string, errDisplay: string, inputBox: string) : boolean {
+    if (privateKey == ""){
+        displayErrorMessage("Please enter your private key.", errDisplay, inputBox);
+        return false;
+    }
+    const hex = /[0-9A-Fa-f]{64}/g;
+    if (privateKey.slice(0,2) != "0x" || !hex.test(privateKey.slice(2))) {
+        displayErrorMessage("Please enter a valid private key. (hexnumber of length 64, starting with 0x)", errDisplay, inputBox);
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -31,18 +40,17 @@ export function checkTokenAddress(tokenAddress: string) : {valid: boolean, messa
  * @param tokenID 
  * @returns 
  */
-export function checkTokenID(tokenID: string) : {valid: boolean, message: string} {
-    let valid = true
-    let message = ""
+export function checkTokenID(tokenID: string, errDisplay: string, inputBox: string) : boolean {
     if (tokenID == ""){
-        valid = false
-        message = "Please input the tokenID."
+        displayErrorMessage("Please input the tokenID.", errDisplay, inputBox);
+        return false;
     }
     const tokenIDParsed = parseFloat(tokenID)
     if (Number.isNaN(tokenIDParsed) || tokenIDParsed <= 0 || !Number.isInteger(tokenIDParsed)){
-        alert("Please enter a valid ID.")
+        displayErrorMessage("Please enter a valid ID.", errDisplay, inputBox);
+        return false;
     } 
-    return { valid, message }
+    return true;
 }
 
 /**
@@ -50,20 +58,18 @@ export function checkTokenID(tokenID: string) : {valid: boolean, message: string
  * @param amount 
  * @returns 
  */
-export function checkAmount(amount: string) : {valid: boolean, message: string} {
-    let valid = true
-    let message = ""
+export function checkAmount(amount: string, errDisplay: string, inputBox: string) : boolean {
     if (amount == ""){
-        valid = false
-        message = "Please input the amount."
+        displayErrorMessage("Please input the amount.", errDisplay, inputBox);
+        return false;
     }
     const amountParsed = parseFloat(amount)
 
-    //alert somewhere else
     if (Number.isNaN(amountParsed) || amountParsed <= 0 || !Number.isInteger(amountParsed)){
-        alert("Please enter a valid ID.")
+        displayErrorMessage("Please enter a valid ID.", errDisplay, inputBox);
+        return false;
     } 
-    return { valid, message }
+    return true;
 }
 
 /**
@@ -71,21 +77,18 @@ export function checkAmount(amount: string) : {valid: boolean, message: string} 
  * @param recipientAddress 
  * @returns 
  */
-export function checkRecipientAddress(recipientAddress: string) : {valid: boolean, message: string} {
-    let valid = true
-    let message = ""
-
+export function checkRecipientAddress(recipientAddress: string, errDisplay: string, inputBox: string) : boolean {
     if (recipientAddress == ""){
-        valid = false
-        message = "Please input the tokenAddress."
+        displayErrorMessage("Please input the recipient address.", errDisplay, inputBox);
+        return false;
     }
 
     const hex = /[0-9A-Fa-f]{40}/g;
     if (recipientAddress.slice(0,2) != "0x" || !hex.test(recipientAddress.slice(2))) {
-        valid = false
-        message = "Please enter a valid address. (hexnumber of length 40, starting with 0x)"
+        displayErrorMessage("Please enter a valid address. (hexnumber of length 40, starting with 0x)", errDisplay, inputBox);
+        return false;
     }
-    return { valid, message }
+    return true;
 }
 
 /**
