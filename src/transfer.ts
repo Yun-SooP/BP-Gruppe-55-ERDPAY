@@ -518,7 +518,7 @@ function advancedTransferContinueButtonEvent(
     // alert(
     //   `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
     // );
-    let message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
+    const message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
     utils.displayErrorMessage(message, 'errTransferConfirm','tokenCheckBox')
     return;
   }
