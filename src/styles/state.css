@@ -26,3 +26,8 @@
   border-radius: 10px;
   margin-left: 15px;
 }
+
+.info-icon-frame:hover .info-box {
+  visibility: visible;
+  opacity: 1;
+}

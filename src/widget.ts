@@ -1,5 +1,6 @@
 import { htmlBalance } from "./balance";
 import { htmlCreateSessionForTransfer } from "./transfer";
+import { createInfoBox} from "./infobox.ts";
 
 /**
  * Function to display selection between transfer and view balance.
@@ -16,7 +17,9 @@ export function widget(html_widget: HTMLDivElement) {
     />
     <header class="main-window__header l-main-window__header">
         <h1>Welcome to ErdPay</h1>
-        <p>Select an action to perform</p>
+        <div class="content-with-infobox">
+          <p>Select an action to perform</p>
+        </div>
     </header>
 
     <form class="main-window__form l-main-window__form">
@@ -25,6 +28,9 @@ export function widget(html_widget: HTMLDivElement) {
     </form>
     </div>
     `;
+
+    const message = `<p> To view any account balance select "View Balance" <br> or look around for more features on our Dashboard! </p>`
+    document.querySelector<HTMLDivElement>(".content-with-infobox")!.appendChild(createInfoBox(message));
 
   const btn_transfer = document.querySelector(
     ".main-window__form .transfer-btn"
