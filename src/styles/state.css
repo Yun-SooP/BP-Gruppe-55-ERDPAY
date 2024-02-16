@@ -26,3 +26,13 @@
   border-radius: 10px;
   margin-left: 15px;
 }
+
+.info-icon-frame:hover .info-box {
+  visibility: visible;
+  opacity: 1;
+}
+
+.info-icon-frame .clicked {
+  visibility: visible;
+  opacity: 1;
+}

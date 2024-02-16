@@ -17,6 +17,7 @@ export function widget(html_widget: HTMLDivElement) {
     <header class="main-window__header l-main-window__header">
         <h1>Welcome to ErdPay</h1>
         <p>Select an action to perform</p>
+   
     </header>
 
     <form class="main-window__form l-main-window__form">
