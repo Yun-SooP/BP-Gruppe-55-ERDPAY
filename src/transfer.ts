@@ -36,7 +36,7 @@ export async function htmlTransfer(
       <p>You have no token available.</p>
     `;
   } else {
-    div_transfer.style.height = "500px";
+    utils.setWindowHeight(div_transfer, 550);
     div_transfer.innerHTML = `
       <h2>Choose your token and the amount of tokens you want to send</h2>
       <header class="token-list-header">
@@ -160,7 +160,7 @@ function checkInputsForTransfer(tokenAddress: string, amount: string, recipientA
   valid = !utils.checkRecipientAddress(recipientAddress, 'errRecipientAddr','recipientAddr') ? false : valid;
   const tokens = <Tokens>account.values.values.get(tokenAddress)
   if (parseFloat(amount) > tokens.value.length){
-    const message = "The selected token does not have enough tokens available. Please adjust the amount or select another token.";
+    const message = "Insufficient tokens, please enter smaller number.";
     utils.displayErrorMessage(message, 'errTokenAmount', 'tokenAmount')
     valid = false
   }
@@ -190,7 +190,7 @@ async function transferEvent(tokenAddress: string, amount: number, recipientAddr
  */
 function htmlTransferSuccesful() {
   div_transfer.innerHTML = `
-    <div class="successful-div third-layer-window">Transfer Succesful!</div>
+    <div class="successful-div third-layer-window">Transfer Successful!</div>
     <form class="successful-transfer-form">
       <button type="button" class="return-btn">return</button>
     </form>

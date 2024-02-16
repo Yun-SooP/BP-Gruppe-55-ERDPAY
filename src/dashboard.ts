@@ -6,18 +6,18 @@ import { htmlTransfer } from "./transfer.ts";
 import { htmlMint } from "./mint.ts";
 import * as utils from "./utils.ts";
 
-let div_dashboard : HTMLDivElement;
-let session : Session;
-let privateKey : string;
-let current : string;
+let div_dashboard: HTMLDivElement;
+let session: Session;
+let privateKey: string;
+let current: string;
 
 /**
  * Function to display selection between a new session and restoring old session.
  * @param html_widget HTML to display to
  */
 export function htmlCreateSession(div_widget: HTMLDivElement) {
-    div_dashboard = div_widget;
-    div_dashboard.innerHTML = `
+  div_dashboard = div_widget;
+  div_dashboard.innerHTML = `
         <div class="session-window l-session-window first-layer-window">
   
           <div class="widget-header">
@@ -40,7 +40,8 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
           </header>
   
         <form class="session-window__form l-session-window__form">
-          <button type="button" class="new-session-btn">New Account</button>
+          <span id="errNewAccount"></span>
+          <button type="button" class="new-session-btn" id="newAccount">New Account</button>
           <span>or</span>
           <span id="errRestoreSession"></span>
           <input type="password" placeholder="your private key (ex. 0x1234...)" id="inputPrivateKey"/>
@@ -48,88 +49,93 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
         </form>
       </div>
     `;
-    const btn_newSession = document.querySelector<HTMLButtonElement>(
-      ".session-window__form .new-session-btn"
-    )!;
-    const btn_restoreSession = document.querySelector<HTMLButtonElement>(
-      ".session-window__form .restore-session-btn"
-      // to fix
-    )!;
-  
-    const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
-      ".session-window__form input[type='password']"
-    )!;
-  
-    /**
-     * Event listeners for going back to the main page
-     */
-    const logo_return =
-      document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
-    logo_return.addEventListener("click", () => widget(div_dashboard));
-  
-    const btn_return = document.querySelector<HTMLButtonElement>(
-      ".session-window .goback-button"
-    )!;
-    btn_return.addEventListener("click", () => widget(div_dashboard));
-  
-    btn_newSession.addEventListener("click", () => eventNewSession());
-  
-    txt_previousPrivateKey.addEventListener("keypress", (event) => {
-      if (event.key == "Enter") {
-        event.preventDefault();
-        btn_restoreSession.click();
-      }
-    });
-  
-    //stretch window and password input, if click password input
-    // txt_previousPrivateKey.addEventListener("click", () => {
-    //   div_sessionWindow.style.width = "550px";
-    //   txt_previousPrivateKey.style.width = "380px";
-    // });
-  
-    btn_restoreSession.addEventListener("click", () =>
-      eventRestoreSession(txt_previousPrivateKey.value)
+  const btn_newSession = document.querySelector<HTMLButtonElement>(
+    ".session-window__form .new-session-btn"
+  )!;
+  const btn_restoreSession = document.querySelector<HTMLButtonElement>(
+    ".session-window__form .restore-session-btn"
+    // to fix
+  )!;
+
+  const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
+    ".session-window__form input[type='password']"
+  )!;
+
+  /**
+   * Event listeners for going back to the main page
+   */
+  const logo_return =
+    document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
+  logo_return.addEventListener("click", () => widget(div_dashboard));
+
+  const btn_return = document.querySelector<HTMLButtonElement>(
+    ".session-window .goback-button"
+  )!;
+  btn_return.addEventListener("click", () => widget(div_dashboard));
+
+  btn_newSession.addEventListener("click", () => eventNewSession());
+
+  txt_previousPrivateKey.addEventListener("keypress", (event) => {
+    if (event.key == "Enter") {
+      event.preventDefault();
+      btn_restoreSession.click();
+    }
+  });
+
+  //stretch window and password input, if click password input
+  // txt_previousPrivateKey.addEventListener("click", () => {
+  //   div_sessionWindow.style.width = "550px";
+  //   txt_previousPrivateKey.style.width = "380px";
+  // });
+
+  btn_restoreSession.addEventListener("click", () =>
+    eventRestoreSession(txt_previousPrivateKey.value)
+  );
+}
+
+/**
+ * Function for new session event.
+ */
+async function eventNewSession() {
+  const newSession_ = await newSession();
+  if (newSession_.message != undefined) {
+    utils.displayErrorMessage(newSession_.message,'errNewAccount','newAccount'); 
+
+    return;
+  }
+  session = newSession_.session!;
+  privateKey = newSession_.privateKey!;
+  htmlDashboard();
+}
+
+async function eventRestoreSession(privateKey: string) {
+  const restoredSession = await restoreSession(privateKey);
+  const valid = utils.checkPrivateKey(
+    privateKey,
+    "errRestoreSession",
+    "inputPrivateKey"
+  );
+  if (!valid) {
+    return;
+  } else if (restoredSession.message != undefined) {
+    // there might be unexpected errors (ex. session does not exist)
+    utils.displayErrorMessage(
+      restoredSession.message,
+      "errRestoreSession",
+      "inputPrivateKey"
     );
+    return;
   }
-  
-  /**
-   * Function for new session event.
-   */
-  async function eventNewSession() {
-    const newSession_ = await newSession();
-    if (newSession_.message != undefined) {
-      alert(newSession_.message);
-  
-      //when does this error message appear?
-      /*displayErrorMessage(newSession_.message,'',''); */
-  
-      return;
-    }
-    session = newSession_.session!;
-    privateKey = newSession_.privateKey!;
-    htmlDashboard();
-  }
-  
-  async function eventRestoreSession(privateKey: string) {
-    const restoredSession = await restoreSession(privateKey);
-    const valid = utils.checkPrivateKey(privateKey, 'errRestoreSession','inputPrivateKey')
-    if (!valid){
-      return;
-    } else if (restoredSession.message != undefined) { // there might be unexpected errors (ex. session does not exist)
-      utils.displayErrorMessage(restoredSession.message,'errRestoreSession','inputPrivateKey');
-      return;
-    }
-    session = restoredSession.session!;
-    htmlDashboard();
-  }
-  
-  /**
-   * Function to make window for transfer and minting.
-   */
-  
+  session = restoredSession.session!;
+  htmlDashboard();
+}
+
+/**
+ * Function to make window for transfer and minting.
+ */
+
 export function htmlDashboard() {
-    div_dashboard.style.height = "130vh";
-    div_dashboard.innerHTML = `
+  div_dashboard.innerHTML = `
     <div class="transfer-window-container l-transfer-window-container first-layer-window">
   
         <div class="widget-header">
@@ -157,57 +163,63 @@ export function htmlDashboard() {
     </div>
       
     `;
-    const head_currentTabLabel = document.getElementById(
-        "current tab label"
-    )!;
-    const div_currentTab = <HTMLDivElement>document.getElementById(
-      "current tab"
-    )!;
-    document.getElementById("transferTab")?.addEventListener("click", () => setTransferTab(div_currentTab, head_currentTabLabel));
-    document.getElementById("mintTab")?.addEventListener("click", () => setMintTab(div_currentTab, head_currentTabLabel));
-    current = ""
-    setTransferTab(div_currentTab, head_currentTabLabel);
-    
-    const btn_privateKey =
-      document.querySelector<HTMLButtonElement>(".private-key")!;
-    btn_privateKey.addEventListener("click", () => alert(privateKey));
-  
-    const btn_sessionAddress =
-      document.querySelector<HTMLButtonElement>(".session-address")!;
-    btn_sessionAddress.addEventListener("click", () => alert(session!.address));
-  
-    // Event listener for going back one page
-  
-    const btn_return = document.querySelector<HTMLButtonElement>(
-        ".transfer-window-container .goback-button"
-    )!;
-    btn_return.addEventListener("click", () => {
-        div_dashboard.style.height = "100vh";
-        htmlCreateSession(div_dashboard);
-    });
-  
-    const logo_return =
-      document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
-    logo_return.addEventListener("click", () => {
-        div_dashboard.style.height = "100vh";
-         widget(div_dashboard);
-    });
-  
+  const head_currentTabLabel = document.getElementById("current tab label")!;
+  const div_currentTab = <HTMLDivElement>(
+    document.getElementById("current tab")!
+  );
+  document
+    .getElementById("transferTab")
+    ?.addEventListener("click", () =>
+      setTransferTab(div_currentTab, head_currentTabLabel)
+    );
+  document
+    .getElementById("mintTab")
+    ?.addEventListener("click", () =>
+      setMintTab(div_currentTab, head_currentTabLabel)
+    );
+  current = "";
+  setTransferTab(div_currentTab, head_currentTabLabel);
+
+  const btn_privateKey =
+    document.querySelector<HTMLButtonElement>(".private-key")!;
+  btn_privateKey.addEventListener("click", () => alert(privateKey));
+
+  const btn_sessionAddress =
+    document.querySelector<HTMLButtonElement>(".session-address")!;
+  btn_sessionAddress.addEventListener("click", () => alert(session!.address));
+
+  // Event listener for going back one page
+
+  const btn_return = document.querySelector<HTMLButtonElement>(
+    ".transfer-window-container .goback-button"
+  )!;
+  btn_return.addEventListener("click", () => {
+    htmlCreateSession(div_dashboard);
+  });
+
+  const logo_return =
+    document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
+  logo_return.addEventListener("click", () => {
+    widget(div_dashboard);
+  });
 }
 
 /**
- * set the given tab and label to transfer 
+ * set the given tab and label to transfer
  * @param div_tab tab to set
  * @param head_tabLabel label to set
  */
-function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement){
-    if(current == "Transfer"){
-        return;
-    }
-    current = "Transfer";
-    head_tabLabel.innerHTML = current;
-    div_tab.setAttribute("class", "transfer-window l-transfer-window second-layer-window")
-    htmlTransfer(div_tab, session);
+function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
+  if (current == "Transfer") {
+    return;
+  }
+  current = "Transfer";
+  head_tabLabel.innerHTML = current;
+  div_tab.setAttribute(
+    "class",
+    "transfer-window l-transfer-window second-layer-window"
+  );
+  htmlTransfer(div_tab, session);
 }
 
 /**
@@ -215,12 +227,15 @@ function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement){
  * @param div_tab tab to set
  * @param head_tabLabel label to set
  */
-function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement){
-    if(current == "Mint"){
-        return;
-    }
-    current = "Mint";
-    head_tabLabel.innerHTML = current;
-    div_tab.setAttribute("class", "mint-window l-mint-window second-layer-window")
-    htmlMint(div_tab, session);
+function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
+  if (current == "Mint") {
+    return;
+  }
+  current = "Mint";
+  head_tabLabel.innerHTML = current;
+  div_tab.setAttribute(
+    "class",
+    "mint-window l-mint-window second-layer-window"
+  );
+  htmlMint(div_tab, session);
 }

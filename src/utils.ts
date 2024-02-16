@@ -10,26 +10,30 @@ const errorRed = '#ff7979';
  * @returns 
  */
 export function checkTokenAddress(tokenAddress: string, errDisplay: string, inputBox: string) : boolean {
+    resetErrorDisplay(errDisplay, inputBox);
+
     if (tokenAddress == ""){
         displayErrorMessage("Please select a token address.", errDisplay, inputBox);
         return false;
     }
     const hex = /[0-9A-Fa-f]{40}/g;
     if (tokenAddress.slice(0,2) != "0x" || !hex.test(tokenAddress.slice(2))) {
-        displayErrorMessage("Please enter a valid address. (hexnumber of length 40, starting with 0x)", errDisplay, inputBox);
+        displayErrorMessage("Please enter a valid address. (Hexadecimal of length 40, starting with 0x)", errDisplay, inputBox);
         return false;
     }
     return true;
 }
 
 export function checkPrivateKey(privateKey: string, errDisplay: string, inputBox: string) : boolean {
+    resetErrorDisplay(errDisplay, inputBox);
+
     if (privateKey == ""){
         displayErrorMessage("Please enter your private key.", errDisplay, inputBox);
         return false;
     }
     const hex = /[0-9A-Fa-f]{64}/g;
     if (privateKey.slice(0,2) != "0x" || !hex.test(privateKey.slice(2))) {
-        displayErrorMessage(`Please enter a valid private key. <br> The private key must be in hex and 64 characters long.`, errDisplay, inputBox);
+        displayErrorMessage(`Please enter a valid private key. <br> The private key must be in hexadecimal and 64 characters long.`, errDisplay, inputBox);
         return false;
     }
     return true;
@@ -41,8 +45,10 @@ export function checkPrivateKey(privateKey: string, errDisplay: string, inputBox
  * @returns 
  */
 export function checkTokenID(tokenID: string, errDisplay: string, inputBox: string) : boolean {
+    resetErrorDisplay(errDisplay, inputBox);
+
     if (tokenID == ""){
-        displayErrorMessage("Please input the tokenID.", errDisplay, inputBox);
+        displayErrorMessage("Please input the token ID.", errDisplay, inputBox);
         return false;
     }
     const tokenIDParsed = parseFloat(tokenID)
@@ -59,14 +65,16 @@ export function checkTokenID(tokenID: string, errDisplay: string, inputBox: stri
  * @returns 
  */
 export function checkAmount(amount: string, errDisplay: string, inputBox: string) : boolean {
+    resetErrorDisplay(errDisplay, inputBox);
+
     if (amount == ""){
-        displayErrorMessage("Please input the amount.", errDisplay, inputBox);
+        displayErrorMessage("Please input the amount of tokens.", errDisplay, inputBox);
         return false;
     }
     const amountParsed = parseFloat(amount)
 
     if (Number.isNaN(amountParsed) || amountParsed <= 0 || !Number.isInteger(amountParsed)){
-        displayErrorMessage("Please enter a valid ID.", errDisplay, inputBox);
+        displayErrorMessage("Please enter a number.", errDisplay, inputBox);
         return false;
     } 
     return true;
@@ -78,6 +86,8 @@ export function checkAmount(amount: string, errDisplay: string, inputBox: string
  * @returns 
  */
 export function checkRecipientAddress(recipientAddress: string, errDisplay: string, inputBox: string) : boolean {
+    resetErrorDisplay(errDisplay, inputBox);
+
     if (recipientAddress == ""){
         displayErrorMessage("Please input the recipient address.", errDisplay, inputBox);
         return false;
@@ -85,7 +95,7 @@ export function checkRecipientAddress(recipientAddress: string, errDisplay: stri
 
     const hex = /[0-9A-Fa-f]{40}/g;
     if (recipientAddress.slice(0,2) != "0x" || !hex.test(recipientAddress.slice(2))) {
-        displayErrorMessage("Please enter a valid address. (hexnumber of length 40, starting with 0x)", errDisplay, inputBox);
+        displayErrorMessage("Please enter a valid address. (Hexadecimal of length 40, starting with 0x)", errDisplay, inputBox);
         return false;
     }
     return true;
@@ -150,7 +160,11 @@ export function makeTokensList(select_tokens: HTMLSelectElement, select_amount: 
  * @param id id of the css element to have red borders
  */
 export function errorHighlight(id :string) {
-    document.getElementById(id)!.style.border = "1px solid var(--errorRed)";
+    document.getElementById(id)!.style.border = "1px solid " + errorRed;
+}
+
+export function errorRemoveHighlight(id: string) {
+    document.getElementById(id)!.style.border = "none";
 }
 /**
  * function to display error message
@@ -169,6 +183,8 @@ export function errorMessageSpan(id:string, msg:string) {
  * @param inputBox input box's id from html to outline in red
  */
 export function displayErrorMessage(message:unknown|string, errDisplay:string, inputBox:string){
+
+    //set error displays
     const msg = 
     `
     <span class="error-message-span">
@@ -182,9 +198,19 @@ export function displayErrorMessage(message:unknown|string, errDisplay:string, i
   }
 /**
  * function to change the height of the height of an element.
- * @param id id of the window in html to change its height
+ * @param id id of the window in html or the HTMLDivElement itself to change its height
  * @param pixel the size of the window you want 
  */
-export function setWindowHeight(id:string, pixel:number){
-    document.getElementById(id)!.style.height = `${pixel}px`;
+export function setWindowHeight(id:string|HTMLDivElement, pixel:number){
+    if ( typeof id === "string"){
+        document.getElementById(id)!.style.height = `${pixel}px`;
+    } else{
+        id.style.height = `${pixel}px`;
+    }
+    
+}
+export function resetErrorDisplay(errDisplay:string, inputBox:string){
+    const msg = "";
+    errorMessageSpan(errDisplay, msg);
+    errorRemoveHighlight(inputBox);
 }
