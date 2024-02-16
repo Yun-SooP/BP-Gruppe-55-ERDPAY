@@ -1,5 +1,6 @@
 import { htmlBalance } from "./balance";
 import { htmlCreateSession } from "./dashboard";
+import { eventPayPopup } from "./pay";
 
 /**
  * Function to display selection between transfer and view balance.
@@ -48,6 +49,9 @@ export function makeWidgetButton() {
   const html_dummy = document.querySelector<HTMLDivElement>("#app")!;
   html_dummy.innerHTML = `
     <div class="dummy">
+        <button id="pay" type="button">
+            Pay with <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
+        </button>
         <button class="main-button" type="button">
             <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
         </button>
@@ -57,6 +61,10 @@ export function makeWidgetButton() {
   btn_main?.addEventListener("click", () => {
     widget(html_dummy);
   });
+  const btn_pay = document.getElementById("pay");
+  btn_pay?.addEventListener("click", () => 
+    eventPayPopup()
+  );
 }
 
 makeWidgetButton();
