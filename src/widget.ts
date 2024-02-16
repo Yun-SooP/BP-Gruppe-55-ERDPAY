@@ -49,8 +49,8 @@ export function makeWidgetButton() {
   const html_dummy = document.querySelector<HTMLDivElement>("#app")!;
   html_dummy.innerHTML = `
     <div class="dummy">
-        <button id="pay" type="button">
-            Pay with <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
+        <button id="pay" class="pay-button" type="button">
+            <span>Pay with</span> <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
         </button>
         <button class="main-button" type="button">
             <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
@@ -62,9 +62,7 @@ export function makeWidgetButton() {
     widget(html_dummy);
   });
   const btn_pay = document.getElementById("pay");
-  btn_pay?.addEventListener("click", () => 
-    eventPayPopup()
-  );
+  btn_pay?.addEventListener("click", () => eventPayPopup());
 }
 
 makeWidgetButton();

@@ -13,15 +13,30 @@
   filter: brightness(0) invert(1);
 }
 
-.main-button {
+.main-button,
+.pay-button {
   width: 275px;
   height: 55px;
   display: flex;
   align-items: center;
+
   backdrop-filter: blur(30px);
   background-color: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
+.pay-button {
+  font-weight: 700;
+  position: relative;
+  span {
+    position: relative;
+    right: -40px;
+  }
+  .erdstall-logo {
+    position: relative;
+    left: 15px;
+  }
+}
+
 .main-button div {
   position: relative;
   font-size: 16px;
@@ -393,7 +408,6 @@ input:checked + .slider:before {
   margin-top: 20px;
 }
 
-
 /* error: red outline*/
 
 .error-message-span {
@@ -402,12 +416,22 @@ input:checked + .slider:before {
 }
 
 @keyframes horizontal-shaking {
-  0% { transform: translateX(0) }
-  25% { transform: translateX(5px) }
-  50% { transform: translateX(-5px) }
-  75% { transform: translateX(5px) }
-  100% { transform: translateX(0) }
- }
- .horizontal-shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.horizontal-shake {
   animation: horizontal-shaking 0.35s 1s;
 }
