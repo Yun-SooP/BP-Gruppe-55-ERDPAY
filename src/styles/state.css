@@ -31,3 +31,8 @@
   visibility: visible;
   opacity: 1;
 }
+
+.info-icon-frame .clicked {
+  visibility: visible;
+  opacity: 1;
+}

@@ -9,6 +9,7 @@ import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 import { widget } from "./widget.ts";
 import { htmlMint } from "./mint.ts";
 import * as utils from "./utils.ts";
+import { createTooltip } from "./infobox.ts";
 
 let session: Session;
 let privateKey: string;
@@ -52,6 +53,9 @@ export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
       </form>
     </div>
   `;
+
+  const text = `<p> this will create a new account! </p>`
+  createTooltip('button','new-session-btn',text)
   const btn_newSession = document.querySelector<HTMLButtonElement>(
     ".session-window__form .new-session-btn"
   )!;

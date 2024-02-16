@@ -471,8 +471,8 @@ input:checked + .slider:before {
 
 .info-icon-frame {
   position:relative;
-  display: inline-block;
-  size: 16px 16px;
+  display: inline-flex;
+  justify-content: center;
   margin-left: 5px;
   margin-top: 10px;
 }
@@ -484,14 +484,13 @@ input:checked + .slider:before {
   background-color: #283048;
   color: #fff;
   text-align: center;
-  padding: 5px 5px 5px 5px;
+  padding: 5px 10px 10px 10px;
   position: absolute;
   z-index: 1;
   bottom: 30px;
-  left: 50%;
-  margin-left: -191px;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.4s;
+  vertical-align: middle;
 }
 
 .info-box::after {
@@ -505,8 +504,8 @@ input:checked + .slider:before {
   border-color: #283048 transparent transparent transparent; 
 }
 
-.info-box .p {
-  padding: 5px;
+.info-box p {
+  padding: 30px 10px 30px 10px;
 }
 
 .info-icon {
@@ -515,11 +514,12 @@ input:checked + .slider:before {
 }
 
 .content-with-infobox{
-  height: 100%;
-  width: 100%;
+  height: max-content;
+  width: max-content;
   display: flex;
   align-items: flex-start;
   position: relative;
+  margin-left: 10px;
 }
 
 
