@@ -1,10 +1,9 @@
-import { widget } from "./widget";
-import { newSession } from "./setup_session";
 import { restoreSession } from "./setup_session";
 import { Session } from "@polycrypt/erdstall";
 import { htmlTransfer } from "./transfer.ts";
 import { htmlMint } from "./mint.ts";
 import * as utils from "./utils.ts";
+import { closePaymentPopup } from "./pay.ts";
 
 let div_dashboard : HTMLDivElement;
 let session : Session;
@@ -15,7 +14,7 @@ let current : string;
  * Function to display selection between a new session and restoring old session.
  * @param html_widget HTML to display to
  */
-export function htmlCreateSession(div_widget: HTMLDivElement) {
+export function htmlCreateSession(div_widget: HTMLDivElement, tokenAddress?: string, amount?: number, recipientAddress?: string) {
     div_dashboard = div_widget;
     div_dashboard.innerHTML = `
         <div class="session-window l-session-window first-layer-window">
@@ -34,23 +33,18 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
           <header class="session-window__header l-session-window__header">
             <h1>Sign-In</h1>
             <p>
-              Create a new account or <br/>
               log-in with your private key
             </p>
           </header>
   
         <form class="session-window__form l-session-window__form">
-          <button type="button" class="new-session-btn">New Account</button>
-          <span>or</span>
           <span id="errRestoreSession"></span>
           <input type="password" placeholder="your private key (ex. 0x1234...)" id="inputPrivateKey"/>
           <button type="button" class="restore-session-btn" >Log-in</button>
         </form>
       </div>
     `;
-    const btn_newSession = document.querySelector<HTMLButtonElement>(
-      ".session-window__form .new-session-btn"
-    )!;
+
     const btn_restoreSession = document.querySelector<HTMLButtonElement>(
       ".session-window__form .restore-session-btn"
       // to fix
@@ -63,16 +57,11 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
     /**
      * Event listeners for going back to the main page
      */
-    const logo_return =
-      document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
-    logo_return.addEventListener("click", () => widget(div_dashboard));
   
     const btn_return = document.querySelector<HTMLButtonElement>(
       ".session-window .goback-button"
     )!;
-    btn_return.addEventListener("click", () => widget(div_dashboard));
-  
-    btn_newSession.addEventListener("click", () => eventNewSession());
+    btn_return.addEventListener("click", closePaymentPopup);
   
     txt_previousPrivateKey.addEventListener("keypress", (event) => {
       if (event.key == "Enter") {
@@ -81,36 +70,14 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
       }
     });
   
-    //stretch window and password input, if click password input
-    // txt_previousPrivateKey.addEventListener("click", () => {
-    //   div_sessionWindow.style.width = "550px";
-    //   txt_previousPrivateKey.style.width = "380px";
-    // });
-  
     btn_restoreSession.addEventListener("click", () =>
-      eventRestoreSession(txt_previousPrivateKey.value)
+      eventRestoreSession(txt_previousPrivateKey.value, tokenAddress, amount, recipientAddress)
     );
   }
   
-  /**
-   * Function for new session event.
-   */
-  async function eventNewSession() {
-    const newSession_ = await newSession();
-    if (newSession_.message != undefined) {
-      alert(newSession_.message);
+
   
-      //when does this error message appear?
-      /*displayErrorMessage(newSession_.message,'',''); */
-  
-      return;
-    }
-    session = newSession_.session!;
-    privateKey = newSession_.privateKey!;
-    htmlDashboard();
-  }
-  
-  async function eventRestoreSession(privateKey: string) {
+  async function eventRestoreSession(privateKey: string, tokenAddress?: string, amount?: number, recipientAddress?: string) {
     const restoredSession = await restoreSession(privateKey);
     const valid = utils.checkPrivateKey(privateKey, 'errRestoreSession','inputPrivateKey')
     if (!valid){
@@ -186,12 +153,6 @@ export function htmlDashboard() {
         htmlCreateSession(div_dashboard);
     });
   
-    const logo_return =
-      document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
-    logo_return.addEventListener("click", () => {
-        div_dashboard.style.height = "100vh";
-         widget(div_dashboard);
-    });
   
 }
 
@@ -207,6 +168,7 @@ function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement){
     current = "Transfer";
     head_tabLabel.innerHTML = current;
     div_tab.setAttribute("class", "transfer-window l-transfer-window second-layer-window")
+
     htmlTransfer(div_tab, session);
 }
 
@@ -224,3 +186,6 @@ function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement){
     div_tab.setAttribute("class", "mint-window l-mint-window second-layer-window")
     htmlMint(div_tab, session);
 }
+
+htmlCreateSession(document.querySelector<HTMLDivElement>("#app")!)
+
