@@ -27,9 +27,6 @@ export function widget(html_widget: HTMLDivElement) {
     </div>
     `;
 
-    // const message = `<p> To view any account balance select "View Balance" <br> or look around for more features on our Dashboard!</p>`
-    // document.querySelector<HTMLDivElement>(".content-with-infobox")!.appendChild(createInfoBox(message));
-
   const btn_transfer = document.querySelector(
     ".main-window__form .transfer-btn"
   );

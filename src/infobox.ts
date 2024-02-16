@@ -1,21 +1,21 @@
-export function createIcon(message: string) {
+export function createToolTip(message: string) {
     const iconFrame = document.createElement('div');
-    iconFrame.classList.add('info-icon-frame')
+    iconFrame.classList.add('tooltip-icon-frame')
 
-    iconFrame.innerHTML = `<i class="fa-solid fa-circle-info info-icon"></i>`
+    iconFrame.innerHTML = `<i class="fa-solid fa-circle-info tooltip-icon"></i>`
 
-    const infoBox = document.createElement('span')
-    infoBox.classList.add('info-box')
+    const tooltip = document.createElement('span')
+    tooltip.classList.add('message-box')
 
-    iconFrame.appendChild(infoBox)
+    iconFrame.appendChild(tooltip)
 
-    infoBox.innerHTML = message
+    tooltip.innerHTML = message
 
     iconFrame.addEventListener('click', () => {
-        infoBox.classList.toggle('clicked')
+        tooltip.classList.toggle('clicked')
     })
 
-    document.querySelector('.content-with-infobox')!.appendChild(iconFrame)
+    document.querySelector('.content-with-tooltip')!.appendChild(iconFrame)
 }
 
 

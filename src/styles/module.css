@@ -469,7 +469,7 @@ input:checked + .slider:before {
   gap: 15px;
 }
 
-.info-icon-frame {
+.tooltip-icon-frame {
   position:relative;
   display: inline-flex;
   justify-content: center;
@@ -477,7 +477,7 @@ input:checked + .slider:before {
   margin-top: 10px;
 }
 
-.info-box {
+.message-box {
   visibility: hidden;
   opacity: 0;
 
@@ -498,7 +498,7 @@ input:checked + .slider:before {
   transition: opacity 0.4s;
 }
 
-.info-box::after {
+.message-box::after {
   content: "";
   position: absolute;
   top: 100%;
@@ -509,23 +509,23 @@ input:checked + .slider:before {
   border-color: #283048 transparent transparent transparent; 
 }
 
-.info-box p {
+.message-box p {
   padding: 30px 10px 30px 10px;
 }
 
-.info-icon {
+.tooltip-icon {
   color: rgba(255, 255, 255, 0.7);
   transform: scale(0.9);
 }
 
-.content-with-infobox{
+.content-with-tooltip{
   height: max-content;
   width: max-content;
 
   display: flex;
   align-items: flex-start;
   position: relative;
-  
+
   left: 11px;
 }
 
