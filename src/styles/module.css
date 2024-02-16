@@ -1,3 +1,8 @@
+@import "modules/utils.css";
+#app {
+  --errorRed: #ff7979;
+}
+
 /* Dummy Page and Main button */
 .dummy {
   display: flex;
@@ -13,6 +18,9 @@
   height: 55px;
   display: flex;
   align-items: center;
+  backdrop-filter: blur(30px);
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 .main-button div {
   position: relative;
@@ -37,111 +45,8 @@
 
 
 
-
-
-*/
-
-/* Reusable Elements. */
-.goback-button {
-  width: 30px;
-  height: 30px;
-  border-radius: 10px;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1), -1px -1px 4px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.05);
-}
-.fa-angle-left {
-  transform: scale(1.2, 1.2);
-  position: relative;
-  filter: brightness(0) invert(1);
-  opacity: 0.8;
-}
-
-.copy-button {
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0);
-  border: none;
-  color: rgba(255, 255, 255, 0.9);
-  box-shadow: none;
-  backdrop-filter: none;
-}
-
-.copy-button:hover {
-  background-color: rgba(0, 0, 0, 0);
-  transform: none;
-}
-
-.copy-button:active {
-  color: rgba(0, 0, 0, 0.5);
-}
-
-.token-list {
-  display: flex;
-  justify-content: center;
-  padding: 0px 0px;
-
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background-color: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(30px);
-  border-radius: 10px;
-}
-
-.first-layer-window,
-.second-layer-window,
-.third-layer-window {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-
-  border: solid 1px rgba(255, 255, 255, 0.25);
-  border-radius: 16px;
-
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(5px);
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1);
-
-  transition: height 0.5s ease-in-out, width 0.5s ease-in-out;
-}
-
-.second-layer-window,
-.third-layer-window {
-  background-color: rgba(255, 255, 255, 0.02);
-}
-
-.third-layer-window {
-  border: solid 1px rgba(255, 255, 255, 0.3);
-  justify-content: center;
-}
-
-/* 
-Session-window 
-height:550
-
-Balance-window
-width:700
-height:455
-position:absolue
-text align:left
-
-transfer-window
-width:700
-height:1000
-position:absolut
-text-align:left
-
-*/
-
-/* 
-
-
-
-
-
-
-
 */
 /* Main Window */
-
 .main-window__header p {
   color: rgba(255, 255, 255, 0.6);
   margin-top: 10px;
@@ -151,14 +56,11 @@ text-align:left
   height: 50px;
   z-index: 100;
 }
-
 /* 
 
 
 
-
 */
-
 /* balance window*/
 
 .balance-window__address-form {
@@ -281,15 +183,21 @@ text-align:left
 }
 
 .transfer-window .token-list-header span:first-child {
-  margin-left: 50px;
+  margin-left: 30px;
   transition: all 0.3s ease-in-out;
 }
 
 .transfer-window .token-list-header span:last-child {
-  margin-left: 290px;
+  margin-left: 310px;
   transition: all 0.3s ease-in-out;
 }
+.transfer-window .token-list {
+  width: 500px;
+}
 
+.transfer-window .token-list__tokens {
+  width: 450px;
+}
 .transfer-window .token-list__amount {
   width: 50px;
 }
@@ -311,8 +219,7 @@ text-align:left
   gap: 5px;
 }
 
-.transfer-form__token-amount span,
-.transfer-form p {
+.transfer-form__token-amount span {
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -324,11 +231,14 @@ text-align:left
 
 */
 /*toggle checkbox css*/
-.transer-form__advanced-transfer {
+.transer-form__advanced-transfer,
+.mint-form__multiple-tokens {
   display: flex;
   align-items: center;
 }
-.transer-form__advanced-transfer p {
+.transer-form__advanced-transfer p,
+.mint-form__multiple-tokens p {
+  color: rgba(255, 255, 255, 0.7);
   margin-left: 10px;
 }
 
@@ -462,13 +372,46 @@ input:checked + .slider:before {
 */
 /* Mint */
 .mint-form {
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
 }
 
+
+.mint-form .token-address-txt {
+  margin-top: 25px;
+}
+
+.mint-form .random-address-btn {
+  align-self: self-end;
+  margin-right: 5px;
+}
+
+.mint-form__multiple-tokens {
+  align-self: self-start;
+  margin-left: 5px;
+  margin-top: 20px;
+}
+
+
+/* error: red outline*/
+
+.error-message-span {
+  font-size: 15px;
+}
+
+@keyframes horizontal-shaking {
+  0% { transform: translateX(0) }
+  25% { transform: translateX(5px) }
+  50% { transform: translateX(-5px) }
+  75% { transform: translateX(5px) }
+  100% { transform: translateX(0) }
+ }
+ .horizontal-shake {
+  animation: horizontal-shaking 0.35s 1s;
+}
 .tooltip-icon-frame {
   position:relative;
   display: inline-flex;
@@ -528,5 +471,3 @@ input:checked + .slider:before {
 
   left: 11px;
 }
-
-

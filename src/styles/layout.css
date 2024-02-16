@@ -64,6 +64,12 @@
   height: 160px;
   margin-top: 10px;
 }
+
+.l-balance-window s {
+  width: 550px;
+  height: 160px;
+  margin-top: 10px;
+}
 /* 
 
 
@@ -92,13 +98,13 @@
 /* Transfer */
 .l-transfer-window-container {
   width: 700px;
-  height: 1000px;
+  height: 830px;
 }
 
 .l-transfer-title {
   align-self: self-start;
   margin-left: 80px;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-bottom: 10px;
 }
 
@@ -114,7 +120,7 @@
 
 .l-mint-window {
   width: 550px;
-  height: 200px;
+  height: 550px;
 }
 
 .l-transfer-footer {
