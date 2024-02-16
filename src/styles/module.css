@@ -315,6 +315,7 @@ input:checked + .slider:before {
 
 .checkboxesIDs {
   margin-top: 20px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .advanced-transfer-form {
@@ -327,7 +328,7 @@ input:checked + .slider:before {
 .token-id {
   color: rgba(255, 255, 255, 0.7);
   border-radius: 12px;
-  width: 45px;
+  width: 90px;
   height: 33px;
   font-size: 13px;
   font-weight: 500;
@@ -393,7 +394,6 @@ input:checked + .slider:before {
   margin-top: 20px;
 }
 
-
 /* error: red outline*/
 
 .error-message-span {
@@ -401,12 +401,22 @@ input:checked + .slider:before {
 }
 
 @keyframes horizontal-shaking {
-  0% { transform: translateX(0) }
-  25% { transform: translateX(5px) }
-  50% { transform: translateX(-5px) }
-  75% { transform: translateX(5px) }
-  100% { transform: translateX(0) }
- }
- .horizontal-shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.horizontal-shake {
   animation: horizontal-shaking 0.35s 1s;
 }

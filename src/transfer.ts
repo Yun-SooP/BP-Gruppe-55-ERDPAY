@@ -11,7 +11,6 @@ let session: Session;
 let account: Account;
 let div_transfer: HTMLDivElement;
 
-
 /**
  * Function to display transfer functionality.
  * Optional paramters fill out inputs in beforehand.
@@ -28,8 +27,8 @@ export async function htmlTransfer(
   recipientAddress?: string,
   advanced?: boolean
 ) {
-  session = sessionForTransfer
-  div_transfer = div
+  session = sessionForTransfer;
+  div_transfer = div;
   account = await session!.getAccount(session!.address);
   if (account.values.values.size == 0) {
     div_transfer.innerHTML = `
@@ -124,7 +123,10 @@ export async function htmlTransfer(
     );
 
     chk_advanced.addEventListener("click", () => {
-      btn_continue.innerText = btn_continue.innerText == "continue to confirmation" ? "continue to ID selection" : "continue to confirmation";
+      btn_continue.innerText =
+        btn_continue.innerText == "continue to confirmation"
+          ? "continue to ID selection"
+          : "continue to confirmation";
     });
 
     select_tokens.value =
@@ -136,10 +138,15 @@ export async function htmlTransfer(
   }
 }
 
-function transferContinueButtonEvent(advanced: boolean, tokenAddress: string, amount: string, recipientAddress: string){
-  const valid = checkInputsForTransfer(tokenAddress, amount, recipientAddress)
+function transferContinueButtonEvent(
+  advanced: boolean,
+  tokenAddress: string,
+  amount: string,
+  recipientAddress: string
+) {
+  const valid = checkInputsForTransfer(tokenAddress, amount, recipientAddress);
 
-  if(!valid){
+  if (!valid) {
     return;
   }
 
@@ -147,28 +154,58 @@ function transferContinueButtonEvent(advanced: boolean, tokenAddress: string, am
   if (advanced) {
     htmlAdvancedTransfer(tokenAddress, amountParsed, recipientAddress);
   } else {
-    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amountParsed)
-    htmlTransferConfirmation(tokenAddress, amountParsed, recipientAddress, tokenIDs)
+    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amountParsed);
+    htmlTransferConfirmation(
+      tokenAddress,
+      amountParsed,
+      recipientAddress,
+      tokenIDs
+    );
   }
-  
 }
 
-function checkInputsForTransfer(tokenAddress: string, amount: string, recipientAddress: string) : boolean {
-  let valid = true
-  valid = !utils.checkTokenAddress(tokenAddress, 'errTokenAddress', "token-list") ? false : valid;
-  valid = !utils.checkAmount(amount, 'errTokenAmount','tokenAmount') ? false : valid;
-  valid = !utils.checkRecipientAddress(recipientAddress, 'errRecipientAddr','recipientAddr') ? false : valid;
-  const tokens = <Tokens>account.values.values.get(tokenAddress)
-  if (parseFloat(amount) > tokens.value.length){
+function checkInputsForTransfer(
+  tokenAddress: string,
+  amount: string,
+  recipientAddress: string
+): boolean {
+  let valid = true;
+  valid = !utils.checkTokenAddress(
+    tokenAddress,
+    "errTokenAddress",
+    "token-list"
+  )
+    ? false
+    : valid;
+  valid = !utils.checkAmount(amount, "errTokenAmount", "tokenAmount")
+    ? false
+    : valid;
+  valid = !utils.checkRecipientAddress(
+    recipientAddress,
+    "errRecipientAddr",
+    "recipientAddr"
+  )
+    ? false
+    : valid;
+  const tokens = <Tokens>account.values.values.get(tokenAddress);
+  if (parseFloat(amount) > tokens.value.length) {
     const message = "Insufficient tokens, please enter smaller number.";
-    utils.displayErrorMessage(message, 'errTokenAmount', 'tokenAmount')
-    valid = false
+    utils.displayErrorMessage(message, "errTokenAmount", "tokenAmount");
+    valid = false;
   }
   return valid;
 }
 
-async function transferEvent(tokenAddress: string, amount: number, recipientAddress: string, tokenIDs?: bigint[]){
-  tokenIDs = typeof tokenIDs == "undefined" ? utils.getTokenIDs(account, tokenAddress, amount) : tokenIDs
+async function transferEvent(
+  tokenAddress: string,
+  amount: number,
+  recipientAddress: string,
+  tokenIDs?: bigint[]
+) {
+  tokenIDs =
+    typeof tokenIDs == "undefined"
+      ? utils.getTokenIDs(account, tokenAddress, amount)
+      : tokenIDs;
   const { status, error } = await transferTo(
     session,
     tokenAddress,
@@ -198,7 +235,9 @@ function htmlTransferSuccesful() {
   const btn_return = document.querySelector<HTMLInputElement>(
     ".successful-transfer-form .return-btn"
   )!;
-  btn_return.addEventListener("click", () => htmlTransfer(div_transfer, session));
+  btn_return.addEventListener("click", () =>
+    htmlTransfer(div_transfer, session)
+  );
 }
 
 /**
@@ -221,7 +260,7 @@ function htmlAdvancedTransfer(
     <h2>To recipient:</h2>
     <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
     <h2>Choose ${amount} token ID${amount > 1 ? "s" : ""} to send</h2>
-    <div class= checkboxesIDs id="tokenCheckBox"></div>
+    <div class= "checkboxesIDs" id="tokenCheckBox"></div>
     <span id="errTransferConfirm"></span>
     <form class="advanced-transfer-form">
       <button type="button" class="advanced-transfer-form__return-btn">return</button>
@@ -257,7 +296,14 @@ function htmlAdvancedTransfer(
     ".advanced-transfer-form__return-btn"
   )!;
   btn_return.addEventListener("click", () =>
-    htmlTransfer(div_transfer, session, tokenAddress, amount, recipientAddress, true)
+    htmlTransfer(
+      div_transfer,
+      session,
+      tokenAddress,
+      amount,
+      recipientAddress,
+      true
+    )
   );
 }
 
@@ -286,7 +332,19 @@ function makeTokenIDsCheckboxes(
         : false;
     chk_IDs.push(checkbox);
     const span = document.createElement("span");
-    span.innerHTML = `${tokenID} </br>`;
+
+    const tokenIDString = tokenID + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay} </br>`;
     div_chkIDs.appendChild(checkbox);
     div_chkIDs.appendChild(span);
   }
@@ -312,8 +370,8 @@ function advancedTransferContinueButtonEvent(
     // alert(
     //   `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
     // );
-    const message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
-    utils.displayErrorMessage(message, 'errTransferConfirm','tokenCheckBox')
+    const message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`;
+    utils.displayErrorMessage(message, "errTransferConfirm", "tokenCheckBox");
     return;
   }
   const tokenIDs = chk_checkedIDs.map((checkbox) => BigInt(checkbox.value));
@@ -363,7 +421,18 @@ function htmlTransferConfirmation(
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
-    span.innerHTML = `${tokenIDs[i]}`;
+    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay}`;
     div_tokenIDs.appendChild(span);
   }
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
@@ -379,7 +448,13 @@ function htmlTransferConfirmation(
   btn_return.addEventListener("click", () =>
     typeof chk_IDs != "undefined"
       ? htmlAdvancedTransfer(tokenAddress, amount, recipientAddress, tokenIDs)
-      : htmlTransfer(div_transfer, session, tokenAddress, amount, recipientAddress)
+      : htmlTransfer(
+          div_transfer,
+          session,
+          tokenAddress,
+          amount,
+          recipientAddress
+        )
   );
 }
 
