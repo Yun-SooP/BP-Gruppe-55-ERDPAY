@@ -22,12 +22,13 @@ let div_transfer: HTMLDivElement;
  */
 export async function htmlTransfer(
   div: HTMLDivElement,
-  session: Session,
+  sessionForTransfer: Session,
   tokenAddress?: string,
   amount?: number,
   recipientAddress?: string,
   advanced?: boolean
 ) {
+  session = sessionForTransfer
   div_transfer = div
   account = await session!.getAccount(session!.address);
   if (account.values.values.size == 0) {
