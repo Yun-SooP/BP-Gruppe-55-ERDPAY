@@ -40,7 +40,8 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
           </header>
   
         <form class="session-window__form l-session-window__form">
-          <button type="button" class="new-session-btn">New Account</button>
+          <span id="errNewAccount"></span>
+          <button type="button" class="new-session-btn" id="newAccount">New Account</button>
           <span>or</span>
           <span id="errRestoreSession"></span>
           <input type="password" placeholder="your private key (ex. 0x1234...)" id="inputPrivateKey"/>
@@ -98,10 +99,7 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
 async function eventNewSession() {
   const newSession_ = await newSession();
   if (newSession_.message != undefined) {
-    alert(newSession_.message);
-
-    //when does this error message appear?
-    /*displayErrorMessage(newSession_.message,'',''); */
+    utils.displayErrorMessage(newSession_.message,'errNewAccount','newAccount'); 
 
     return;
   }
