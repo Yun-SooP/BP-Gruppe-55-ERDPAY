@@ -403,7 +403,7 @@ function htmlTransferConfirmation(
     <h2>Please confirm the transfer</h2>
     <h2>${amount} Token${amount > 1 ? "s" : ""} of:</h2>
     <div class="token-address-div third-layer-window">${tokenAddress}</div>
-    <h2>token ID:</h2>
+    <h2>token ID${tokenIDs.length > 1 ? "s" : ""}:</h2>
     <div id="tokenIDs">
     </div>
 
