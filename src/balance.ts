@@ -190,7 +190,7 @@ async function viewBalance(client: Client, input: HTMLInputElement) {
     setWindowHeight('balanceAddressEnterWindow', 210);
 
     //display error message 
-    const msg = `Please enter a valid address. <br> The address must be in hex and 40 characters long.`
+    const msg = `Please enter a valid address. <br> The address must be in hexadecimal and 40 characters long.`
     displayErrorMessage(msg,'errBalanceAccAddr', 'inputAddress');
    
   }
