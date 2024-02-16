@@ -13,6 +13,185 @@ let div_transfer: HTMLDivElement;
 
 
 /**
+ * Function to display selection between a new session and restoring old session.
+ * @param html_widget HTML to display to
+ */
+export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
+  div_app = div_widget;
+  div_app.innerHTML = `
+      <div class="session-window l-session-window first-layer-window">
+
+        <div class="widget-header">
+          <button class="goback-button">
+            <i class="fa-solid fa-angle-left"></i>
+          </button>
+          <img
+            class="erdstall-logo"
+            src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
+            alt="TypeScript"
+          />
+        </div>
+      
+        <header class="session-window__header l-session-window__header">
+          <h1>Transfer</h1>
+          <p>
+            Create a new session or<br />
+            restore your previous session with your private key
+          </p>
+        </header>
+
+      <form class="session-window__form l-session-window__form">
+        <button type="button" class="new-session-btn">New Session</button>
+        <span>or</span>
+        <input type="password" placeholder="your private key" />
+        <button type="button" class="restore-session-btn">Restore Session</button>
+      </form>
+    </div>
+  `;
+
+  const btn_newSession = document.querySelector<HTMLButtonElement>(
+    ".session-window__form .new-session-btn"
+  )!;
+  const btn_restoreSession = document.querySelector<HTMLButtonElement>(
+    ".session-window__form .restore-session-btn"
+    // to fix
+  )!;
+
+  const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
+    ".session-window__form input[type='password']"
+  )!;
+
+  /**
+   * Event listeners for going back to the main page
+   */
+  const logo_return =
+    document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
+  logo_return.addEventListener("click", () => widget(div_app));
+
+  const btn_return = document.querySelector<HTMLButtonElement>(
+    ".session-window .goback-button"
+  )!;
+  btn_return.addEventListener("click", () => widget(div_app));
+
+  btn_newSession.addEventListener("click", () => eventNewSession());
+
+  txt_previousPrivateKey.addEventListener("keypress", (event) => {
+    if (event.key == "Enter") {
+      event.preventDefault();
+      btn_restoreSession.click();
+    }
+  });
+
+  //stretch window and password input, if click password input
+  // txt_previousPrivateKey.addEventListener("click", () => {
+  //   div_sessionWindow.style.width = "550px";
+  //   txt_previousPrivateKey.style.width = "380px";
+  // });
+
+  btn_restoreSession.addEventListener("click", () =>
+    eventRestoreSession(txt_previousPrivateKey.value)
+  );
+}
+
+/**
+ * Function for new session event.
+ */
+async function eventNewSession() {
+  const newSession_ = await newSession();
+  if (newSession_.message != undefined) {
+    alert(newSession_.message);
+    return;
+  }
+  session = newSession_.session!;
+  privateKey = newSession_.privateKey!;
+  htmlTransferAndMintWindow();
+}
+
+async function eventRestoreSession(privateKey: string) {
+  const restoredSession = await restoreSession(privateKey);
+  if (restoredSession.message != undefined) {
+    alert(restoredSession.message);
+    return;
+  }
+  session = restoredSession.session!;
+  htmlTransferAndMintWindow();
+}
+
+/**
+ * Function to make window for transfer and minting.
+ */
+
+export function htmlTransferAndMintWindow() {
+  div_app.style.height = "130vh";
+  div_app.innerHTML = `
+  <div class="transfer-window-container l-transfer-window-container first-layer-window">
+
+      <div class="widget-header">
+          <button class="goback-button">
+            <i class="fa-solid fa-angle-left"></i>
+          </button>
+          <img
+            class="erdstall-logo"
+            src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
+            alt="TypeScript"
+          />
+      </div>
+
+      <h1 class="l-transfer-title">Transfer</h1>
+
+      <div class="transfer-window l-transfer-window second-layer-window">
+      </div>
+
+      <h1 class="l-transfer-title">Mint</h1>
+      <div class="mint-window l-mint-window second-layer-window">
+      </div>
+        <div class="transfer-footer l-transfer-footer">
+          <span class="private-key">your private key</span>
+          <span class="session-address">your address</span>
+        </div>
+    </div>
+    
+  `;
+  div_transfer = document.querySelector<HTMLDivElement>(
+    ".transfer-window-container .transfer-window"
+  )!;
+  const div_mint = document.querySelector<HTMLDivElement>(".mint-window")!;
+
+  const btn_privateKey =
+    document.querySelector<HTMLButtonElement>(".private-key")!;
+  btn_privateKey.addEventListener("click", () => alert(privateKey));
+
+  const btn_sessionAddress =
+    document.querySelector<HTMLButtonElement>(".session-address")!;
+  btn_sessionAddress.addEventListener("click", () => alert(session!.address));
+
+  // Event listener for going back one page
+
+  const btn_return = document.querySelector<HTMLButtonElement>(
+    ".transfer-window-container .goback-button"
+  )!;
+  btn_return.addEventListener("click", () => {
+    div_app.style.height = "100vh";
+    htmlCreateSessionForTransfer(div_app);
+  });
+
+  const logo_return =
+    document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
+  logo_return.addEventListener("click", () => {
+    div_app.style.height = "100vh";
+    widget(div_app);
+  });
+
+  /*const btn_mint = document.querySelector<HTMLInputElement>(
+    '.mint-form input[value="mint new token"]'
+  )!; */
+
+  htmlTransfer();
+  htmlMint(div_mint, session);
+}
+
+
+/**
  * Function to display transfer functionality.
  * Optional paramters fill out inputs in beforehand.
  * @param tokenAddress Optional, token address for transfer.
