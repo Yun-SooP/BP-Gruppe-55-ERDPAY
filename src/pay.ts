@@ -13,8 +13,10 @@ let session: Session;
 let privateKey: string;
 let account: Account
 
+let paid: boolean;
+
 let div_pay: HTMLDivElement;
-export function eventPayPopup(tokenAddressToPay: string, amountToPay: number, recipientAddressToPay: string) {
+export function eventPayPopup(tokenAddressToPay: string, amountToPay: number, recipientAddressToPay: string) : Promise<boolean>{
 
   tokenAddress = tokenAddressToPay;
   amount = amountToPay;
@@ -47,17 +49,28 @@ export function eventPayPopup(tokenAddressToPay: string, amountToPay: number, re
     // Append the popup to the overlay, then the overlay to the body
     overlay.appendChild(popup);
     document.body.appendChild(overlay);
-
+    paid = false;
     htmlLogin()
+    return new Promise((resolve) => {
+      document.addEventListener('close', () => {
+        closePaymentPopup();
+        resolve(paid);
+      });
+    });
+    
 }
   
 
   // Function to close the popup
 function closePaymentPopup() {
-    const overlay = document.getElementById('paymentOverlay');
-    if (overlay) {
-      overlay.remove();
-    }
+  const overlay = document.getElementById('paymentOverlay');
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function dispatchCloseEvent() {
+  document.dispatchEvent(new Event('close'));
 }
 
 function htmlLogin() {
@@ -185,17 +198,26 @@ function htmlFrame(){
   )!;
 }
 
-async function htmlPay(
+async function htmlPay (
   tokenAddress: string,
   amount: number,
   recipientAddress: string,
   advanced?: boolean
 ) {
   account = await session!.getAccount(session!.address);
-  if (account.values.values.size == 0) {
+  const tokensForPayment = <Tokens>account.values.values.get(tokenAddress);
+  if (tokensForPayment == undefined || tokensForPayment.value.length < amount) {
+    div_pay.style.height = "130px";
     div_pay.innerHTML = `
-      <p>You have no token available.</p>
+      <h2>You don't have ${tokensForPayment == undefined ? "the" : "enough"} tokens required for payment.</h2>
+      <form class="successful-transfer-form">
+        <button type="button" class="return-btn">close</button>
+      </form>
     `;
+    const btn_close = document.querySelector<HTMLInputElement>(
+      ".successful-transfer-form .return-btn"
+    )!;
+    btn_close.addEventListener('click', dispatchCloseEvent);
   } else {
     div_pay.style.height = "500px";
     div_pay.innerHTML = `
