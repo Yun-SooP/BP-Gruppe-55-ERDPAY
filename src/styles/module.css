@@ -13,30 +13,15 @@
   filter: brightness(0) invert(1);
 }
 
-.main-button,
-.pay-button {
+.main-button {
   width: 275px;
   height: 55px;
   display: flex;
   align-items: center;
-
   backdrop-filter: blur(30px);
   background-color: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
-.pay-button {
-  font-weight: 700;
-  position: relative;
-  span {
-    position: relative;
-    right: -40px;
-  }
-  .erdstall-logo {
-    position: relative;
-    left: 15px;
-  }
-}
-
 .main-button div {
   position: relative;
   font-size: 16px;
@@ -69,6 +54,7 @@
 
 .main-window__form button {
   height: 50px;
+  z-index: 100;
 }
 /* 
 
@@ -330,6 +316,7 @@ input:checked + .slider:before {
 
 .checkboxesIDs {
   margin-top: 20px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .advanced-transfer-form {
@@ -342,7 +329,7 @@ input:checked + .slider:before {
 .token-id {
   color: rgba(255, 255, 255, 0.7);
   border-radius: 12px;
-  width: 45px;
+  width: 90px;
   height: 33px;
   font-size: 13px;
   font-weight: 500;
@@ -411,7 +398,6 @@ input:checked + .slider:before {
 /* error: red outline*/
 
 .error-message-span {
-  color: var(--errorRed);
   font-size: 15px;
 }
 
@@ -434,4 +420,63 @@ input:checked + .slider:before {
 }
 .horizontal-shake {
   animation: horizontal-shaking 0.35s 1s;
+}
+.tooltip-icon-frame {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  margin-left: 5px;
+  margin-top: 10px;
+}
+
+.message-box {
+  visibility: hidden;
+  opacity: 0;
+
+  width: max-content;
+  height: max-content;
+
+  background-color: #283048;
+  color: #fff;
+
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  z-index: 1;
+
+  padding: 5px 10px 10px 10px;
+  bottom: 30px;
+
+  transition: opacity 0.4s;
+}
+
+.message-box::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: #283048 transparent transparent transparent;
+}
+
+.message-box p {
+  padding: 30px 10px 30px 10px;
+}
+
+.tooltip-icon {
+  color: rgba(255, 255, 255, 0.7);
+  transform: scale(0.9);
+}
+
+.content-with-tooltip {
+  height: max-content;
+  width: max-content;
+
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+
+  left: 11px;
 }

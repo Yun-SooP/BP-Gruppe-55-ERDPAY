@@ -285,7 +285,19 @@ function makeTokenIDsCheckboxes(
         : false;
     chk_IDs.push(checkbox);
     const span = document.createElement("span");
-    span.innerHTML = `${tokenID} </br>`;
+
+    const tokenIDString = tokenID + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay} </br>`;
     div_chkIDs.appendChild(checkbox);
     div_chkIDs.appendChild(span);
   }
@@ -344,7 +356,7 @@ function htmlTransferConfirmation(
     <h2>Please confirm the transfer</h2>
     <h2>${amount} Token${amount > 1 ? "s" : ""} of:</h2>
     <div class="token-address-div third-layer-window">${tokenAddress}</div>
-    <h2>token ID:</h2>
+    <h2>token ID${tokenIDs.length > 1 ? "s" : ""}:</h2>
     <div id="tokenIDs">
     </div>
 
@@ -362,7 +374,18 @@ function htmlTransferConfirmation(
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
-    span.innerHTML = `${tokenIDs[i]}`;
+    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay}`;
     div_tokenIDs.appendChild(span);
   }
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
@@ -378,7 +401,13 @@ function htmlTransferConfirmation(
   btn_return.addEventListener("click", () =>
     typeof chk_IDs != "undefined"
       ? htmlAdvancedTransfer(tokenAddress, amount, recipientAddress, tokenIDs)
-      : htmlTransfer(div_transfer, session, tokenAddress, amount, recipientAddress)
+      : htmlTransfer(
+          div_transfer,
+          session,
+          tokenAddress,
+          amount,
+          recipientAddress
+        )
   );
 }
 
