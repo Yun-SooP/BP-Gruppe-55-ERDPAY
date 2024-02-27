@@ -8,23 +8,29 @@
  *          <button> ... </button>
  *      </div>
  * @param message The message for the users to explain tools more in detail. It should be handed over as a string representing html code ex. '<p> ... </p>' .
+ * @param selectorClass The wrapper element of the HTML-Element you want to attach the tooltip to
+ * @param box_position A string that defines the position of the tooltip box relative to the icon. There are 4 possible inputs 'top', 'bottom, 'left' and 'right'
  */
-export function createToolTip(message: string) {
+export function createToolTip(message: string, selectorClass: string, box_position: string) {
     const iconFrame = document.createElement('div');
+    const element = document.querySelector('.' + selectorClass)!
+    element.classList.add('content-with-tooltip')
+
     iconFrame.classList.add('tooltip-icon-frame')
 
     iconFrame.innerHTML = `<i class="fa-solid fa-circle-info tooltip-icon"></i>`
 
     const tooltip = document.createElement('span')
-    tooltip.classList.add('message-box')
+    tooltip.classList.add('message-box-' + box_position)
     iconFrame.appendChild(tooltip)
     tooltip.innerHTML = message
+    tooltip.querySelector('p')!.classList.add('message-box-text')
 
     iconFrame.addEventListener('click', () => {
         tooltip.classList.toggle('clicked')
     })
-
-    document.querySelector('.content-with-tooltip')!.appendChild(iconFrame)
+    
+    element.appendChild(iconFrame)
 }
 
 

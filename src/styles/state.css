@@ -27,12 +27,12 @@
   margin-left: 15px;
 }
 
-.info-icon-frame:hover .info-box {
-  visibility: visible;
-  opacity: 1;
+.tooltip-icon-frame:hover .message-box-top, .tooltip-icon-frame:hover .message-box-right, .tooltip-icon-frame:hover .message-box-left, .tooltip-icon-frame:hover .message-box-bottom {
+  visibility: visible; 
+  opacity: 100%;
 }
 
-.info-icon-frame .clicked {
+.tooltip-icon-frame .clicked {
   visibility: visible;
   opacity: 1;
 }

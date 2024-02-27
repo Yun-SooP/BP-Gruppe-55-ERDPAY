@@ -425,11 +425,12 @@ input:checked + .slider:before {
   position: relative;
   display: inline-flex;
   justify-content: center;
-  margin-left: 5px;
+  margin-left: 8px;
   margin-top: 10px;
+  bottom: 4px;
 }
 
-.message-box {
+.message-box-top {
   visibility: hidden;
   opacity: 0;
 
@@ -450,7 +451,7 @@ input:checked + .slider:before {
   transition: opacity 0.4s;
 }
 
-.message-box::after {
+.message-box-top::after {
   content: "";
   position: absolute;
   top: 100%;
@@ -461,9 +462,108 @@ input:checked + .slider:before {
   border-color: #283048 transparent transparent transparent;
 }
 
-.message-box p {
+.message-box-bottom {
+  visibility: hidden;
+  opacity: 0;
+
+  width: max-content;
+  height: max-content;
+
+  background-color: #283048;
+  color: #fff;
+
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  z-index: 1;
+
+  padding: 5px 10px 10px 10px;
+  top: 30px;
+
+  transition: opacity 0.4s;
+}
+
+.message-box-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent #283048 transparent;
+}
+
+.message-box-right {
+  visibility: hidden;
+  opacity: 0;
+
+  width: max-content;
+  height: max-content;
+
+  background-color: #283048;
+  color: #fff;
+
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  z-index: 1;
+
+  padding: 5px 10px 10px 10px;
+  left: 30px;
+  bottom: -35px;
+
+  transition: opacity 0.4s;
+}
+
+.message-box-right::after {
+  content: "";
+  position: absolute;
+  right: 100%;
+  bottom: 37%;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent #283048 transparent transparent ;
+}
+
+.message-box-left {
+  visibility: hidden;
+  opacity: 0;
+
+  width: max-content;
+  height: max-content;
+
+  background-color: #283048;
+  color: #fff;
+
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  z-index: 1;
+
+  padding: 5px 10px 10px 10px;
+  right: 30px;
+  bottom: -35px;
+
+  transition: opacity 0.4s;
+}
+
+.message-box-left::after {
+  content: "";
+  position: absolute;
+  left: 113%;
+  bottom: 37%;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent transparent #283048 ;
+}
+
+.message-box-text {
   padding: 30px 10px 30px 10px;
 }
+
 
 .tooltip-icon {
   color: rgba(255, 255, 255, 0.7);
@@ -475,7 +575,7 @@ input:checked + .slider:before {
   width: max-content;
 
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   position: relative;
 
   left: 11px;
