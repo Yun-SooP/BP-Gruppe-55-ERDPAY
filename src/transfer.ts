@@ -138,6 +138,13 @@ export async function htmlTransfer(
   }
 }
 
+/**
+ * Function for continue event in transfer.
+ * @param advanced Selection of advanced transfer functionality.
+ * @param tokenAddress Token address for transfer.
+ * @param amount Amount of tokens to transfer.
+ * @param recipientAddress Recipient address for transfer.
+ */
 function transferContinueButtonEvent(
   advanced: boolean,
   tokenAddress: string,
@@ -164,6 +171,14 @@ function transferContinueButtonEvent(
   }
 }
 
+/**
+ * Functionality to check the inputs for the transfer.
+ * @param tokenAddress Token address for transfer.
+ * @param amount Amount of tokens to transfer.
+ * @param recipientAddress Recipient address for transfer.
+ * @returns valid If the transfer inputs are valid.
+ * @returns message If input is unvalid.
+ */
 function checkInputsForTransfer(
   tokenAddress: string,
   amount: string,
@@ -196,6 +211,14 @@ function checkInputsForTransfer(
   return valid;
 }
 
+/**
+ * Function for transfer event.
+ * Execute the transfer and display whether the transfer was successful or not.
+ * @param tokenAddress Token address for transfer.
+ * @param amount Amount of tokens to transfer.
+ * @param recipientAddress Recipient address for transfer.
+ * @param tokenIDs Optional, IDs to transfer.
+ */
 async function transferEvent(
   tokenAddress: string,
   amount: number,
@@ -367,9 +390,6 @@ function advancedTransferContinueButtonEvent(
 ) {
   const chk_checkedIDs = chk_IDs.filter((checkbox) => checkbox.checked);
   if (chk_checkedIDs.length != amount) {
-    // alert(
-    //   `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
-    // );
     const message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`;
     utils.displayErrorMessage(message, "errTransferConfirm", "tokenCheckBox");
     return;
