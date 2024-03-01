@@ -31,10 +31,11 @@ export function widget(html_widget: HTMLDivElement) {
     </form>
     </div>
     `;
-  const text1 = '<p> Test1 </p>'
-  const text2 = '<p> Check out more services <br> by visiting our Dashboard! </p>'
-  createToolTip(text1, 'button1', 'left')
-  createToolTip(text2, 'button2', 'right')
+  const text1 = "<p> Test1 </p>";
+  const text2 =
+    "<p> Check out more services <br> by visiting our Dashboard! </p>";
+  createToolTip(text1, "button1", "right");
+  createToolTip(text2, "button2", "right");
 
   const btn_transfer = document.querySelector(
     ".main-window__form .transfer-btn"
