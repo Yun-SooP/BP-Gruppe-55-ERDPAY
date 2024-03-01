@@ -327,7 +327,8 @@ input:checked + .slider:before {
 }
 
 /* Confirm Window */
-.token-id {
+.token-id,
+.clickable-token-id {
   color: rgba(255, 255, 255, 0.7);
   border-radius: 12px;
   width: 90px;

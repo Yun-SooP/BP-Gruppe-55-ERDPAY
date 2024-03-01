@@ -11,66 +11,65 @@ let recipientAddress: string;
 
 let session: Session;
 let privateKey: string;
-let account: Account
+let account: Account;
 
 let paid: boolean;
 
 let div_pay: HTMLDivElement;
-export function eventPayPopup(tokenAddressToPay: string, amountToPay: number, recipientAddressToPay: string) : Promise<boolean>{
-
+export function eventPayPopup(
+  tokenAddressToPay: string,
+  amountToPay: number,
+  recipientAddressToPay: string
+): Promise<boolean> {
   tokenAddress = tokenAddressToPay;
   amount = amountToPay;
   recipientAddress = recipientAddressToPay;
 
-    // Create the overlay element
-    const overlay = document.createElement('div');
-    overlay.id = 'paymentOverlay';
-    overlay.style.position = 'fixed';
-    overlay.style.left = '0';
-    overlay.style.top = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-    overlay.style.display = 'flex';
-    overlay.style.justifyContent = 'center';
-    overlay.style.alignItems = 'center';
-    overlay.style.zIndex = '1000';
-    overlay.style.overflowY = 'auto'; // Enable vertical scrolling on the overlay
+  // Create the overlay element
+  const overlay = document.createElement("div");
+  overlay.id = "paymentOverlay";
+  overlay.style.position = "fixed";
+  overlay.style.left = "0";
+  overlay.style.top = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+  overlay.style.display = "flex";
+  overlay.style.justifyContent = "center";
+  overlay.style.alignItems = "center";
+  overlay.style.zIndex = "1000";
+  overlay.style.overflowY = "auto"; // Enable vertical scrolling on the overlay
 
-  
-    // Create the popup element
-    popup = document.createElement('div');
-    popup.id = 'paymentPopup';
-    popup.style.textAlign = 'center';
-    popup.style.maxHeight = '100%'; // Set a maximum height for the popup
-    popup.style.overflowY = 'auto'; // Enable vertical scrolling within the popup
-  
+  // Create the popup element
+  popup = document.createElement("div");
+  popup.id = "paymentPopup";
+  popup.style.textAlign = "center";
+  popup.style.maxHeight = "100%"; // Set a maximum height for the popup
+  popup.style.overflowY = "auto"; // Enable vertical scrolling within the popup
 
-    // Append the popup to the overlay, then the overlay to the body
-    overlay.appendChild(popup);
-    document.body.appendChild(overlay);
-    paid = false;
-    htmlLogin()
-    return new Promise((resolve) => {
-      document.addEventListener('close', () => {
-        closePaymentPopup();
-        resolve(paid);
-      });
+  // Append the popup to the overlay, then the overlay to the body
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+  paid = false;
+  htmlLogin();
+  return new Promise((resolve) => {
+    document.addEventListener("close", () => {
+      closePaymentPopup();
+      resolve(paid);
     });
-    
+  });
 }
-  
 
-  // Function to close the popup
+// Function to close the popup
 function closePaymentPopup() {
-  const overlay = document.getElementById('paymentOverlay');
+  const overlay = document.getElementById("paymentOverlay");
   if (overlay) {
     overlay.remove();
   }
 }
 
 function dispatchCloseEvent() {
-  document.dispatchEvent(new Event('close'));
+  document.dispatchEvent(new Event("close"));
 }
 
 function htmlLogin() {
@@ -128,28 +127,34 @@ function htmlLogin() {
     }
   });
 
-  btn_login.addEventListener("click", () =>
-    eventLogin(txt_privateKey.value)
-  );
+  btn_login.addEventListener("click", () => eventLogin(txt_privateKey.value));
 }
-
 
 async function eventLogin(privateKeyForLogin: string) {
   const restoredSession = await restoreSession(privateKeyForLogin);
-  const valid = utils.checkPrivateKey(privateKeyForLogin, 'errRestoreSession','inputPrivateKey')
-  if (!valid){
+  const valid = utils.checkPrivateKey(
+    privateKeyForLogin,
+    "errRestoreSession",
+    "inputPrivateKey"
+  );
+  if (!valid) {
     return;
-  } else if (restoredSession.message != undefined) { // there might be unexpected errors (ex. session does not exist)
-    utils.displayErrorMessage(restoredSession.message,'errRestoreSession','inputPrivateKey');
+  } else if (restoredSession.message != undefined) {
+    // there might be unexpected errors (ex. session does not exist)
+    utils.displayErrorMessage(
+      restoredSession.message,
+      "errRestoreSession",
+      "inputPrivateKey"
+    );
     return;
   }
   session = restoredSession.session!;
-  privateKey = privateKeyForLogin 
+  privateKey = privateKeyForLogin;
   htmlFrame();
   htmlPay(tokenAddress, amount, recipientAddress);
 }
 
-function htmlFrame(){
+function htmlFrame() {
   popup.style.height = "130vh";
   popup.innerHTML = `
   <div class="transfer-window-container l-transfer-window-container first-layer-window">
@@ -189,16 +194,14 @@ function htmlFrame(){
   // Event listener for going back one page
 
   const btn_return = document.querySelector<HTMLButtonElement>(
-      ".transfer-window-container .goback-button"
+    ".transfer-window-container .goback-button"
   )!;
-  btn_return.addEventListener("click",  closePaymentPopup);
+  btn_return.addEventListener("click", closePaymentPopup);
 
-  div_pay = <HTMLDivElement>document.getElementById(
-    "pay"
-  )!;
+  div_pay = <HTMLDivElement>document.getElementById("pay")!;
 }
 
-async function htmlPay (
+async function htmlPay(
   tokenAddress: string,
   amount: number,
   recipientAddress: string,
@@ -209,7 +212,9 @@ async function htmlPay (
   if (tokensForPayment == undefined || tokensForPayment.value.length < amount) {
     div_pay.style.height = "130px";
     div_pay.innerHTML = `
-      <h2>You don't have ${tokensForPayment == undefined ? "the" : "enough"} tokens required for payment.</h2>
+      <h2>You don't have ${
+        tokensForPayment == undefined ? "the" : "enough"
+      } tokens required for payment.</h2>
       <form class="successful-transfer-form">
         <button type="button" class="return-btn">close</button>
       </form>
@@ -217,18 +222,20 @@ async function htmlPay (
     const btn_close = document.querySelector<HTMLInputElement>(
       ".successful-transfer-form .return-btn"
     )!;
-    btn_close.addEventListener('click', dispatchCloseEvent);
+    btn_close.addEventListener("click", dispatchCloseEvent);
   } else {
     div_pay.style.height = "500px";
     const amountToPay = tokensForPayment.value.length;
-    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amount)
+    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amount);
     div_pay.innerHTML = `
     <h2></h2>
     <h2>Token Address:</h2>
     <div class="token-address-div third-layer-window">${tokenAddress}</div>
 
     <h2>Amount:</h2>
-    <div class="amount-div third-layer-window">To pay: ${amountToPay} Token${amountToPay > 1 ? "s" : ""} (available: ${amount} Token${amount > 1 ? "s" : ""})</div>
+    <div class="amount-div third-layer-window">To pay: ${amountToPay} Token${
+      amountToPay > 1 ? "s" : ""
+    } (available: ${amount} Token${amount > 1 ? "s" : ""})</div>
 
     <h2>token ID${tokenIDs.length > 1 ? "s" : ""}:</h2>
     <div id="tokenIDs">
@@ -269,17 +276,25 @@ async function htmlPay (
     );
 
     chk_advanced.addEventListener("click", () => {
-      btn_continue.innerText = btn_continue.innerText == "continue to confirmation" ? "continue to ID selection" : "continue to confirmation";
+      btn_continue.innerText =
+        btn_continue.innerText == "continue to confirmation"
+          ? "continue to ID selection"
+          : "continue to confirmation";
     });
 
     chk_advanced.checked = advanced ? true : false;
   }
 }
 
-function payContinueButtonEvent(advanced: boolean, tokenAddress: string, amount: string, recipientAddress: string){
-  const valid = checkInputsForPay(tokenAddress, amount, recipientAddress)
+function payContinueButtonEvent(
+  advanced: boolean,
+  tokenAddress: string,
+  amount: string,
+  recipientAddress: string
+) {
+  const valid = checkInputsForPay(tokenAddress, amount, recipientAddress);
 
-  if(!valid){
+  if (!valid) {
     return;
   }
 
@@ -287,28 +302,54 @@ function payContinueButtonEvent(advanced: boolean, tokenAddress: string, amount:
   if (advanced) {
     htmlAdvancedPay(tokenAddress, amountParsed, recipientAddress);
   } else {
-    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amountParsed)
-    htmlPayConfirmation(tokenAddress, amountParsed, recipientAddress, tokenIDs)
+    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amountParsed);
+    htmlPayConfirmation(tokenAddress, amountParsed, recipientAddress, tokenIDs);
   }
-  
 }
 
-function checkInputsForPay(tokenAddress: string, amount: string, recipientAddress: string) : boolean {
-  let valid = true
-  valid = !utils.checkTokenAddress(tokenAddress, 'errTokenAddress', "token-list") ? false : valid;
-  valid = !utils.checkAmount(amount, 'errTokenAmount','tokenAmount') ? false : valid;
-  valid = !utils.checkRecipientAddress(recipientAddress, 'errRecipientAddr','recipientAddr') ? false : valid;
-  const tokens = <Tokens>account.values.values.get(tokenAddress)
-  if (parseFloat(amount) > tokens.value.length){
-    const message = "The selected token does not have enough tokens available. Please adjust the amount or select another token.";
-    utils.displayErrorMessage(message, 'errTokenAmount', 'tokenAmount')
-    valid = false
+function checkInputsForPay(
+  tokenAddress: string,
+  amount: string,
+  recipientAddress: string
+): boolean {
+  let valid = true;
+  valid = !utils.checkTokenAddress(
+    tokenAddress,
+    "errTokenAddress",
+    "token-list"
+  )
+    ? false
+    : valid;
+  valid = !utils.checkAmount(amount, "errTokenAmount", "tokenAmount")
+    ? false
+    : valid;
+  valid = !utils.checkRecipientAddress(
+    recipientAddress,
+    "errRecipientAddr",
+    "recipientAddr"
+  )
+    ? false
+    : valid;
+  const tokens = <Tokens>account.values.values.get(tokenAddress);
+  if (parseFloat(amount) > tokens.value.length) {
+    const message =
+      "The selected token does not have enough tokens available. Please adjust the amount or select another token.";
+    utils.displayErrorMessage(message, "errTokenAmount", "tokenAmount");
+    valid = false;
   }
   return valid;
 }
 
-async function payEvent(tokenAddress: string, amount: number, recipientAddress: string, tokenIDs?: bigint[]){
-  tokenIDs = typeof tokenIDs == "undefined" ? utils.getTokenIDs(account, tokenAddress, amount) : tokenIDs
+async function payEvent(
+  tokenAddress: string,
+  amount: number,
+  recipientAddress: string,
+  tokenIDs?: bigint[]
+) {
+  tokenIDs =
+    typeof tokenIDs == "undefined"
+      ? utils.getTokenIDs(account, tokenAddress, amount)
+      : tokenIDs;
   const { status, error } = await payTo(
     session,
     tokenAddress,
@@ -338,7 +379,7 @@ function htmlPaySuccesful() {
   const btn_return = document.querySelector<HTMLInputElement>(
     ".successful-transfer-form .return-btn"
   )!;
-  btn_return.addEventListener("click", () => new Event('close'));
+  btn_return.addEventListener("click", () => new Event("close"));
 }
 
 /**
@@ -410,12 +451,12 @@ function htmlAdvancedPay(
  */
 function makeTokenIDsSelection(
   div_tokenIDs: HTMLDivElement,
-  tokenIDs: bigint[],
+  tokenIDs: bigint[]
 ): bigint[] {
-  const selectedTokenIDs : bigint[] = [];
+  const selectedTokenIDs: bigint[] = [];
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
-    span.classList.add("token-id", "third-layer-window");
+    span.classList.add("clickable-token-id", "third-layer-window");
     const tokenIDString = tokenIDs[i] + "";
     const tokenIDTODisplay =
       tokenIDString.length > 6
@@ -427,8 +468,8 @@ function makeTokenIDsSelection(
           )
         : tokenIDString;
     span.innerHTML = `${tokenIDTODisplay}`;
-    span.addEventListener('click', ()=>{
-
+    span.addEventListener("click", () => {
+      span.classList.add("clicked-clickable-token-id");
     });
     div_tokenIDs.appendChild(span);
   }
@@ -453,8 +494,8 @@ function advancedPayContinueButtonEvent(
     // alert(
     //   `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
     // );
-    const message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
-    utils.displayErrorMessage(message, 'errTransferConfirm','tokenCheckBox')
+    const message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`;
+    utils.displayErrorMessage(message, "errTransferConfirm", "tokenCheckBox");
     return;
   }
   const tokenIDs = chk_checkedIDs.map((checkbox) => BigInt(checkbox.value));
@@ -531,11 +572,7 @@ function htmlPayConfirmation(
   btn_return.addEventListener("click", () =>
     typeof chk_IDs != "undefined"
       ? htmlAdvancedPay(tokenAddress, amount, recipientAddress, tokenIDs)
-      : htmlPay(
-          tokenAddress,
-          amount,
-          recipientAddress
-        )
+      : htmlPay(tokenAddress, amount, recipientAddress)
   );
 }
 
