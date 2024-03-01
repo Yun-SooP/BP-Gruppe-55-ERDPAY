@@ -304,6 +304,7 @@ input:checked + .slider:before {
 /* Confirm Transfer */
 
 .token-address-div,
+.amount-div,
 .recipient-address-div,
 .successful-div {
   color: rgba(255, 255, 255, 0.8);

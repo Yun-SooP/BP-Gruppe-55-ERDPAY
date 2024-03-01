@@ -14,7 +14,7 @@ export function makeWidgetButton() {
     `;
   const btn_pay = document.getElementById("pay button");
   btn_pay?.addEventListener("click", async () => {
-    const paid = await eventPayPopup("0x923439be515b6a928cb9650d70000a9044e49e85",3,"0x72ca3dd960c157bd3e8d5654c8ed381ef4d8c840")
+    const paid = await eventPayPopup("0x923439be515b6a928cb9650d70000a9044e49e85",2,"0x72ca3dd960c157bd3e8d5654c8ed381ef4d8c840")
     html_dummy.innerHTML = `
     <div class="dummy">
       <h1>${paid ? "Payment is made" : "Payment is not made"}</h1>

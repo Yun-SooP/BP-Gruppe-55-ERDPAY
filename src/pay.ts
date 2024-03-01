@@ -220,76 +220,33 @@ async function htmlPay (
     btn_close.addEventListener('click', dispatchCloseEvent);
   } else {
     div_pay.style.height = "500px";
+    const amountToPay = tokensForPayment.value.length;
     div_pay.innerHTML = `
-      <h2>Choose your token and the amount of tokens you want to send</h2>
-      <header class="token-list-header">
-          <span>Available Tokens</span>
-          <span>Amount</span>
-      </header>
-      <span id="errTokenAddress"></span>
-      <div id="token-list" class="token-list">
-        <select class="token-list__tokens" size = "5"></select>
-        <select class="token-list__amount" disabled size = "5"></select>
-      </div>
+    <h2></h2>
+    <h2>Token Address:</h2>
+    <div class="token-address-div third-layer-window">${tokenAddress}</div>
 
-      <form class="transfer-form">
-         <div class="transfer-form__token-amount">
-              <span id="errTokenAmount"></span>
-              <input type = "text" placeholder="amount" spellcheck="false" id="tokenAmount"/>
-              <span>Tokens</span>
-        </div>
+    <h2>Amount:</h2>
+    <div class="amount-div third-layer-window">To pay: ${amountToPay} Token${amountToPay > 1 ? "s" : ""} (available: ${amount} Token${amount > 1 ? "s" : ""})</div>
 
-        <div class="transer-form__advanced-transfer">
-          <label class="toggle">
-            <input type = "checkbox" id = "advancedTransfer"></input>
-            <span class="slider round"></span>
-          </label>
-          <p>advanced payment with ID selection</p>
-        </div> 
-        <span id="errRecipientAddr"></span>
-        <input type="text" class="transfer-form__recipient-address" placeholder="recipient address (ex. 0x1234...)" spellcheck="false" id="recipientAddr"/>
-        
-        <button type="button" class="transfer-form__continue-btn">continue to confirmation</button>
-      </form>
+    <h2>To recipient:</h2>
+    <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
+    
+    <form class="transfer-form">
+      <div class="transer-form__advanced-transfer">
+        <label class="toggle">
+          <input type = "checkbox" id = "advancedTransfer"></input>
+          <span class="slider round"></span>
+        </label>
+        <p>advanced payment with ID selection</p>
+      </div> 
+  
+      <button type="button" class="transfer-form__continue-btn">continue to confirmation</button>
+      <button type="button" class="return-btn">cancel</button>
+    </form>
     `;
-    const select_tokens = document.querySelector<HTMLSelectElement>(
-      ".token-list__tokens"
-    )!;
 
-    const select_amount = document.querySelector<HTMLSelectElement>(
-      ".token-list__amount"
-    )!;
 
-    //Synchronize scroll of select_tokens and select_amount
-    let isSyncingLeftScroll = false;
-    let isSyncingRightScroll = false;
-
-    select_tokens.onscroll = function () {
-      if (!isSyncingLeftScroll) {
-        isSyncingRightScroll = true;
-        select_amount.scrollTop = select_tokens.scrollTop;
-      }
-      isSyncingLeftScroll = false;
-    };
-
-    select_amount.onscroll = function () {
-      if (!isSyncingRightScroll) {
-        isSyncingLeftScroll = true;
-        select_tokens.scrollTop = select_amount.scrollTop;
-      }
-      isSyncingRightScroll = false;
-    };
-
-    const tokens = Array.from(account.values.values.entries());
-
-    const txt_amount = document.querySelector<HTMLInputElement>(
-      ".transfer-form__token-amount input"
-    )!;
-    const txt_recipientAddress = document.querySelector<HTMLInputElement>(
-      '.transfer-form input[placeholder="recipient address (ex. 0x1234...)"]'
-    )!;
-
-    utils.makeTokensList(select_tokens, select_amount, tokens);
 
     const btn_continue = document.querySelector<HTMLInputElement>(
       ".transfer-form__continue-btn"
@@ -300,9 +257,9 @@ async function htmlPay (
     btn_continue.addEventListener("click", () =>
       payContinueButtonEvent(
         chk_advanced.checked,
-        select_tokens.value,
-        txt_amount.value,
-        txt_recipientAddress.value
+        tokenAddress,
+        amount.toString(),
+        recipientAddress
       )
     );
 
@@ -310,11 +267,6 @@ async function htmlPay (
       btn_continue.innerText = btn_continue.innerText == "continue to confirmation" ? "continue to ID selection" : "continue to confirmation";
     });
 
-    select_tokens.value =
-      typeof tokenAddress == "undefined" ? "" : tokenAddress;
-    txt_amount.value = typeof amount == "undefined" ? "" : `${amount}`;
-    txt_recipientAddress.value =
-      typeof recipientAddress == "undefined" ? "" : recipientAddress;
     chk_advanced.checked = advanced ? true : false;
   }
 }
@@ -375,13 +327,13 @@ function htmlPaySuccesful() {
   div_pay.innerHTML = `
     <div class="successful-div third-layer-window">Payment Succesful!</div>
     <form class="successful-transfer-form">
-      <button type="button" class="return-btn">return</button>
+      <button type="button" class="return-btn">close</button>
     </form>
   `;
   const btn_return = document.querySelector<HTMLInputElement>(
     ".successful-transfer-form .return-btn"
   )!;
-  btn_return.addEventListener("click", closePaymentPopup);
+  btn_return.addEventListener("click", () => new Event('close'));
 }
 
 /**
@@ -469,14 +421,25 @@ function makeTokenIDsCheckboxes(
         : false;
     chk_IDs.push(checkbox);
     const span = document.createElement("span");
-    span.innerHTML = `${tokenID} </br>`;
+
+    const tokenIDString = tokenID + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay} </br>`;
     div_chkIDs.appendChild(checkbox);
     div_chkIDs.appendChild(span);
   }
 
   return chk_IDs;
 }
-
 /**
  * Function for continue button event in advanced payment.
  * @param tokenAddress Token address for payment.
@@ -525,10 +488,10 @@ function htmlPayConfirmation(
   chk_IDs?: HTMLInputElement[]
 ) {
   div_pay.innerHTML = `
-    <h2>Please confirm the payment</h2>
+    <h2>Please confirm the transfer</h2>
     <h2>${amount} Token${amount > 1 ? "s" : ""} of:</h2>
     <div class="token-address-div third-layer-window">${tokenAddress}</div>
-    <h2>token ID:</h2>
+    <h2>token ID${tokenIDs.length > 1 ? "s" : ""}:</h2>
     <div id="tokenIDs">
     </div>
 
@@ -536,7 +499,7 @@ function htmlPayConfirmation(
     <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
     
     <form class="confirm-transfer-form">
-      <button type="button" class="confirm-transfer-btn">confirm payment</button>
+      <button type="button" class="confirm-transfer-btn">confirm transfer</button>
       <button type="button" class="return-btn">return</button>
     </form>
 
@@ -546,13 +509,24 @@ function htmlPayConfirmation(
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
-    span.innerHTML = `${tokenIDs[i]}`;
+    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay}`;
     div_tokenIDs.appendChild(span);
   }
-  const btn_makePayment = document.querySelector<HTMLInputElement>(
+  const btn_makeTransfer = document.querySelector<HTMLInputElement>(
     ".confirm-transfer-form .confirm-transfer-btn"
   )!;
-  btn_makePayment.addEventListener("click", () =>
+  btn_makeTransfer.addEventListener("click", () =>
     payEvent(tokenAddress, amount, recipientAddress, tokenIDs)
   );
 
@@ -562,7 +536,11 @@ function htmlPayConfirmation(
   btn_return.addEventListener("click", () =>
     typeof chk_IDs != "undefined"
       ? htmlAdvancedPay(tokenAddress, amount, recipientAddress, tokenIDs)
-      : htmlPay(tokenAddress, amount, recipientAddress)
+      : htmlPay(
+          tokenAddress,
+          amount,
+          recipientAddress
+        )
   );
 }
 
