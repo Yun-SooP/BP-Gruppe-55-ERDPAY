@@ -12,10 +12,15 @@ let recipientAddress: string;
 let session: Session;
 let privateKey: string;
 let account: Account;
+let tokenIDs: bigint[];
 
 let paid: boolean;
-
 let div_pay: HTMLDivElement;
+type BooleanWrapper = {
+  value: boolean;
+}
+
+
 export function eventPayPopup(
   tokenAddressToPay: string,
   amountToPay: number,
@@ -214,61 +219,46 @@ async function htmlPay(
     div_pay.style.height = "500px";
     const amountAvailable = tokensForPayment.value.length;
     div_pay.innerHTML = `
-    <h2></h2>
-    <h2>Token Address:</h2>
-    <div class="token-address-div third-layer-window">${tokenAddress}</div>
+      <h2></h2>
+      <h2>Token Address:</h2>
+      <div class="token-address-div third-layer-window">${tokenAddress}</div>
 
-    <h2>Amount:</h2>
-    <div class="amount-div third-layer-window">To pay: ${amount} Token${
-      amount > 1 ? "s" : ""
-    } (available: ${amountAvailable} Token${amountAvailable > 1 ? "s" : ""})</div>
+      <h2>Amount:</h2>
+      <div class="amount-div third-layer-window">To pay: ${amount} Token${
+        amount > 1 ? "s" : ""
+      } (available: ${amountAvailable} Token${amountAvailable > 1 ? "s" : ""})</div>
 
-    <h2 id="token ID label">token ID${amount > 1 ? "s" : ""}:</h2>
-    <button type="button" class="changeTokenIDs-btn">change</button>
-    <div class="tokenIDs-div third-layer-window"> 
-      <div id="tokenIDs">
+      <h2 id="token ID label">token ID${amount > 1 ? "s" : ""}:</h2>
+      <button type="button" class="changeTokenIDs-btn">change</button>
+      <div class="tokenIDs-div third-layer-window"> 
+        <div id="tokenIDs">
+        </div>
       </div>
-    </div>
 
-    <h2>To recipient:</h2>
-    <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
-    
-    <form class="confirm-transfer-form">
-      <button type="button" class="confirm-transfer-btn">confirm transfer</button>
-      <button type="button" class="return-btn">cancel</button>
-    </form>
-    `;
-    let tokenIDs = utils.getTokenIDs(account, tokenAddress, amount);
+      <h2>To recipient:</h2>
+      <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
+      
+      <form class="confirm-transfer-form">
+        <button type="button" class="confirm-transfer-btn">confirm transfer</button>
+        <button type="button" class="return-btn">cancel</button>
+      </form>
+      `;
+    tokenIDs = utils.getTokenIDs(account, tokenAddress, amount);
     const tokenIDsAvailable = utils.getTokenIDs(account, tokenAddress, amountAvailable);
     const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
     makeTokenIDsList(div_tokenIDs, tokenIDs);
     const btn_changeTokenIDs = document.querySelector<HTMLButtonElement>(".changeTokenIDs-btn")!;
-    let selecting: boolean = false;
+    const selecting : BooleanWrapper = { value: false };
     
-    btn_changeTokenIDs.addEventListener("click", ()=>{
-      if (!selecting){
-        selecting = true;
-        btn_changeTokenIDs.innerText = "confirm";
-        div_tokenIDs.innerHTML ="";
-        tokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
-      } else {
-        if(tokenIDs.length != amount){
-          alert(`Please select ${amount} token ID${amount > 1 ? "s" : ""}!`);
-          return;
-        }
-        selecting = false;
-        btn_changeTokenIDs.innerText = "change";
-        div_tokenIDs.innerHTML ="";
-        makeTokenIDsList(div_tokenIDs, tokenIDs);
-      }
-    });
+    btn_changeTokenIDs.addEventListener("click", ()=>changeTokenIDsButtonEvent(
+      selecting,tokenIDsAvailable,div_tokenIDs, btn_changeTokenIDs));
 
     const btn_confirm = document.querySelector<HTMLInputElement>(
       ".confirm-transfer-form .confirm-transfer-btn"
     )!;
 
     btn_confirm.addEventListener("click", () =>{
-      if (selecting){
+      if (selecting.value){
         alert("Please confirm the token ID selection!")
       } else {
         payEvent(tokenAddress,amount,recipientAddress, tokenIDs);
@@ -297,6 +287,24 @@ function htmlPayNotPossible(tokensForPayment : Tokens){
       ".successful-transfer-form .return-btn"
     )!;
     btn_close.addEventListener("click", dispatchCloseEvent);
+}
+
+function changeTokenIDsButtonEvent(selecting:BooleanWrapper, tokenIDsAvailable:bigint[], div_tokenIDs:HTMLDivElement, btn_changeTokenIDs:HTMLButtonElement){
+  if (!selecting.value){
+    selecting.value = true;
+    btn_changeTokenIDs.innerText = "confirm";
+    div_tokenIDs.innerHTML ="";
+    tokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
+  } else {
+    if(tokenIDs.length != amount){
+      alert(`Please select ${amount} token ID${amount > 1 ? "s" : ""}!`);
+      return;
+    }
+    selecting.value = false;
+    btn_changeTokenIDs.innerText = "change";
+    div_tokenIDs.innerHTML ="";
+    makeTokenIDsList(div_tokenIDs, tokenIDs);
+  }
 }
 
 async function payEvent(
