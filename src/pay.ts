@@ -196,7 +196,7 @@ function htmlFrame() {
   const btn_return = document.querySelector<HTMLButtonElement>(
     ".transfer-window-container .goback-button"
   )!;
-  btn_return.addEventListener("click", closePaymentPopup);
+  btn_return.addEventListener("click", dispatchCloseEvent);
 
   div_pay = <HTMLDivElement>document.getElementById("pay")!;
 }
@@ -205,12 +205,86 @@ async function htmlPay(
   tokenAddress: string,
   amount: number,
   recipientAddress: string,
-  advanced?: boolean
 ) {
   account = await session!.getAccount(session!.address);
   const tokensForPayment = <Tokens>account.values.values.get(tokenAddress);
   if (tokensForPayment == undefined || tokensForPayment.value.length < amount) {
-    div_pay.style.height = "130px";
+    htmlPayNotPossible(tokensForPayment);
+  } else {
+    div_pay.style.height = "500px";
+    const amountAvailable = tokensForPayment.value.length;
+    div_pay.innerHTML = `
+    <h2></h2>
+    <h2>Token Address:</h2>
+    <div class="token-address-div third-layer-window">${tokenAddress}</div>
+
+    <h2>Amount:</h2>
+    <div class="amount-div third-layer-window">To pay: ${amount} Token${
+      amount > 1 ? "s" : ""
+    } (available: ${amountAvailable} Token${amountAvailable > 1 ? "s" : ""})</div>
+
+    <h2 id="token ID label">token ID${amount > 1 ? "s" : ""}:</h2>
+    <button type="button" class="changeTokenIDs-btn">change</button>
+    <div class="tokenIDs-div third-layer-window"> 
+      <div id="tokenIDs">
+      </div>
+    </div>
+
+    <h2>To recipient:</h2>
+    <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
+    
+    <form class="confirm-transfer-form">
+      <button type="button" class="confirm-transfer-btn">confirm transfer</button>
+      <button type="button" class="return-btn">cancel</button>
+    </form>
+    `;
+    let tokenIDs = utils.getTokenIDs(account, tokenAddress, amount);
+    const tokenIDsAvailable = utils.getTokenIDs(account, tokenAddress, amountAvailable);
+    const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
+    makeTokenIDsList(div_tokenIDs, tokenIDs);
+    const btn_changeTokenIDs = document.querySelector<HTMLButtonElement>(".changeTokenIDs-btn")!;
+    let selecting: boolean = false;
+    
+    btn_changeTokenIDs.addEventListener("click", ()=>{
+      if (!selecting){
+        selecting = true;
+        btn_changeTokenIDs.innerText = "confirm";
+        div_tokenIDs.innerHTML ="";
+        tokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
+      } else {
+        if(tokenIDs.length != amount){
+          alert(`Please select ${amount} token ID${amount > 1 ? "s" : ""}!`);
+          return;
+        }
+        selecting = false;
+        btn_changeTokenIDs.innerText = "change";
+        div_tokenIDs.innerHTML ="";
+        makeTokenIDsList(div_tokenIDs, tokenIDs);
+      }
+    });
+
+    const btn_confirm = document.querySelector<HTMLInputElement>(
+      ".confirm-transfer-form .confirm-transfer-btn"
+    )!;
+
+    btn_confirm.addEventListener("click", () =>{
+      if (selecting){
+        alert("Please confirm the token ID selection!")
+      } else {
+        payEvent(tokenAddress,amount,recipientAddress, tokenIDs);
+      }
+    });
+
+    const btn_cancel = document.querySelector<HTMLInputElement>(
+      ".confirm-transfer-form .return-btn"
+    )!;
+    btn_cancel.addEventListener("click", dispatchCloseEvent);
+
+  }
+
+}
+function htmlPayNotPossible(tokensForPayment : Tokens){
+  div_pay.style.height = "130px";
     div_pay.innerHTML = `
       <h2>You don't have ${
         tokensForPayment == undefined ? "the" : "enough"
@@ -223,113 +297,6 @@ async function htmlPay(
       ".successful-transfer-form .return-btn"
     )!;
     btn_close.addEventListener("click", dispatchCloseEvent);
-  } else {
-    div_pay.style.height = "500px";
-    const amountAvailable = tokensForPayment.value.length;
-    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amount);
-    div_pay.innerHTML = `
-    <h2></h2>
-    <h2>Token Address:</h2>
-    <div class="token-address-div third-layer-window">${tokenAddress}</div>
-
-    <h2>Amount:</h2>
-    <div class="amount-div third-layer-window">To pay: ${amount} Token${
-      amount > 1 ? "s" : ""
-    } (available: ${amountAvailable} Token${amountAvailable > 1 ? "s" : ""})</div>
-
-    <h2>token ID${tokenIDs.length > 1 ? "s" : ""}:</h2>
-    <div id="tokenIDs">
-    </div>
-
-    <h2>To recipient:</h2>
-    <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
-    
-    <form class="transfer-form">
-      <div class="transer-form__advanced-transfer">
-        <label class="toggle">
-          <input type = "checkbox" id = "advancedTransfer"></input>
-          <span class="slider round"></span>
-        </label>
-        <p>advanced payment with ID selection</p>
-      </div> 
-  
-      <button type="button" class="transfer-form__continue-btn">continue to confirmation</button>
-      <button type="button" class="return-btn">cancel</button>
-    </form>
-    `;
-    const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
-
-    makeTokenIDsSelection(div_tokenIDs, tokenIDs);
-
-    const btn_continue = document.querySelector<HTMLInputElement>(
-      ".transfer-form__continue-btn"
-    )!;
-    const chk_advanced =
-      document.querySelector<HTMLInputElement>("#advancedTransfer")!;
-
-    btn_continue.addEventListener("click", () =>
-      payEvent(tokenAddress,amount,recipientAddress)
-    );
-
-    chk_advanced.addEventListener("click", () => {
-      btn_continue.innerText =
-        btn_continue.innerText == "continue to confirmation"
-          ? "continue to ID selection"
-          : "continue to confirmation";
-    });
-
-    chk_advanced.checked = advanced ? true : false;
-  }
-}
-
-// function payContinueButtonEvent(tokenAddress: string, amount: string, recipientAddress: string){
-//   const valid = checkInputsForPay(tokenAddress, amount, recipientAddress)
-
-//   if(!valid){
-//     return;
-//   }
-
-//   const amountParsed = parseFloat(amount);
-//   if (advanced) {
-//     htmlAdvancedPay(tokenAddress, amountParsed, recipientAddress);
-//   } else {
-//     const tokenIDs = utils.getTokenIDs(account, tokenAddress, amountParsed)
-//     htmlPayConfirmation(tokenAddress, amountParsed, recipientAddress, tokenIDs)
-//   }
-  
-// }
-
-function checkInputsForPay(
-  tokenAddress: string,
-  amount: string,
-  recipientAddress: string
-): boolean {
-  let valid = true;
-  valid = !utils.checkTokenAddress(
-    tokenAddress,
-    "errTokenAddress",
-    "token-list"
-  )
-    ? false
-    : valid;
-  valid = !utils.checkAmount(amount, "errTokenAmount", "tokenAmount")
-    ? false
-    : valid;
-  valid = !utils.checkRecipientAddress(
-    recipientAddress,
-    "errRecipientAddr",
-    "recipientAddr"
-  )
-    ? false
-    : valid;
-  const tokens = <Tokens>account.values.values.get(tokenAddress);
-  if (parseFloat(amount) > tokens.value.length) {
-    const message =
-      "The selected token does not have enough tokens available. Please adjust the amount or select another token.";
-    utils.displayErrorMessage(message, "errTokenAmount", "tokenAmount");
-    valid = false;
-  }
-  return valid;
 }
 
 async function payEvent(
@@ -349,6 +316,7 @@ async function payEvent(
     tokenIDs
   );
   if (status == 1) {
+    paid = true;
     htmlPaySuccesful();
   } else {
     const err: Error = <Error>error;
@@ -371,7 +339,7 @@ function htmlPaySuccesful() {
   const btn_return = document.querySelector<HTMLInputElement>(
     ".successful-transfer-form .return-btn"
   )!;
-  btn_return.addEventListener("click", () => new Event('close'));
+  btn_return.addEventListener("click", dispatchCloseEvent);
 }
 
 
@@ -395,7 +363,14 @@ function makeTokenIDsSelection(
         : tokenIDString;
     span.innerHTML = `${tokenIDTODisplay}`;
     span.addEventListener('click', ()=>{
-      span.classList.add("clicked-clickable-token-id");
+      if (!span.classList.contains("clicked-clickable-token-id")){
+        span.classList.add("clicked-clickable-token-id");
+        selectedTokenIDs.push(tokenIDs[i])
+      } else{
+        span.classList.remove("clicked-clickable-token-id");
+        const index = selectedTokenIDs.indexOf(tokenIDs[i]);
+        selectedTokenIDs.splice(index, 1);
+      }
     });
     div_tokenIDs.appendChild(span);
   }
@@ -410,7 +385,7 @@ function makeTokenIDsSelection(
  * @param checkedTokenIDs Optional, token IDs for payment. Filled in if given.
  * @returns token id list for selected token IDs.
  */
-function makeTokenIDsSelection(
+function makeTokenIDsList(
   div_tokenIDs: HTMLDivElement,
   tokenIDs: bigint[],
 ): bigint[] {
@@ -429,148 +404,13 @@ function makeTokenIDsSelection(
           )
         : tokenIDString;
     span.innerHTML = `${tokenIDTODisplay}`;
-    span.addEventListener('click', ()=>{
-      span.classList.add("clicked-clickable-token-id");
-    });
     div_tokenIDs.appendChild(span);
   }
 
   return selectedTokenIDs;
 }
 
-/**
- * Function to fill token IDs selection. Spans for selections are created.
- * @param div_tokenIDs HTML element to fill in the selection.
- * @param tokenIDs Available token IDs.
- * @param checkedTokenIDs Optional, token IDs for payment. Filled in if given.
- * @returns token id list for selected token IDs.
- */
-function makeTokenIDsSelection(
-  div_tokenIDs: HTMLDivElement,
-  tokenIDs: bigint[]
-): bigint[] {
-  const selectedTokenIDs: bigint[] = [];
-  for (let i = 0; i < tokenIDs.length; i++) {
-    const span = document.createElement("span");
-    span.classList.add("clickable-token-id", "third-layer-window");
-    const tokenIDString = tokenIDs[i] + "";
-    const tokenIDTODisplay =
-      tokenIDString.length > 6
-        ? tokenIDString.substring(0, 3) +
-          "..." +
-          tokenIDString.substring(
-            tokenIDString.length - 3,
-            tokenIDString.length
-          )
-        : tokenIDString;
-    span.innerHTML = `${tokenIDTODisplay}`;
-    span.addEventListener('click', ()=>{
 
-    });
-    div_tokenIDs.appendChild(span);
-  }
-
-  return selectedTokenIDs;
-}
-/**
- * Function for continue button event in advanced payment.
- * @param tokenAddress Token address for payment.
- * @param amount Amount of tokens to payment.
- * @param recipientAddress Recipient address for payment.
- * @param chk_IDs List of checkboxes for token IDs.
- */
-function advancedPayContinueButtonEvent(
-  tokenAddress: string,
-  amount: number,
-  recipientAddress: string,
-  chk_IDs: HTMLInputElement[]
-) {
-  const chk_checkedIDs = chk_IDs.filter((checkbox) => checkbox.checked);
-  if (chk_checkedIDs.length != amount) {
-    // alert(
-    //   `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
-    // );
-    const message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`;
-    utils.displayErrorMessage(message, "errTransferConfirm", "tokenCheckBox");
-    return;
-  }
-  const tokenIDs = chk_checkedIDs.map((checkbox) => BigInt(checkbox.value));
-  htmlPayConfirmation(
-    tokenAddress,
-    amount,
-    recipientAddress,
-    tokenIDs,
-    chk_IDs
-  );
-}
-
-/**
- * Function to display payment confirmation.
- * @param tokenAddress Token address for payment.
- * @param amount Amount of tokens to payment.
- * @param recipientAddress Recipient address for payment.
- * @param tokenIDs IDs to payment.
- * @param chk_IDs Optional, list of checkboxes for token IDs.
- */
-function htmlPayConfirmation(
-  tokenAddress: string,
-  amount: number,
-  recipientAddress: string,
-  tokenIDs: bigint[],
-  chk_IDs?: HTMLInputElement[]
-) {
-  div_pay.innerHTML = `
-    <h2>Please confirm the transfer</h2>
-    <h2>${amount} Token${amount > 1 ? "s" : ""} of:</h2>
-    <div class="token-address-div third-layer-window">${tokenAddress}</div>
-    <h2>token ID${tokenIDs.length > 1 ? "s" : ""}:</h2>
-    <div id="tokenIDs">
-    </div>
-
-    <h2>To recipient:</h2>
-    <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
-    
-    <form class="confirm-transfer-form">
-      <button type="button" class="confirm-transfer-btn">confirm transfer</button>
-      <button type="button" class="return-btn">return</button>
-    </form>
-
-  `;
-  const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
-
-  for (let i = 0; i < tokenIDs.length; i++) {
-    const span = document.createElement("span");
-    span.classList.add("token-id", "third-layer-window");
-    const tokenIDString = tokenIDs[i] + "";
-    const tokenIDTODisplay =
-      tokenIDString.length > 6
-        ? tokenIDString.substring(0, 3) +
-          "..." +
-          tokenIDString.substring(
-            tokenIDString.length - 3,
-            tokenIDString.length
-          )
-        : tokenIDString;
-
-    span.innerHTML = `${tokenIDTODisplay}`;
-    div_tokenIDs.appendChild(span);
-  }
-  const btn_makeTransfer = document.querySelector<HTMLInputElement>(
-    ".confirm-transfer-form .confirm-transfer-btn"
-  )!;
-  btn_makeTransfer.addEventListener("click", () =>
-    payEvent(tokenAddress, amount, recipientAddress, tokenIDs)
-  );
-
-  const btn_return = document.querySelector<HTMLInputElement>(
-    ".confirm-transfer-form .return-btn"
-  )!;
-  btn_return.addEventListener("click", () =>
-    typeof chk_IDs != "undefined"
-      ? htmlAdvancedPay(tokenAddress, amount, recipientAddress, tokenIDs)
-      : htmlPay(tokenAddress, amount, recipientAddress)
-  );
-}
 
 /**
  * Function to carry out payment of tokens.

@@ -305,6 +305,7 @@ input:checked + .slider:before {
 
 .token-address-div,
 .amount-div,
+.tokenIDs-div,
 .recipient-address-div,
 .successful-div {
   color: rgba(255, 255, 255, 0.8);
