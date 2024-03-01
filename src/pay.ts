@@ -221,6 +221,7 @@ async function htmlPay (
   } else {
     div_pay.style.height = "500px";
     const amountToPay = tokensForPayment.value.length;
+    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amount)
     div_pay.innerHTML = `
     <h2></h2>
     <h2>Token Address:</h2>
@@ -228,6 +229,10 @@ async function htmlPay (
 
     <h2>Amount:</h2>
     <div class="amount-div third-layer-window">To pay: ${amountToPay} Token${amountToPay > 1 ? "s" : ""} (available: ${amount} Token${amount > 1 ? "s" : ""})</div>
+
+    <h2>token ID${tokenIDs.length > 1 ? "s" : ""}:</h2>
+    <div id="tokenIDs">
+    </div>
 
     <h2>To recipient:</h2>
     <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
@@ -245,8 +250,8 @@ async function htmlPay (
       <button type="button" class="return-btn">cancel</button>
     </form>
     `;
-
-
+    const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
+    makeTokenIDsSelection(div_tokenIDs, tokenIDs);
 
     const btn_continue = document.querySelector<HTMLInputElement>(
       ".transfer-form__continue-btn"
@@ -403,26 +408,15 @@ function htmlAdvancedPay(
  * @param checkedTokenIDs Optional, token IDs for payment. Filled in if given.
  * @returns chk_IDs List of checkboxes for token IDs.
  */
-function makeTokenIDsCheckboxes(
-  div_chkIDs: HTMLDivElement,
-  availableTokenIDs: bigint[],
-  checkedTokenIDs?: bigint[]
-): HTMLInputElement[] {
-  const chk_IDs: HTMLInputElement[] = [];
-  for (let i = 0; i < availableTokenIDs.length; i++) {
-    const tokenID = availableTokenIDs[i];
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.value = `${tokenID}`;
-    checkbox.id = `${tokenID}`;
-    checkbox.checked =
-      typeof checkedTokenIDs != "undefined" && checkedTokenIDs.includes(tokenID)
-        ? true
-        : false;
-    chk_IDs.push(checkbox);
+function makeTokenIDsSelection(
+  div_tokenIDs: HTMLDivElement,
+  tokenIDs: bigint[],
+): bigint[] {
+  const selectedTokenIDs : bigint[] = [];
+  for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
-
-    const tokenIDString = tokenID + "";
+    span.classList.add("token-id", "third-layer-window");
+    const tokenIDString = tokenIDs[i] + "";
     const tokenIDTODisplay =
       tokenIDString.length > 6
         ? tokenIDString.substring(0, 3) +
@@ -432,13 +426,14 @@ function makeTokenIDsCheckboxes(
             tokenIDString.length
           )
         : tokenIDString;
+    span.innerHTML = `${tokenIDTODisplay}`;
+    span.addEventListener('click', ()=>{
 
-    span.innerHTML = `${tokenIDTODisplay} </br>`;
-    div_chkIDs.appendChild(checkbox);
-    div_chkIDs.appendChild(span);
+    });
+    div_tokenIDs.appendChild(span);
   }
 
-  return chk_IDs;
+  return selectedTokenIDs;
 }
 /**
  * Function for continue button event in advanced payment.
