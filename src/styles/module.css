@@ -336,6 +336,11 @@ input:checked + .slider:before {
   font-size: 13px;
   font-weight: 500;
 }
+
+.clickable-token-id {
+  cursor: pointer;
+}
+
 #tokenIDs {
   align-self: self-start;
   margin-left: 35px;
