@@ -6,7 +6,7 @@ import { Tokens, Assets, Asset } from "@polycrypt/erdstall/ledger/assets";
 
 let popup: HTMLDivElement;
 let tokenAddress: string;
-let amount: number;
+let amountToPay: number;
 let recipientAddress: string;
 
 let session: Session;
@@ -20,14 +20,22 @@ type BooleanWrapper = {
   value: boolean;
 }
 
-
+/**
+ * Triggers a popup for processing a payment.
+ * Returns a promise that resolves to a boolean value indicating the payment success status:
+ * `true` for a successful payment, `false` otherwise.
+ * @param tokenAddressToPay The address of the token to use for payment.
+ * @param amount The amount of the token to pay.
+ * @param recipientAddressToPay The address of the payment recipient.
+ * @returns A promise that resolves to a boolean indicating the payment 
+ */
 export function eventPayPopup(
   tokenAddressToPay: string,
-  amountToPay: number,
+  amount: number,
   recipientAddressToPay: string
 ): Promise<boolean> {
   tokenAddress = tokenAddressToPay;
-  amount = amountToPay;
+  amountToPay = amount;
   recipientAddress = recipientAddressToPay;
 
   // Create the overlay element
@@ -59,24 +67,39 @@ export function eventPayPopup(
   htmlLogin();
   return new Promise((resolve) => {
     document.addEventListener("close", () => {
-      closePaymentPopup();
-      resolve(paid);
+      closePaymentPopup(); // Function to close the popup (assumed to be defined elsewhere)
+      resolve(paid); // `paid` variable should hold the payment status (true or false)
     });
   });
+
+  /**
+   * Closes the payment popup overlay.
+   * Designed to be used internally within the `eventPayPopup` function to ensure the popup is not closed
+   * without resolving the associated promise.
+   * External functions should use `dispatchCloseEvent` to trigger the closing of the popup.
+   */
+  function closePaymentPopup() {
+    const overlay = document.getElementById("paymentOverlay");
+    if (overlay) {
+      overlay.remove();
+    }
+  } 
 }
 
-// Function to close the popup
-function closePaymentPopup() {
-  const overlay = document.getElementById("paymentOverlay");
-  if (overlay) {
-    overlay.remove();
-  }
-}
 
+/**
+ * Dispatches a 'close' event to signal the intention to close the payment popup.
+ * This function should be used by external components that need to close the popup,
+ * ensuring that the closing process is managed correctly and any associated cleanup is performed.
+ */
 function dispatchCloseEvent() {
   document.dispatchEvent(new Event("close"));
 }
 
+/**
+ * Populates the popup with a sign-in form and sets up the necessary event listeners.
+ * The form includes an input field for a private key and a login button.
+ */
 function htmlLogin() {
   popup.innerHTML = `
       <div class="session-window l-session-window first-layer-window">
@@ -116,14 +139,10 @@ function htmlLogin() {
     ".session-window__form input[type='password']"
   )!;
 
-  /**
-   * Event listeners for going back to the main page
-   */
-
   const btn_return = document.querySelector<HTMLButtonElement>(
     ".session-window .goback-button"
   )!;
-  btn_return.addEventListener("click", closePaymentPopup);
+  btn_return.addEventListener("click", dispatchCloseEvent);
 
   txt_privateKey.addEventListener("keypress", (event) => {
     if (event.key == "Enter") {
@@ -135,6 +154,14 @@ function htmlLogin() {
   btn_login.addEventListener("click", () => eventLogin(txt_privateKey.value));
 }
 
+/**
+ * Event to log in a user using a provided private key.
+ * Validates the private key and restores the user's session if it's valid.
+ * Displays an error message if the key is invalid or if the session restoration fails.
+ * On successful login, it proceeds to render the payment interface.
+ *
+ * @param privateKeyForLogin The private key to use for logging into the session.
+ */
 async function eventLogin(privateKeyForLogin: string) {
   const restoredSession = await restoreSession(privateKeyForLogin);
   const valid = utils.checkPrivateKey(
@@ -156,9 +183,12 @@ async function eventLogin(privateKeyForLogin: string) {
   session = restoredSession.session!;
   privateKey = privateKeyForLogin;
   htmlFrame();
-  htmlPay(tokenAddress, amount, recipientAddress);
+  htmlPay(tokenAddress, amountToPay, recipientAddress);
 }
 
+/**
+ * Renders the payment frame within the popup and sets up the interactive elements.
+ */
 function htmlFrame() {
   popup.style.height = "130vh";
   popup.innerHTML = `
@@ -206,6 +236,15 @@ function htmlFrame() {
   div_pay = <HTMLDivElement>document.getElementById("pay")!;
 }
 
+/**
+ * Populates the payment area with transaction details and sets up payment actions.
+ * It checks if the user has sufficient tokens for the payment and displays the payment form or an error message.
+ * Event listeners are added to handle token ID changes and confirm or cancel the transfer.
+ *
+ * @param tokenAddress The token address to use for payment.
+ * @param amount The amount of tokens to pay.
+ * @param recipientAddress The recipient address for the transaction.
+ */
 async function htmlPay(
   tokenAddress: string,
   amount: number,
@@ -271,8 +310,14 @@ async function htmlPay(
     btn_cancel.addEventListener("click", dispatchCloseEvent);
 
   }
-
 }
+
+/**
+ * Displays a message in the payment area indicating that the payment cannot proceed.
+ * The message varies depending on whether the user has no tokens or an insufficient amount.
+ *
+ * @param tokensForPayment The Tokens object representing the user's current token balance.
+ */
 function htmlPayNotPossible(tokensForPayment : Tokens){
   div_pay.style.height = "130px";
     div_pay.innerHTML = `
@@ -296,8 +341,8 @@ function changeTokenIDsButtonEvent(selecting:BooleanWrapper, tokenIDsAvailable:b
     div_tokenIDs.innerHTML ="";
     tokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
   } else {
-    if(tokenIDs.length != amount){
-      alert(`Please select ${amount} token ID${amount > 1 ? "s" : ""}!`);
+    if(tokenIDs.length != amountToPay){
+      alert(`Please select ${amountToPay} token ID${amountToPay > 1 ? "s" : ""}!`);
       return;
     }
     selecting.value = false;
@@ -307,6 +352,16 @@ function changeTokenIDsButtonEvent(selecting:BooleanWrapper, tokenIDsAvailable:b
   }
 }
 
+/**
+ * Handles the event for the 'change token IDs' button click.
+ * Toggles the user's ability to select token IDs for the payment and updates the button text accordingly.
+ * It also validates the number of selected token IDs against the required payment amount.
+ * 
+ * @param selecting A BooleanWrapper object indicating if the token ID selection mode is active.
+ * @param tokenIDsAvailable An array of available token IDs for selection.
+ * @param div_tokenIDs The HTMLDivElement where token IDs are displayed and selected.
+ * @param btn_changeTokenIDs The button element that toggles the token ID selection mode.
+ */
 async function payEvent(
   tokenAddress: string,
   amount: number,
@@ -335,7 +390,8 @@ async function payEvent(
 }
 
 /**
- * Function to display successful payment.
+ * Updates the payment area with a success message and a close button after a successful payment.
+ * It defines the success message and sets up an event listener on the close button to allow the user to exit the payment interface.
  */
 function htmlPaySuccesful() {
   div_pay.innerHTML = `
@@ -350,7 +406,14 @@ function htmlPaySuccesful() {
   btn_return.addEventListener("click", dispatchCloseEvent);
 }
 
-
+/**
+ * Creates a clickable list of token IDs for the user to select from for the payment.
+ * Each token ID is truncated for display and can be selected or deselected, updating the array of selected token IDs.
+ *
+ * @param div_tokenIDs The HTMLDivElement that will contain the list of token IDs.
+ * @param tokenIDs An array of token IDs that the user can select from.
+ * @returns An array of the selected token IDs.
+ */
 function makeTokenIDsSelection(
   div_tokenIDs: HTMLDivElement,
   tokenIDs: bigint[],
@@ -387,17 +450,17 @@ function makeTokenIDsSelection(
 }
 
 /**
- * Function to fill token IDs selection. Spans for selections are created.
- * @param div_tokenIDs HTML element to fill in the selection.
- * @param tokenIDs Available token IDs.
- * @param checkedTokenIDs Optional, token IDs for payment. Filled in if given.
- * @returns token id list for selected token IDs.
+ * Populates a given div element with a list of token IDs.
+ * Each token ID is displayed in a truncated format for better readability.
+ *
+ * @param div_tokenIDs The HTMLDivElement where the token IDs will be displayed.
+ * @param tokenIDs An array of token IDs to display.
+ * @returns
  */
 function makeTokenIDsList(
   div_tokenIDs: HTMLDivElement,
   tokenIDs: bigint[],
-): bigint[] {
-  const selectedTokenIDs : bigint[] = [];
+) {
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
@@ -414,20 +477,19 @@ function makeTokenIDsList(
     span.innerHTML = `${tokenIDTODisplay}`;
     div_tokenIDs.appendChild(span);
   }
-
-  return selectedTokenIDs;
 }
 
 
 
 /**
- * Function to carry out payment of tokens.
- * @param session Session from which the payment will happen
- * @param token Token to payment
- * @param amount Amount of the token to payment
- * @param address Address to payment to
- * @param tokenIDs optional, IDs of token to payment
- * @returns Status and error message
+ * Initiates a transfer of specified token IDs to a recipient address.
+ * Attempts the transfer through the given session and returns the transaction status and any errors.
+ *
+ * @param session An established session.
+ * @param tokenAddress The address of the token to be transferred.
+ * @param recipientAddress The address of the recipient receiving the tokens.
+ * @param tokenIDs An array of token IDs to transfer.
+ * @returns An object containing the status of the transaction and any error that occurred.
  */
 async function payTo(
   session: Session,
