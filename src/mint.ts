@@ -61,6 +61,11 @@ export async function htmlMint(div: HTMLDivElement, session: Session) {
   );
 }
 
+/**
+ * Function to mint a signle token.
+ * @param session The session in which the token will be minted in.
+ * @returns If minting fails.
+ */
 async function eventSingleMint(session: Session) {
   const txt_tokenAddress = document.querySelector<HTMLInputElement>(
     ".mint-form input[placeholder='token address (ex. 0x1234...)']"
@@ -92,6 +97,11 @@ async function eventSingleMint(session: Session) {
   await htmlMint(div_mint, session);
 }
 
+/**
+ * Function to mint multiple token.
+ * @param session The session in which the token will be minted in.
+ * @returns If minting fails.
+ */
 async function eventMultipleMint(session: Session) {
   const txt_tokenAddress = document.querySelector<HTMLInputElement>(
     ".mint-form input[placeholder='token address (ex. 0x1234...)']"
@@ -110,7 +120,13 @@ async function eventMultipleMint(session: Session) {
   await htmlMint(div_mint, session);
 }
 
-//split into checking address and checking other inputs, or even into 3.
+/**
+ * Function to check the inputs for minting.
+ * @param tokenAddress Address of token to mint. 
+ * @param amount Amount of tokens to mint.
+ * @param tokenID ID of token to mint.
+ * @returns Boolean if the inputs are valid or not.
+ */
 function checkInputsForMint(
   tokenAddress: string,
   amount: string,
@@ -128,8 +144,8 @@ function checkInputsForMint(
 /**
  * Function to mint a token.
  * @param session The session in which the token will minted in.
- * @param token Token address to mint of.
- * @param id Token ID to mint. Has to be non existing ID.
+ * @param tokenAddress Token address to mint of.
+ * @param tokenID Token ID to mint. Has to be non existing ID.
  * @returns Status and error message
  */
 async function mint(session: Session, tokenAddress: string, tokenID: bigint) {
@@ -161,6 +177,13 @@ async function mint(session: Session, tokenAddress: string, tokenID: bigint) {
   return { status, error };
 }
 
+/**
+ * Function to mint multiple token.
+ * @param session The session in which the token will minted in.
+ * @param tokenAddress Token address to mint of.
+ * @param amount Amount to mint.
+ * @returns Promise with the token IDs.
+ */
 async function multipleMint(
   session: Session,
   tokenAddress: string,
