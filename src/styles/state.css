@@ -36,3 +36,7 @@
   visibility: visible;
   opacity: 1;
 }
+
+.clicked-clickable-token-id {
+  background-color: rgba(0, 0, 0, 0.2);
+}
