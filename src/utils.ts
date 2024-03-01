@@ -5,9 +5,12 @@ import { Asset } from "@polycrypt/erdstall/ledger/assets"
 const errorRed = '#ff7979';
 
 /**
- * 
- * @param tokenAddress 
- * @returns 
+ * Function to check if the token address is valid.
+ * A valid token address must start with '0x' followed by 40 hexadecimal characters.
+ * @param tokenAddress The token address to validate.
+ * @param errDisplay The element ID where the error message should be displayed.
+ * @param inputBox The input element ID that receives focus on error.
+ * @returns {boolean} True if the address is valid; false otherwise.
  */
 export function checkTokenAddress(tokenAddress: string, errDisplay: string, inputBox: string) : boolean {
     resetErrorDisplay(errDisplay, inputBox);
@@ -41,6 +44,14 @@ export function checkTokenAddressSelected(tokenAddress: string, errDisplay: stri
     return true;
 }
 
+/**
+ * Checks if the given private key is valid.
+ * A valid private key must start with '0x' followed by 64 hexadecimal characters.
+ * @param privateKey - The private key to validate.
+ * @param errDisplay - The element ID where the error message should be displayed.
+ * @param inputBox - The input element ID that receives focus on error.
+ * @returns {boolean} - True if the key is valid; false otherwise.
+ */
 export function checkPrivateKey(privateKey: string, errDisplay: string, inputBox: string) : boolean {
     resetErrorDisplay(errDisplay, inputBox);
 
@@ -57,9 +68,12 @@ export function checkPrivateKey(privateKey: string, errDisplay: string, inputBox
 }
 
 /**
- * 
- * @param tokenID 
- * @returns 
+ * Checks if the given token ID is valid.
+ * A valid token ID must be a positive integer without any special characters.
+ * @param tokenID - The token ID to validate.
+ * @param errDisplay - The element ID where the error message should be displayed.
+ * @param inputBox - The input element ID that receives focus on error.
+ * @returns {boolean} - True if the token ID is valid; false otherwise.
  */
 export function checkTokenID(tokenID: string, errDisplay: string, inputBox: string) : boolean {
     resetErrorDisplay(errDisplay, inputBox);
@@ -68,18 +82,20 @@ export function checkTokenID(tokenID: string, errDisplay: string, inputBox: stri
         displayErrorMessage("Please input the token ID.", errDisplay, inputBox);
         return false;
     }
-    const tokenIDParsed = parseFloat(tokenID)
-    if (Number.isNaN(tokenIDParsed) || tokenIDParsed <= 0 || !Number.isInteger(tokenIDParsed)){
-        displayErrorMessage("Please enter a valid ID.", errDisplay, inputBox);
+    const specialCharacters = /^[0-9]+$/;
+    if(!specialCharacters.test(tokenID)) {
+        displayErrorMessage("Please enter a valid ID. Special characters are not allowed.", errDisplay, inputBox);
         return false;
-    } 
+    }
     return true;
 }
 
 /**
- * 
- * @param amount 
- * @returns 
+ * Checks if the given amount is a valid number greater than zero and an integer.
+ * @param amount - The amount to validate.
+ * @param errDisplay - The element ID where the error message should be displayed.
+ * @param inputBox - The input element ID that receives focus on error.
+ * @returns {boolean} - True if the amount is valid; false otherwise.
  */
 export function checkAmount(amount: string, errDisplay: string, inputBox: string) : boolean {
     resetErrorDisplay(errDisplay, inputBox);
@@ -98,9 +114,12 @@ export function checkAmount(amount: string, errDisplay: string, inputBox: string
 }
 
 /**
- * 
- * @param recipientAddress 
- * @returns 
+ * Checks if the given recipient address is valid.
+ * A valid recipient address must start with '0x' followed by 40 hexadecimal characters.
+ * @param recipientAddress - The recipient address to validate.
+ * @param errDisplay - The element ID where the error message should be displayed.
+ * @param inputBox - The input element ID that receives focus on error.
+ * @returns {boolean} - True if the address is valid; false otherwise.
  */
 export function checkRecipientAddress(recipientAddress: string, errDisplay: string, inputBox: string) : boolean {
     resetErrorDisplay(errDisplay, inputBox);
@@ -119,8 +138,9 @@ export function checkRecipientAddress(recipientAddress: string, errDisplay: stri
 }
 
 /**
- * 
- * @returns 
+ * Generates a random address following the Ethereum address format.
+ * The address starts with '0x' followed by 40 random hexadecimal characters.
+ * @returns {string} - The generated random address.
  */
 export function generateRandomAddress() : string {
     const values = crypto.getRandomValues(new Uint8Array(20));
@@ -129,8 +149,9 @@ export function generateRandomAddress() : string {
 }
 
 /**
- * 
- * @returns 
+ * Generates a random token ID in a bigint format.
+ * The ID is a 256-bit number represented as a hexadecimal string converted to bigint.
+ * @returns {bigint} - The generated random token ID.
  */
 export function generateRandomTokenID() : bigint {
     const randomBytesArray = crypto.getRandomValues(new Uint8Array(32));
@@ -139,11 +160,12 @@ export function generateRandomTokenID() : bigint {
 }
 
 /**
- * 
- * @param account 
- * @param tokenAddress 
- * @param amount 
- * @returns 
+ * Retrieves token IDs from an account for a given token address.
+ * If an amount is specified, returns that many token IDs; otherwise, returns all token IDs.
+ * @param account - The account to retrieve token IDs from.
+ * @param tokenAddress - The address of the token.
+ * @param amount - Optional. The number of token IDs to retrieve.
+ * @returns {bigint[]} - An array of token IDs.
  */
 export function getTokenIDs(account: Account, tokenAddress: string, amount?: number) : bigint[] {
     const tokens = <Tokens>account.values.values.get(tokenAddress)!;
@@ -152,10 +174,10 @@ export function getTokenIDs(account: Account, tokenAddress: string, amount?: num
 }
 
 /**
- * 
- * @param select_tokens 
- * @param select_amount 
- * @param tokens 
+ * Populates the token and amount select elements with options based on the available tokens.
+ * @param select_tokens - The select element for choosing tokens.
+ * @param select_amount - The select element for choosing the amount.
+ * @param tokens - An array of token information tuples [token address, asset].
  */
 export function makeTokensList(select_tokens: HTMLSelectElement, select_amount: HTMLSelectElement, tokens: [string, Asset][]){
     for (let i = 0; i < tokens.length; i++) {
@@ -173,20 +195,25 @@ export function makeTokensList(select_tokens: HTMLSelectElement, select_amount: 
 }
 
 /**
- * function to show red borders around the element
- * @param id id of the css element to have red borders
+ * Applies a red border style to the element with the given ID to highlight it as an error field.
+ * @param id - The ID of the element to which the red border should be applied.
  */
 export function errorHighlight(id :string) {
     document.getElementById(id)!.style.border = "1px solid " + errorRed;
 }
 
+/**
+ * Removes the red border style from the element with the given ID, typically used after the error is resolved.
+ * @param id - The ID of the element from which the red border should be removed.
+ */
 export function errorRemoveHighlight(id: string) {
     document.getElementById(id)!.style.border = "none";
 }
+
 /**
- * function to display error message
- * @param id id of the css element
- * @param msg html span element; needs to be written between ``
+ * Inserts an HTML span element with an error message into the element with the given ID.
+ * @param id - The ID of the element where the error message span will be inserted.
+ * @param msg - The error message to be displayed, formatted as an HTML string.
  */
 export function errorMessageSpan(id:string, msg:string) {
     const errorMsg = document.getElementById(id);
@@ -194,10 +221,10 @@ export function errorMessageSpan(id:string, msg:string) {
   }
 
 /**
- * function to display error message and red borders for transfer
- * @param message message to display in errDisplay
- * @param errDisplay span element's id from html to show error message
- * @param inputBox input box's id from html to outline in red
+ * Displays an error message with a red font color inside a span element and highlights the associated input box.
+ * @param message - The error message to be displayed.
+ * @param errDisplay - The ID of the span element where the error message will be displayed.
+ * @param inputBox - The ID of the input box element that will be highlighted.
  */
 export function displayErrorMessage(message:unknown|string, errDisplay:string, inputBox:string){
 
@@ -213,10 +240,11 @@ export function displayErrorMessage(message:unknown|string, errDisplay:string, i
     errorMessageSpan(errDisplay, msg);
     errorHighlight(inputBox);
   }
+
 /**
- * function to change the height of the height of an element.
- * @param id id of the window in html or the HTMLDivElement itself to change its height
- * @param pixel the size of the window you want 
+ * Adjusts the height of the element with the given ID or the HTMLDivElement itself.
+ * @param id - The ID of the HTML element or the HTMLDivElement to be resized.
+ * @param pixel - The new height in pixels for the element.
  */
 export function setWindowHeight(id:string|HTMLDivElement, pixel:number){
     if ( typeof id === "string"){
@@ -226,6 +254,12 @@ export function setWindowHeight(id:string|HTMLDivElement, pixel:number){
     }
     
 }
+
+/**
+ * Clears any displayed error message and removes the red highlight from the input box.
+ * @param errDisplay - The ID of the span element where the error message is displayed.
+ * @param inputBox - The ID of the input box element that was highlighted.
+ */
 export function resetErrorDisplay(errDisplay:string, inputBox:string){
     const msg = "";
     errorMessageSpan(errDisplay, msg);

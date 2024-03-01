@@ -82,3 +82,73 @@
   border: solid 0.5px rgba(255, 255, 255, 0.7);
   justify-content: center;
 }
+
+/* Tooltip */
+.tooltip-icon-frame {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-left: 8px;
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+
+.message-box-top,
+.message-box-bottom,
+.message-box-right,
+.message-box-left {
+  visibility: hidden;
+  opacity: 0;
+
+  width: max-content;
+  height: max-content;
+
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  color: #283048;
+
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  z-index: 1;
+
+  padding: 5px 10px 10px 10px;
+  transition: opacity 0.4s;
+}
+
+.message-box-top {
+  bottom: 30px;
+}
+.message-box-bottom {
+  top: 30px;
+}
+
+.message-box-right {
+  left: 30px;
+  bottom: -35px;
+}
+
+.message-box-left {
+  right: 30px;
+  bottom: -35px;
+}
+
+.message-box-text {
+  padding: 20px 10px 20px 10px;
+}
+
+.tooltip-icon {
+  color: rgba(255, 255, 255, 0.7);
+  transform: scale(0.9);
+}
+
+.content-with-tooltip {
+  height: max-content;
+  width: max-content;
+
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  left: 11px;
+}

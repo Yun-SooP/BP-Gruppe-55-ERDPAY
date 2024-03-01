@@ -108,6 +108,10 @@ async function eventNewSession() {
   htmlDashboard();
 }
 
+/**
+ * Function for restore session event.
+ * @param privateKey Private key to restore the session.
+ */
 async function eventRestoreSession(privateKey: string) {
   const restoredSession = await restoreSession(privateKey);
   const valid = utils.checkPrivateKey(

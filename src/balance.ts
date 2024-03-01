@@ -55,8 +55,6 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
   try {
     client = await setupClient();
   } catch (error) {
-
-    //what error is this, and when does it show?
     alert(error);
   }
 
@@ -181,11 +179,7 @@ async function viewBalance(client: Client, input: HTMLInputElement) {
         select_id.add(option);
       }
     });
-  } catch (error) {
-    // alert(
-    //   "Please enter a valid address. The address must be in hex and 40 characters long."
-    // );
-    
+  } catch (error) {    
     //resize window height
     setWindowHeight('balanceAddressEnterWindow', 210);
 
