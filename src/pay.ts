@@ -225,7 +225,7 @@ async function htmlPay(
     btn_close.addEventListener("click", dispatchCloseEvent);
   } else {
     div_pay.style.height = "500px";
-    const amountToPay = tokensForPayment.value.length;
+    const amountAvailable = tokensForPayment.value.length;
     const tokenIDs = utils.getTokenIDs(account, tokenAddress, amount);
     div_pay.innerHTML = `
     <h2></h2>
@@ -233,9 +233,9 @@ async function htmlPay(
     <div class="token-address-div third-layer-window">${tokenAddress}</div>
 
     <h2>Amount:</h2>
-    <div class="amount-div third-layer-window">To pay: ${amountToPay} Token${
-      amountToPay > 1 ? "s" : ""
-    } (available: ${amount} Token${amount > 1 ? "s" : ""})</div>
+    <div class="amount-div third-layer-window">To pay: ${amount} Token${
+      amount > 1 ? "s" : ""
+    } (available: ${amountAvailable} Token${amountAvailable > 1 ? "s" : ""})</div>
 
     <h2>token ID${tokenIDs.length > 1 ? "s" : ""}:</h2>
     <div id="tokenIDs">
@@ -268,7 +268,7 @@ async function htmlPay(
       document.querySelector<HTMLInputElement>("#advancedTransfer")!;
 
     btn_continue.addEventListener("click", () =>
-      payEvent(tokenAddress,amountToPay,)
+      payEvent(tokenAddress,amount,recipientAddress)
     );
 
     chk_advanced.addEventListener("click", () => {
