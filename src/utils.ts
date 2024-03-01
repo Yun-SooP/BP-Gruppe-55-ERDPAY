@@ -51,11 +51,11 @@ export function checkTokenID(tokenID: string, errDisplay: string, inputBox: stri
         displayErrorMessage("Please input the token ID.", errDisplay, inputBox);
         return false;
     }
-    const tokenIDParsed = parseFloat(tokenID)
-    if (Number.isNaN(tokenIDParsed) || tokenIDParsed <= 0 || !Number.isInteger(tokenIDParsed)){
-        displayErrorMessage("Please enter a valid ID.", errDisplay, inputBox);
+    const specialCharacters = /^[0-9]+$/;
+    if(!specialCharacters.test(tokenID)) {
+        displayErrorMessage("Please enter a valid ID. Special characters are not allowed.", errDisplay, inputBox);
         return false;
-    } 
+    }
     return true;
 }
 
