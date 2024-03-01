@@ -146,8 +146,10 @@ export function htmlDashboard() {
             <button class="goback-button">
               <i class="fa-solid fa-angle-left"></i>
             </button>
-            <div id="transferTab">Transfer</div>
-            <div id="mintTab">Mint</div>
+            <div class="l-tab">
+              <div id="transferTab" class="tab">Transfer</div>
+              <div id="mintTab" class="tab">Mint</div>
+            </div>
             <img
               class="erdstall-logo"
               src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
@@ -176,6 +178,7 @@ export function htmlDashboard() {
     ?.addEventListener("click", () =>
       setTransferTab(div_currentTab, head_currentTabLabel)
     );
+ //document.getElementById("transferTab")?.setAttribute("class", "tab:active");
   document
     .getElementById("mintTab")
     ?.addEventListener("click", () =>
