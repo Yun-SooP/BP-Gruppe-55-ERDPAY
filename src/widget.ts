@@ -1,5 +1,6 @@
 import { htmlBalance } from "./balance";
-import { htmlCreateSessionForTransfer } from "./transfer";
+import { htmlCreateSession } from "./dashboard";
+import { createToolTip } from "./tooltip";
 
 /**
  * Function to display selection between transfer and view balance.
@@ -17,20 +18,30 @@ export function widget(html_widget: HTMLDivElement) {
     <header class="main-window__header l-main-window__header">
         <h1>Welcome to ErdPay</h1>
         <p>Select an action to perform</p>
+   
     </header>
 
     <form class="main-window__form l-main-window__form">
-        <button type="button" class="view-balance-btn">View Balance</button>
-        <button type="button" class="transfer-btn">Transfer</button>
+        <div class='button1'>
+          <button type="button" class="view-balance-btn">View Balance</button>
+        </div>
+        <div class='button2'>
+          <button type="button" class="transfer-btn">Dashboard</button>
+        </div>
     </form>
     </div>
     `;
+  const text1 = "<p> Test1 </p>";
+  const text2 =
+    "<p> Check out more services <br> by visiting our Dashboard! </p>";
+  createToolTip(text1, "button1", "right");
+  createToolTip(text2, "button2", "right");
 
   const btn_transfer = document.querySelector(
     ".main-window__form .transfer-btn"
   );
   btn_transfer?.addEventListener("click", () => {
-    htmlCreateSessionForTransfer(html_widget);
+    htmlCreateSession(html_widget);
   });
 
   const btn_balance = document.querySelector(
@@ -47,22 +58,13 @@ export function widget(html_widget: HTMLDivElement) {
 export function makeWidgetButton() {
   const html_dummy = document.querySelector<HTMLDivElement>("#app")!;
   html_dummy.innerHTML = `
-    
-
     <div class="dummy">
-
-        <button class="main-button" type="button">
-            <div>Pay with</div>
-            <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
-        </button>
         <button class="main-button" type="button">
             <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
         </button>
-
-        
     </div>
     `;
-  const btn_main = document.querySelector(".main-button:last-child");
+  const btn_main = document.querySelector(".main-button");
   btn_main?.addEventListener("click", () => {
     widget(html_dummy);
   });

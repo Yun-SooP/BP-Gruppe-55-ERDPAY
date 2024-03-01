@@ -3,7 +3,7 @@ import { setupClient } from "./setup_client.ts";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { Client } from "@polycrypt/erdstall";
 import { widget } from "./widget.ts";
-import { Asset, Tokens } from "@polycrypt/erdstall/ledger/assets";
+import { getTokenIDs, makeTokensList, displayErrorMessage, setWindowHeight } from "./utils.ts";
 
 let html_widgetCopy: HTMLDivElement;
 let div_balanceWindow: HTMLDivElement;
@@ -37,11 +37,15 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
     <h1 class="l-balance-title">Balance</h1>
     <div class="balance-window-container__address"></div>
 
-    <div class="balance-window l-balance-window second-layer-window">
+    <div class="balance-window l-balance-window second-layer-window"  id="balanceAddressEnterWindow">
       <form class="balance-window__address-form">
-        <input type="text" placeholder="account address" spellcheck="false"/>
-        <button type="button" class="view-balance-btn" />View Balance</button>
+        <span id="errBalanceAccAddr"></span>
+        <input type="text" placeholder="account address" spellcheck="false" id="inputAddress"/>
+        <button type="button" class="view-balance-btn">
+          View Balance
+        </button>
       </form>
+
     </div>
   </div>
   `;
@@ -91,25 +95,6 @@ export async function htmlBalance(html_widget: HTMLDivElement) {
   });
   btn_return.addEventListener("click", () => widget(html_widget));
   logo_return.addEventListener("click", () => widget(html_widget));
-
-  // let tokens: string[], ids: number[][], amounts: number[];
-
-  // Event listener for the buttons to return, to view the balance and to select Token to view
-  // btn_viewBalance.addEventListener("click", async () => {
-  //   txt_amount!.innerHTML = "";
-  //   txt_ids!.innerHTML = "";
-  //   [tokens, ids, amounts] = await viewBalance(
-  //     client!,
-  //     txt_balanceAddress,
-  //     select_tokens
-  //   );
-  // });
-
-  // select_tokens.addEventListener("change", () => {
-  //   const index = tokens.indexOf(select_tokens.value);
-  //   txt_ids!.innerHTML = ids[index].toString();
-  //   txt_amount!.innerHTML = amounts[index].toString();
-  // });
 }
 
 /**
@@ -155,33 +140,9 @@ async function viewBalance(client: Client, input: HTMLInputElement) {
       isSyncingRightScroll = false;
     };
 
-    //리턴 할 필요 없으면 지워도 되는것들
-    const tokens: string[] = [];
-    const amounts: number[] = [];
-
     select_tokens.options.length = 0;
-    const ids: number[][] = [];
 
-    for (let i = 0; i < entries.length; i++) {
-      const option = document.createElement("option");
-      const asset = entries[i];
-      option.text =
-        asset[0].substring(0, 8) + "......" + asset[0].substring(36, 42);
-      // TODO: design
-      // option.onmouseover()
-      option.value = asset[0];
-      select_tokens.add(option);
-
-      const option_amount = document.createElement("option");
-      option_amount.value = asset[0]; //actually not used, because select_amount disabled.
-      option_amount.text = (<Tokens>asset[1]).value.length + "";
-      select_amount.add(option_amount);
-
-      ids.push(getIds(asset));
-      //리턴 할 필요 없다면 없어도 되는것들
-      tokens.push(asset[0]);
-      amounts.push((<Tokens>asset[1]).value.length);
-    }
+    makeTokensList(select_tokens, select_amount, entries)
 
     //Make select_id, if a token is selected
     const select_id = document.querySelector<HTMLSelectElement>(
@@ -207,8 +168,7 @@ async function viewBalance(client: Client, input: HTMLInputElement) {
       //make id-list visible
       select_id.classList.remove("invisible-balance-window__id-list");
       select_id.classList.add("visible-balance-window__id-list");
-      const index = tokens.indexOf(select_tokens.value);
-      const selectedIds = ids[index];
+      const selectedIds = getTokenIDs(account, select_tokens.value);
 
       //fill id-list
       for (let i = 0; i < selectedIds.length; i++) {
@@ -219,12 +179,17 @@ async function viewBalance(client: Client, input: HTMLInputElement) {
         select_id.add(option);
       }
     });
-  } catch (error) {
-    alert(
-      "Please enter a valid address. The address must be in hex and 40 characters long."
-    );
+  } catch (error) {    
+    //resize window height
+    setWindowHeight('balanceAddressEnterWindow', 210);
+
+    //display error message 
+    const msg = `Please enter a valid address. <br> The address must be in hexadecimal and 40 characters long.`
+    displayErrorMessage(msg,'errBalanceAccAddr', 'inputAddress');
+   
   }
 }
+
 
 /**
  * Function to display token list
@@ -265,17 +230,4 @@ function transformToTokenListWindow(input: HTMLInputElement) {
   btn_copy!.addEventListener("click", () => {
     navigator.clipboard.writeText(input.value);
   });
-}
-
-/**
- * Function to read ids of a token into an array
- * @param asset Token to read the ids from
- * @returns Array with ids of given Token
- */
-function getIds(asset: [string, Asset]): number[] {
-  const innerIds: number[] = [];
-  for (const id of asset[1].toJSON()) {
-    innerIds.push(parseInt(id));
-  }
-  return innerIds;
 }

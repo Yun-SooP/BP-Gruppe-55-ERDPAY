@@ -1,48 +1,91 @@
 import { Session } from "@polycrypt/erdstall";
 import { Address } from "@polycrypt/erdstall/ledger";
-import { htmlTransferAndMintWindow } from "./transfer";
+import * as utils from "./utils.ts";
 
 /**
  * Function to display the functionality of minting.
  * @param div_mint HTML to display to
  * @param session The session in which the token will minted in.
  */
-export async function htmlMint(div_mint: HTMLDivElement, session: Session) {
+let div_mint : HTMLDivElement;
+export async function htmlMint(div: HTMLDivElement, session: Session) {
+  div_mint = div;
   div_mint.innerHTML = `
     <form class="mint-form">
-        <input type="text" placeholder="token address" />
-        <input type="text" placeholder="token ID" />
+
+        <span id="errMintTokenAddr"></span>
+        <input type="text" class="token-address-txt" placeholder="token address (ex. 0x1234...)" id="mintTokenAddr"/>
+        <button type="button" class="random-address-btn">generate random address</button>
+
+        <div class="mint-form__multiple-tokens">
+          <label class="toggle">
+            <input type="checkbox" id="multiple"></checkbox>
+            <span class="slider round"></span>
+          </label>
+          <p>mint multiple tokens</p>
+        </div> 
+
+        <span id="errMintTokenId"></span>
+        <input type="text" placeholder="token ID" id="mintTokenId"/>
         <button type="button" class="mint-btn">mint new token</button>
     </form>
     `;
-  const btn_mint = document.querySelector<HTMLInputElement>(
-    ".mint-form .mint-btn"
+  const txt_tokenAddress = document.querySelector<HTMLInputElement>(
+    ".mint-form input[placeholder='token address (ex. 0x1234...)']"
   )!;
 
-  btn_mint.addEventListener("click", async () => eventMint(session));
+  const txt_tokenID = document.querySelector<HTMLInputElement>(
+    ".mint-form input[placeholder='token ID']"
+  )!;
+
+  const chk_multiple = document.querySelector<HTMLInputElement>("#multiple")!;
+  chk_multiple.addEventListener(
+    "click",
+    () =>
+      (txt_tokenID.placeholder = chk_multiple.checked ? "amount" : "token ID")
+  );
+
+  const btn_mint = document.querySelector<HTMLButtonElement>(
+    ".mint-form .mint-btn"
+  )!;
+  btn_mint.addEventListener("click", async () =>
+    chk_multiple.checked ? eventMultipleMint(session) : eventSingleMint(session)
+  );
+
+  const btn_randomAddress = document.querySelector<HTMLInputElement>(
+    ".mint-form .random-address-btn"
+  )!;
+  btn_randomAddress.addEventListener(
+    "click",
+    () => (txt_tokenAddress.value = utils.generateRandomAddress())
+  );
 }
 
 /**
- * Function in development
- * @param session
- * @returns
+ * Function to mint a signle token.
+ * @param session The session in which the token will be minted in.
+ * @returns If minting fails.
  */
-async function eventMint(session: Session) {
+async function eventSingleMint(session: Session) {
   const txt_tokenAddress = document.querySelector<HTMLInputElement>(
-    ".mint-form input[placeholder='token address']"
+    ".mint-form input[placeholder='token address (ex. 0x1234...)']"
   )!;
-  const txt_tokenId = document.querySelector<HTMLInputElement>(
+  const txt_tokenID = document.querySelector<HTMLInputElement>(
     ".mint-form input[placeholder='token ID']"
   )!;
-  const tokenId = parseFloat(txt_tokenId.value);
-  if (Number.isNaN(tokenId) || tokenId <= 0 || !Number.isInteger(tokenId)) {
-    alert("Please enter a valid ID.");
+  const tokenAddress = txt_tokenAddress.value;
+  const tokenID = txt_tokenID.value;
+
+  //cannot differenciate if error is for token address or amount
+  const valid = checkInputsForMint(tokenAddress, "1", tokenID);
+  
+  if (!valid) {
     return;
   }
   const { status, error } = await mint(
     session,
-    txt_tokenAddress.value,
-    parseFloat(txt_tokenId.value)
+    tokenAddress,
+    BigInt(parseFloat(tokenID))
   );
   if (status == 0) {
     const err: Error = <Error>error;
@@ -51,23 +94,67 @@ async function eventMint(session: Session) {
   } else if (status == 1) {
     alert("Token succesfully minted!");
   }
-  await htmlTransferAndMintWindow();
+  await htmlMint(div_mint, session);
+}
+
+/**
+ * Function to mint multiple token.
+ * @param session The session in which the token will be minted in.
+ * @returns If minting fails.
+ */
+async function eventMultipleMint(session: Session) {
+  const txt_tokenAddress = document.querySelector<HTMLInputElement>(
+    ".mint-form input[placeholder='token address (ex. 0x1234...)']"
+  )!;
+  const txt_amount = document.querySelector<HTMLInputElement>(
+    ".mint-form input[placeholder='amount']"
+  )!;
+  const tokenAddress = txt_tokenAddress.value;
+  const amount = txt_amount.value;
+  const valid = checkInputsForMint(tokenAddress, amount);
+  if (!valid) {
+    return;
+  }
+  await multipleMint(session, tokenAddress, parseFloat(amount));
+  alert("Tokens succesfully minted!");
+  await htmlMint(div_mint, session);
+}
+
+/**
+ * Function to check the inputs for minting.
+ * @param tokenAddress Address of token to mint. 
+ * @param amount Amount of tokens to mint.
+ * @param tokenID ID of token to mint.
+ * @returns Boolean if the inputs are valid or not.
+ */
+function checkInputsForMint(
+  tokenAddress: string,
+  amount: string,
+  tokenID?: string
+): boolean {
+  let valid = true
+  valid = !utils.checkTokenAddress(tokenAddress, 'errMintTokenAddr', 'mintTokenAddr') ? false : valid;
+  valid = !utils.checkAmount(amount, 'errMintTokenId', 'mintTokenId') ? false : valid;
+  if (tokenID != undefined) {
+    valid = !utils.checkTokenID(tokenID, 'errMintTokenId', 'mintTokenId') ? false : valid;
+  }
+  return valid;
 }
 
 /**
  * Function to mint a token.
  * @param session The session in which the token will minted in.
- * @param token Token address to mint of.
- * @param id Token ID to mint. Has to be non existing ID.
+ * @param tokenAddress Token address to mint of.
+ * @param tokenID Token ID to mint. Has to be non existing ID.
  * @returns Status and error message
  */
-export async function mint(session: Session, token: string, id: number) {
+async function mint(session: Session, tokenAddress: string, tokenID: bigint) {
   let transaction;
   let receipt;
   let status;
   let error;
   try {
-    transaction = await session.mint(Address.fromString(token), BigInt(id));
+    transaction = await session.mint(Address.fromString(tokenAddress), tokenID);
     receipt = await transaction.receipt;
     status = receipt.status;
     error = receipt.error;
@@ -86,5 +173,35 @@ export async function mint(session: Session, token: string, id: number) {
       error = new Error("Please enter a valid token address.");
     }
   }
+
   return { status, error };
+}
+
+/**
+ * Function to mint multiple token.
+ * @param session The session in which the token will minted in.
+ * @param tokenAddress Token address to mint of.
+ * @param amount Amount to mint.
+ * @returns Promise with the token IDs.
+ */
+async function multipleMint(
+  session: Session,
+  tokenAddress: string,
+  amount: number
+): Promise<bigint[]> {
+  const tokenIDs: bigint[] = [];
+  for (let i = 0; i < amount; i++) {
+    let status = 0;
+    let tokenID;
+    while (status == 0) {
+      const transaction = await mint(
+        session,
+        tokenAddress,
+        utils.generateRandomTokenID()
+      );
+      status = <number>transaction.status;
+    }
+    tokenIDs.push(tokenID!);
+  }
+  return tokenIDs;
 }

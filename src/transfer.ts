@@ -4,197 +4,12 @@ import { Address } from "@polycrypt/erdstall/ledger";
 import { Account } from "@polycrypt/erdstall/ledger";
 import { Asset } from "@polycrypt/erdstall/ledger/assets";
 import { Assets } from "@polycrypt/erdstall/ledger/assets";
-import { newSession, restoreSession } from "./setup_session.ts";
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
-import { widget } from "./widget.ts";
-import { htmlMint } from "./mint.ts";
+import * as utils from "./utils.ts";
 
 let session: Session;
-let privateKey: string;
 let account: Account;
-let div_app: HTMLDivElement;
 let div_transfer: HTMLDivElement;
-
-/**
- * Function to display selection between a new session and restoring old session.
- * @param html_widget HTML to display to
- */
-export function htmlCreateSessionForTransfer(div_widget: HTMLDivElement) {
-  div_app = div_widget;
-  div_app.innerHTML = `
-      <div class="session-window l-session-window first-layer-window">
-
-        <div class="widget-header">
-          <button class="goback-button">
-            <i class="fa-solid fa-angle-left"></i>
-          </button>
-          <img
-            class="erdstall-logo"
-            src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
-            alt="TypeScript"
-          />
-        </div>
-      
-        <header class="session-window__header l-session-window__header">
-          <h1>Transfer</h1>
-          <p>
-            Create a new session or<br />
-            restore your previous session with your private key
-          </p>
-        </header>
-
-      <form class="session-window__form l-session-window__form">
-        <button type="button" class="new-session-btn">New Session</button>
-        <span>or</span>
-        <input type="password" placeholder="your private key" />
-        <button type="button" class="restore-session-btn">Restore Session</button>
-      </form>
-    </div>
-  `;
-  const btn_newSession = document.querySelector<HTMLButtonElement>(
-    ".session-window__form .new-session-btn"
-  )!;
-  const btn_restoreSession = document.querySelector<HTMLButtonElement>(
-    ".session-window__form .restore-session-btn"
-    // to fix
-  )!;
-
-  const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
-    ".session-window__form input[type='password']"
-  )!;
-
-  /**
-   * Event listeners for going back to the main page
-   */
-  const logo_return =
-    document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
-  logo_return.addEventListener("click", () => widget(div_app));
-
-  const btn_return = document.querySelector<HTMLButtonElement>(
-    ".session-window .goback-button"
-  )!;
-  btn_return.addEventListener("click", () => widget(div_app));
-
-  btn_newSession.addEventListener("click", () => eventNewSession());
-
-  txt_previousPrivateKey.addEventListener("keypress", (event) => {
-    if (event.key == "Enter") {
-      event.preventDefault();
-      btn_restoreSession.click();
-    }
-  });
-
-  //stretch window and password input, if click password input
-  // txt_previousPrivateKey.addEventListener("click", () => {
-  //   div_sessionWindow.style.width = "550px";
-  //   txt_previousPrivateKey.style.width = "380px";
-  // });
-
-  btn_restoreSession.addEventListener("click", () =>
-    eventRestoreSession(txt_previousPrivateKey.value)
-  );
-}
-
-/**
- * Function for new session event.
- */
-async function eventNewSession() {
-  const newSession_ = await newSession();
-  if (newSession_.message != undefined) {
-    alert(newSession_.message);
-    return;
-  }
-  session = newSession_.session!;
-  privateKey = newSession_.privateKey!;
-  htmlTransferAndMintWindow();
-}
-
-/**
- * Function for restore session event.
- * @param privateKey Private key to restore the session.
- */
-async function eventRestoreSession(privateKey: string) {
-  const restoredSession = await restoreSession(privateKey);
-  if (restoredSession.message != undefined) {
-    alert(restoredSession.message);
-    return;
-  }
-  session = restoredSession.session!;
-  htmlTransferAndMintWindow();
-}
-
-/**
- * Function to make window for transfer and minting.
- */
-
-export function htmlTransferAndMintWindow() {
-  div_app.style.height = "130vh";
-  div_app.innerHTML = `
-  <div class="transfer-window-container l-transfer-window-container first-layer-window">
-
-      <div class="widget-header">
-          <button class="goback-button">
-            <i class="fa-solid fa-angle-left"></i>
-          </button>
-          <img
-            class="erdstall-logo"
-            src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
-            alt="TypeScript"
-          />
-      </div>
-
-      <h1 class="l-transfer-title">Transfer</h1>
-
-      <div class="transfer-window l-transfer-window second-layer-window">
-      </div>
-
-      <h1 class="l-transfer-title">Mint</h1>
-      <div class="mint-window l-mint-window second-layer-window">
-      </div>
-        <div class="transfer-footer l-transfer-footer">
-          <span class="private-key">your private key</span>
-          <span class="session-address">your address</span>
-        </div>
-    </div>
-    
-  `;
-  div_transfer = document.querySelector<HTMLDivElement>(
-    ".transfer-window-container .transfer-window"
-  )!;
-  const div_mint = document.querySelector<HTMLDivElement>(".mint-window")!;
-
-  const btn_privateKey =
-    document.querySelector<HTMLButtonElement>(".private-key")!;
-  btn_privateKey.addEventListener("click", () => alert(privateKey));
-
-  const btn_sessionAddress =
-    document.querySelector<HTMLButtonElement>(".session-address")!;
-  btn_sessionAddress.addEventListener("click", () => alert(session!.address));
-
-  // Event listener for going back one page
-
-  const btn_return = document.querySelector<HTMLButtonElement>(
-    ".transfer-window-container .goback-button"
-  )!;
-  btn_return.addEventListener("click", () => {
-    div_app.style.height = "100vh";
-    htmlCreateSessionForTransfer(div_app);
-  });
-
-  const logo_return =
-    document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
-  logo_return.addEventListener("click", () => {
-    div_app.style.height = "100vh";
-    widget(div_app);
-  });
-
-  /*const btn_mint = document.querySelector<HTMLInputElement>(
-    '.mint-form input[value="mint new token"]'
-  )!; */
-
-  htmlTransfer();
-  htmlMint(div_mint, session);
-}
 
 /**
  * Function to display transfer functionality.
@@ -205,34 +20,38 @@ export function htmlTransferAndMintWindow() {
  * @param advanced Optional, selection of advanced transfer functionality.
  */
 export async function htmlTransfer(
+  div: HTMLDivElement,
+  sessionForTransfer: Session,
   tokenAddress?: string,
   amount?: number,
   recipientAddress?: string,
   advanced?: boolean
 ) {
+  session = sessionForTransfer;
+  div_transfer = div;
   account = await session!.getAccount(session!.address);
   if (account.values.values.size == 0) {
     div_transfer.innerHTML = `
       <p>You have no token available.</p>
     `;
   } else {
-    div_transfer.style.height = "500px";
+    utils.setWindowHeight(div_transfer, 550);
     div_transfer.innerHTML = `
       <h2>Choose your token and the amount of tokens you want to send</h2>
       <header class="token-list-header">
           <span>Available Tokens</span>
-          <span>amount</span>
+          <span>Amount</span>
       </header>
-
-      <div class="token-list">
-          <select class="token-list__tokens" size = "5"></select>
-          <select class="token-list__amount" disabled size = "5"></select>
+      <span id="errTokenAddress"></span>
+      <div id="token-list" class="token-list">
+        <select class="token-list__tokens" size = "5"></select>
+        <select class="token-list__amount" disabled size = "5"></select>
       </div>
-
 
       <form class="transfer-form">
          <div class="transfer-form__token-amount">
-              <input type = "text" placeholder="amount" spellcheck="false"/>
+              <span id="errTokenAmount"></span>
+              <input type = "text" placeholder="amount" spellcheck="false" id="tokenAmount"/>
               <span>Tokens</span>
         </div>
 
@@ -243,8 +62,9 @@ export async function htmlTransfer(
           </label>
           <p>advanced transfer with ID selection</p>
         </div> 
-
-        <input type="text" class="transfer-form__recipient-address" placeholder="recipient address" spellcheck="false"/>
+        <span id="errRecipientAddr"></span>
+        <input type="text" class="transfer-form__recipient-address" placeholder="recipient address (ex. 0x1234...)" spellcheck="false" id="recipientAddr"/>
+        
         <button type="button" class="transfer-form__continue-btn">continue to confirmation</button>
       </form>
     `;
@@ -282,15 +102,18 @@ export async function htmlTransfer(
       ".transfer-form__token-amount input"
     )!;
     const txt_recipientAddress = document.querySelector<HTMLInputElement>(
-      '.transfer-form input[placeholder="recipient address"]'
+      '.transfer-form input[placeholder="recipient address (ex. 0x1234...)"]'
     )!;
 
-    makeTokensList(select_tokens, select_amount, tokens);
+    utils.makeTokensList(select_tokens, select_amount, tokens);
 
     const btn_continue = document.querySelector<HTMLInputElement>(
       ".transfer-form__continue-btn"
     )!;
-    btn_continue.addEventListener("click", async () =>
+    const chk_advanced =
+      document.querySelector<HTMLInputElement>("#advancedTransfer")!;
+
+    btn_continue.addEventListener("click", () =>
       transferContinueButtonEvent(
         chk_advanced.checked,
         select_tokens.value,
@@ -299,15 +122,11 @@ export async function htmlTransfer(
       )
     );
 
-    const chk_advanced =
-      document.querySelector<HTMLInputElement>("#advancedTransfer")!;
-
-    chk_advanced.addEventListener("click", async () => {
-      if (btn_continue.value == "continue to confirmation") {
-        btn_continue.value = "continue to ID selection";
-      } else {
-        btn_continue.value = "continue to confirmation";
-      }
+    chk_advanced.addEventListener("click", () => {
+      btn_continue.innerText =
+        btn_continue.innerText == "continue to confirmation"
+          ? "continue to ID selection"
+          : "continue to confirmation";
     });
 
     select_tokens.value =
@@ -316,31 +135,6 @@ export async function htmlTransfer(
     txt_recipientAddress.value =
       typeof recipientAddress == "undefined" ? "" : recipientAddress;
     chk_advanced.checked = advanced ? true : false;
-  }
-}
-
-/**
- * Function to fill token address selection list with token addresses.
- * @param select_tokens HTMLSelectElement to display token addresses to.
- * @param tokens Available tokens.
- */
-function makeTokensList(
-  select_tokens: HTMLSelectElement,
-  select_amount: HTMLSelectElement,
-  tokens: [string, Asset][]
-) {
-  for (let i = 0; i < tokens.length; i++) {
-    const option = document.createElement("option");
-    const token = tokens[i];
-    option.value = token[0];
-    option.text = token[0];
-    select_tokens.add(option);
-
-    const option_amount = document.createElement("option");
-    // check if selected "one more time"
-    option_amount.value = token[0];
-    option_amount.text = (<Tokens>token[1]).value.length + "";
-    select_amount.add(option_amount);
   }
 }
 
@@ -357,27 +151,23 @@ function transferContinueButtonEvent(
   amount: string,
   recipientAddress: string
 ) {
-  const { valid, message } = checkInputsForTransfer(
-    tokenAddress,
-    amount,
-    recipientAddress
-  );
+  const valid = checkInputsForTransfer(tokenAddress, amount, recipientAddress);
 
   if (!valid) {
-    alert(message);
+    return;
+  }
+
+  const amountParsed = parseFloat(amount);
+  if (advanced) {
+    htmlAdvancedTransfer(tokenAddress, amountParsed, recipientAddress);
   } else {
-    const amountParsed = parseFloat(amount);
-    if (advanced) {
-      htmlAdvancedTransfer(tokenAddress, amountParsed, recipientAddress);
-    } else {
-      const tokenIDs = getTokenIDsForTransfer(tokenAddress, amountParsed);
-      htmlTransferConfirmation(
-        tokenAddress,
-        amountParsed,
-        recipientAddress,
-        tokenIDs
-      );
-    }
+    const tokenIDs = utils.getTokenIDs(account, tokenAddress, amountParsed);
+    htmlTransferConfirmation(
+      tokenAddress,
+      amountParsed,
+      recipientAddress,
+      tokenIDs
+    );
   }
 }
 
@@ -393,40 +183,32 @@ function checkInputsForTransfer(
   tokenAddress: string,
   amount: string,
   recipientAddress: string
-): { valid: boolean; message: string } {
+): boolean {
   let valid = true;
-  let message = "";
-  if (tokenAddress == "") {
-    message = "Please select the address of the token to transfer.";
-    valid = false;
-    return { valid, message };
-  } else if (amount == "") {
-    message = "Please input the amount of the tokens to transfer.";
-    valid = false;
-    return { valid, message };
-  } else if (recipientAddress == "") {
-    message = "Please input the address of the recipient.";
-    valid = false;
-    return { valid, message };
-  }
-  const amountParsed = parseFloat(amount);
-  if (
-    Number.isNaN(amountParsed) ||
-    amountParsed <= 0 ||
-    !Number.isInteger(amountParsed)
-  ) {
-    message = "Please enter a valid amount.";
-    valid = false;
-    return { valid, message };
-  }
+  valid = !utils.checkTokenAddress(
+    tokenAddress,
+    "errTokenAddress",
+    "token-list"
+  )
+    ? false
+    : valid;
+  valid = !utils.checkAmount(amount, "errTokenAmount", "tokenAmount")
+    ? false
+    : valid;
+  valid = !utils.checkRecipientAddress(
+    recipientAddress,
+    "errRecipientAddr",
+    "recipientAddr"
+  )
+    ? false
+    : valid;
   const tokens = <Tokens>account.values.values.get(tokenAddress);
-  if (amountParsed > tokens.value.length) {
-    message =
-      "The selected token does not have enough tokens available. Please adjust the amount or select another token.";
+  if (parseFloat(amount) > tokens.value.length) {
+    const message = "Insufficient tokens, please enter smaller number.";
+    utils.displayErrorMessage(message, "errTokenAmount", "tokenAmount");
     valid = false;
-    return { valid, message };
   }
-  return { valid, message };
+  return valid;
 }
 
 /**
@@ -445,7 +227,7 @@ async function transferEvent(
 ) {
   tokenIDs =
     typeof tokenIDs == "undefined"
-      ? getTokenIDsForTransfer(tokenAddress, amount)
+      ? utils.getTokenIDs(account, tokenAddress, amount)
       : tokenIDs;
   const { status, error } = await transferTo(
     session,
@@ -457,6 +239,8 @@ async function transferEvent(
     htmlTransferSuccesful();
   } else {
     const err: Error = <Error>error;
+
+    //when does this appear?
     alert("Transfer failed!: " + err.message);
   }
 }
@@ -466,7 +250,7 @@ async function transferEvent(
  */
 function htmlTransferSuccesful() {
   div_transfer.innerHTML = `
-    <div class="successful-div third-layer-window">Transfer Succesful!</div>
+    <div class="successful-div third-layer-window">Transfer Successful!</div>
     <form class="successful-transfer-form">
       <button type="button" class="return-btn">return</button>
     </form>
@@ -474,7 +258,9 @@ function htmlTransferSuccesful() {
   const btn_return = document.querySelector<HTMLInputElement>(
     ".successful-transfer-form .return-btn"
   )!;
-  btn_return.addEventListener("click", () => htmlTransfer());
+  btn_return.addEventListener("click", () =>
+    htmlTransfer(div_transfer, session)
+  );
 }
 
 /**
@@ -497,7 +283,8 @@ function htmlAdvancedTransfer(
     <h2>To recipient:</h2>
     <div class="recipient-address-div third-layer-window">${recipientAddress}</div>
     <h2>Choose ${amount} token ID${amount > 1 ? "s" : ""} to send</h2>
-    <div class= checkboxesIDs></div>
+    <div class= "checkboxesIDs" id="tokenCheckBox"></div>
+    <span id="errTransferConfirm"></span>
     <form class="advanced-transfer-form">
       <button type="button" class="advanced-transfer-form__return-btn">return</button>
       <button type="button" class="advanced-transfer-form__continue-btn">continue</button>
@@ -532,7 +319,14 @@ function htmlAdvancedTransfer(
     ".advanced-transfer-form__return-btn"
   )!;
   btn_return.addEventListener("click", () =>
-    htmlTransfer(tokenAddress, amount, recipientAddress, true)
+    htmlTransfer(
+      div_transfer,
+      session,
+      tokenAddress,
+      amount,
+      recipientAddress,
+      true
+    )
   );
 }
 
@@ -561,7 +355,19 @@ function makeTokenIDsCheckboxes(
         : false;
     chk_IDs.push(checkbox);
     const span = document.createElement("span");
-    span.innerHTML = `${tokenID} </br>`;
+
+    const tokenIDString = tokenID + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay} </br>`;
     div_chkIDs.appendChild(checkbox);
     div_chkIDs.appendChild(span);
   }
@@ -584,9 +390,8 @@ function advancedTransferContinueButtonEvent(
 ) {
   const chk_checkedIDs = chk_IDs.filter((checkbox) => checkbox.checked);
   if (chk_checkedIDs.length != amount) {
-    alert(
-      `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
-    );
+    const message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`;
+    utils.displayErrorMessage(message, "errTransferConfirm", "tokenCheckBox");
     return;
   }
   const tokenIDs = chk_checkedIDs.map((checkbox) => BigInt(checkbox.value));
@@ -618,7 +423,7 @@ function htmlTransferConfirmation(
     <h2>Please confirm the transfer</h2>
     <h2>${amount} Token${amount > 1 ? "s" : ""} of:</h2>
     <div class="token-address-div third-layer-window">${tokenAddress}</div>
-    <h2>token ID:</h2>
+    <h2>token ID${tokenIDs.length > 1 ? "s" : ""}:</h2>
     <div id="tokenIDs">
     </div>
 
@@ -636,7 +441,18 @@ function htmlTransferConfirmation(
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
-    span.innerHTML = `${tokenIDs[i]}`;
+    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay}`;
     div_tokenIDs.appendChild(span);
   }
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
@@ -652,7 +468,13 @@ function htmlTransferConfirmation(
   btn_return.addEventListener("click", () =>
     typeof chk_IDs != "undefined"
       ? htmlAdvancedTransfer(tokenAddress, amount, recipientAddress, tokenIDs)
-      : htmlTransfer(tokenAddress, amount, recipientAddress)
+      : htmlTransfer(
+          div_transfer,
+          session,
+          tokenAddress,
+          amount,
+          recipientAddress
+        )
   );
 }
 
@@ -695,18 +517,4 @@ async function transferTo(
     error = err;
   }
   return { status, error };
-}
-
-/**
- * Function to get token IDs for the transfer.
- * @param tokenAddress Token address for transfer.
- * @param amount Amount of tokens to transfer.
- * @returns Token IDs for the transfer.
- */
-function getTokenIDsForTransfer(
-  tokenAddress: string,
-  amount: number
-): bigint[] {
-  const tokens = <Tokens>account.values.values.get(tokenAddress)!;
-  return tokens.value.slice(0, amount);
 }
