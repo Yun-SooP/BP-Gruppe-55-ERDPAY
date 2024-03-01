@@ -170,7 +170,7 @@ function checkInputsForTransfer(
   recipientAddress: string
 ): boolean {
   let valid = true;
-  valid = !utils.checkTokenAddress(
+  valid = !utils.checkTokenAddressSelected(
     tokenAddress,
     "errTokenAddress",
     "token-list"
@@ -213,7 +213,7 @@ async function transferEvent(
     tokenIDs
   );
   if (status == 1) {
-    htmlTransferSuccesful();
+    htmlTransferSuccessful();
   } else {
     const err: Error = <Error>error;
 
@@ -225,15 +225,15 @@ async function transferEvent(
 /**
  * Function to display successful transfer.
  */
-function htmlTransferSuccesful() {
+function htmlTransferSuccessful() {
   div_transfer.innerHTML = `
     <div class="successful-div third-layer-window">Transfer Successful!</div>
-    <form class="successful-transfer-form">
+    <form class="successful-form">
       <button type="button" class="return-btn">return</button>
     </form>
   `;
   const btn_return = document.querySelector<HTMLInputElement>(
-    ".successful-transfer-form .return-btn"
+    ".successful-form .return-btn"
   )!;
   btn_return.addEventListener("click", () =>
     htmlTransfer(div_transfer, session)

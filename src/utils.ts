@@ -13,14 +13,31 @@ export function checkTokenAddress(tokenAddress: string, errDisplay: string, inpu
     resetErrorDisplay(errDisplay, inputBox);
 
     if (tokenAddress == ""){
-        displayErrorMessage("Please select a token address.", errDisplay, inputBox);
+        displayErrorMessage("Please enter a token address.", errDisplay, inputBox);
         return false;
     }
     const hex = /[0-9A-Fa-f]{40}/g;
-    if (tokenAddress.slice(0,2) != "0x" || !hex.test(tokenAddress.slice(2))) {
+    if (tokenAddress.slice(0,2) != "0x" || !hex.test(tokenAddress.slice(2)) ||tokenAddress.length > 42) {
         displayErrorMessage("Please enter a valid address. (Hexadecimal of length 40, starting with 0x)", errDisplay, inputBox);
         return false;
     }
+    return true;
+}
+/**
+ * 
+ * @param tokenAddress 
+ * @param errDisplay 
+ * @param inputBox 
+ * @returns 
+ */
+export function checkTokenAddressSelected(tokenAddress: string, errDisplay: string, inputBox: string) : boolean {
+    resetErrorDisplay(errDisplay, inputBox);
+
+    if (tokenAddress == ""){
+        displayErrorMessage("Please select a token address.", errDisplay, inputBox);
+        return false;
+    }
+    
     return true;
 }
 

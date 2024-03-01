@@ -2,14 +2,18 @@ import { Session } from "@polycrypt/erdstall";
 import { Address } from "@polycrypt/erdstall/ledger";
 import * as utils from "./utils.ts";
 
+//let session: Session;
+let div_mint: HTMLDivElement;
+
 /**
  * Function to display the functionality of minting.
  * @param div_mint HTML to display to
  * @param session The session in which the token will minted in.
  */
-let div_mint : HTMLDivElement;
 export async function htmlMint(div: HTMLDivElement, session: Session) {
   div_mint = div;
+  //session = sessionForMint;
+
   div_mint.innerHTML = `
     <form class="mint-form">
 
@@ -87,9 +91,10 @@ async function eventSingleMint(session: Session) {
     alert("Minting failed: " + err.message);
     return;
   } else if (status == 1) {
-    alert("Token succesfully minted!");
+    htmlMintSuccessful(session);
+    //alert("Token succesfully minted!");
   }
-  await htmlMint(div_mint, session);
+  //await htmlMint(div_mint, session);
 }
 
 async function eventMultipleMint(session: Session) {
@@ -106,8 +111,9 @@ async function eventMultipleMint(session: Session) {
     return;
   }
   await multipleMint(session, tokenAddress, parseFloat(amount));
-  alert("Tokens succesfully minted!");
-  await htmlMint(div_mint, session);
+  htmlMintSuccessful(session);
+  //alert("Tokens succesfully minted!");
+  //await htmlMint(div_mint, session);
 }
 
 //split into checking address and checking other inputs, or even into 3.
@@ -181,4 +187,22 @@ async function multipleMint(
     tokenIDs.push(tokenID!);
   }
   return tokenIDs;
+}
+
+/**
+ * Function to display successful transfer.
+ */
+function htmlMintSuccessful(session:Session) {
+  div_mint.innerHTML = `
+    <div class="successful-div third-layer-window">Mint Successful!</div>
+    <form class="successful-form">
+      <button type="button" class="return-btn">return</button>
+    </form>
+  `;
+  const btn_return = document.querySelector<HTMLInputElement>(
+    ".successful-form .return-btn"
+  )!;
+  btn_return.addEventListener("click", () =>
+    htmlMint(div_mint, session)
+  );
 }
