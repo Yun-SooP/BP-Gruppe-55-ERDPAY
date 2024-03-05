@@ -115,7 +115,7 @@ async function eventNewSession() {
 async function eventRestoreSession(privateKeyForRestore: string) {
   const restoredSession = await restoreSession(privateKeyForRestore);
   const valid = utils.checkPrivateKey(
-    privateKey,
+    privateKeyForRestore,
     "errRestoreSession",
     "inputPrivateKey"
   );
