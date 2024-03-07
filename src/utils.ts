@@ -180,6 +180,7 @@ export function getTokenIDs(account: Account, tokenAddress: string, amount?: num
  * @param tokens - An array of token information tuples [token address, asset].
  */
 export function makeTokensList(select_tokens: HTMLSelectElement, select_amount: HTMLSelectElement, tokens: [string, Asset][]){
+    tokens.sort((t1, t2)=> Number(t1[0]) - Number(t2[0]))
     for (let i = 0; i < tokens.length; i++) {
       const option = document.createElement("option");
       const token = tokens[i];
