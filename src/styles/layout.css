@@ -21,7 +21,7 @@
 /* Main */
 .l-main-window {
   width: 500px;
-  height: 400px;
+  height: 500px;
 }
 
 .l-main-logo {
@@ -137,4 +137,3 @@
   align-items:end;
   border-bottom: solid 2px rgba(255,255,255,0.7);
 } */
-
