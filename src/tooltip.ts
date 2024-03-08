@@ -35,5 +35,3 @@ export function createToolTip(
 
   element.appendChild(iconFrame);
 }
-
-// export function insertTooltip(message:string, )

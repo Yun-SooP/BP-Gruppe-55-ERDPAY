@@ -27,8 +27,11 @@
   margin-left: 15px;
 }
 
-.tooltip-icon-frame:hover .message-box-top, .tooltip-icon-frame:hover .message-box-right, .tooltip-icon-frame:hover .message-box-left, .tooltip-icon-frame:hover .message-box-bottom {
-  visibility: visible; 
+.tooltip-icon-frame:hover .message-box-top,
+.tooltip-icon-frame:hover .message-box-right,
+.tooltip-icon-frame:hover .message-box-left,
+.tooltip-icon-frame:hover .message-box-bottom {
+  visibility: visible;
   z-index: 100;
   opacity: 1;
 }

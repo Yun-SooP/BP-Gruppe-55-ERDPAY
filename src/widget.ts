@@ -1,6 +1,6 @@
 import { htmlBalance } from "./balance";
 import { htmlCreateSession } from "./dashboard";
-import { createToolTip } from "./tooltip";
+// import { insertTooltip } from "./tooltip";
 
 /**
  * Function to display selection between transfer and view balance.
@@ -22,20 +22,20 @@ export function widget(html_widget: HTMLDivElement) {
     </header>
 
     <form class="main-window__form l-main-window__form">
-        <div class='button1'>
+        <div class="content-with-tooltip">
           <button type="button" class="view-balance-btn">View Balance</button>
-        </div>
-        <div class='button2'>
+          <div class="tooltip">        
+            <i class="fa-solid fa-circle-info tooltip tooltip-icon"></i> 
+            <span class="tooltiptext">Tooltip text</span> 
+          </div>  
+        </div>  
+    
           <button type="button" class="transfer-btn">Dashboard</button>
-        </div>
+          
+      
     </form>
     </div>
     `;
-  const text1 = "<p> Test1 </p>";
-  const text2 =
-    "<p> Check out more services <br> by visiting our Dashboard! </p>";
-  createToolTip(text1, "button1", "right");
-  createToolTip(text2, "button2", "right");
 
   const btn_transfer = document.querySelector(
     ".main-window__form .transfer-btn"
