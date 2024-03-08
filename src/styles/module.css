@@ -436,8 +436,8 @@ input:checked + .slider:before {
   bottom: 90%;
 }
 
-.tab:checked {
-  border-bottom: solid 2px var(--toggleBlue);
+.selected {
+  border-bottom: solid 3px var(--toggleBlue);
 }
 
 .tab:hover {

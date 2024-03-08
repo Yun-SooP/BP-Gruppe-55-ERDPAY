@@ -148,7 +148,7 @@ export function htmlDashboard() {
               <i class="fa-solid fa-angle-left"></i>
             </button>
             <div class="l-tab">
-              <div id="transferTab" class="tab">Transfer</div>
+              <div id="transferTab" class="tab selected">Transfer</div>
               <div id="mintTab" class="tab">Mint</div>
             </div>
             <img
@@ -176,15 +176,24 @@ export function htmlDashboard() {
   );
   document
     .getElementById("transferTab")
-    ?.addEventListener("click", () =>
-      setTransferTab(div_currentTab, head_currentTabLabel)
-    );
- //document.getElementById("transferTab")?.setAttribute("class", "tab:active");
+    ?.addEventListener("click", () =>{
+      setTransferTab(div_currentTab, head_currentTabLabel);
+      var element = document.querySelector("#transferTab");
+      element?.classList.add("selected");
+      var element = document.querySelector("#mintTab");
+      element?.classList.remove("selected");
+    }
+  );
   document
     .getElementById("mintTab")
-    ?.addEventListener("click", () =>
-      setMintTab(div_currentTab, head_currentTabLabel)
-    );
+    ?.addEventListener("click", () => {
+      setMintTab(div_currentTab, head_currentTabLabel);
+      var element = document.querySelector("#mintTab");
+      element?.classList.add("selected");
+      var element = document.querySelector("#transferTab");
+      element?.classList.remove("selected");
+    }
+  );
   current = "";
   setTransferTab(div_currentTab, head_currentTabLabel);
 
