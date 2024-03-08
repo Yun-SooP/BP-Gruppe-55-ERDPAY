@@ -73,7 +73,7 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
   )!;
   btn_return.addEventListener("click", () => widget(div_dashboard));
 
-  btn_newSession.addEventListener("click", () => eventNewSession());
+  btn_newSession.addEventListener("click", () => eventNewSession(div_widget));
 
   txt_previousPrivateKey.addEventListener("keypress", (event) => {
     if (event.key == "Enter") {
@@ -96,7 +96,7 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
 /**
  * Function for new session event.
  */
-async function eventNewSession() {
+async function eventNewSession(html_widget:HTMLDivElement) {
   const newSession_ = await newSession();
   if (newSession_.message != undefined) {
     utils.displayErrorMessage(newSession_.message,'errNewAccount','newAccount'); 
@@ -105,7 +105,59 @@ async function eventNewSession() {
   }
   session = newSession_.session!;
   privateKey = newSession_.privateKey!;
-  htmlDashboard();
+  welcome(session, privateKey, html_widget);
+}
+
+function welcome(session: Session, privateKey:string, html_widget: HTMLDivElement) {
+  const sessionAsString = session.address.toString();
+  html_widget.innerHTML = `
+    <div class="l-create-account-window-container create-window-account-container first-layer-window">
+      <header class="create-account-window-header l-create-account-window-header"> 
+        <h1> You have successfully created a new account! </h1>
+        <p> You can view your account details below <br> Please make sure to keep your data private </p>
+      </header>
+
+      <div class="l-create-account-window-container-body create-account-window-container-body"> 
+
+        <div class="l-create-account-session-address-container create-account-session-address-container"> 
+          <div class="create-account-window-frame-icons">
+            <i class="fa-solid fa-user"></i> 
+            <p> Your address </p>
+          </div>
+
+
+          <div class="copy-icon-session third-layer-window">
+             <span class="session-address">${utils.shortenString(sessionAsString,3)}</span>
+             <i class="fa-solid fa-copy copy-button"></i>
+          </div>
+
+        </div>
+
+        <div class="l-create-account-private-key-container create-account-private-key-container"> 
+          <div class="create-account-window-frame-icons">
+            <i class="fa-solid fa-key"></i> 
+            <p> Your private key </p>
+          </div>
+
+          <div class="copy-icon-private-key third-layer-window">
+             <span class="private-key">${utils.shortenString(privateKey,3)}</span>
+             <i class="fa-solid fa-copy copy-button"></i>
+          </div>
+        </div>
+        
+      </div>
+      <button type="button" class="transfer-btn"> Go to Dashboard </button>
+    </div>
+  `
+  const copy_button_privatekey = document.querySelector<HTMLElement>(".copy-icon-private-key .fa-copy")!
+  utils.copyToClipboard(privateKey,copy_button_privatekey);
+  
+  const copy_button_session = document.querySelector<HTMLElement>(".copy-icon-session .fa-copy")!
+  utils.copyToClipboard(sessionAsString,copy_button_session);
+
+  const dashboard = html_widget.querySelector<HTMLButtonElement>('.l-create-account-window-container .transfer-btn')!;
+  dashboard.addEventListener("click", () => htmlDashboard());
+
 }
 
 async function eventRestoreSession(privateKey: string) {

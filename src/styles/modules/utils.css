@@ -18,6 +18,17 @@
   filter: brightness(0) invert(1);
   opacity: 0.8;
 }
+.fa-user ,.fa-key{
+  position: relative;
+  color: rgba(255, 255, 255, 0.8);
+  transform: scale(2.5);
+}
+
+.copy-icon-private-key, .copy-icon-session {
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 5px;
+  width: max-content;
+}
 
 .copy-button {
   cursor: pointer;

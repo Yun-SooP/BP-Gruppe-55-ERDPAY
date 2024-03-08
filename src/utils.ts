@@ -214,3 +214,25 @@ export function resetErrorDisplay(errDisplay:string, inputBox:string){
     errorMessageSpan(errDisplay, msg);
     errorRemoveHighlight(inputBox);
 }
+
+export function shortenString(tokenID: string, shownNumber:number){
+    const tokenIDString = tokenID;
+    const bound = shownNumber + 2
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, bound) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    return tokenIDTODisplay
+}
+
+export function copyToClipboard(text:string, element:HTMLElement) {
+    element.addEventListener("click", () => {
+        navigator.clipboard.writeText(text);
+    });
+}
