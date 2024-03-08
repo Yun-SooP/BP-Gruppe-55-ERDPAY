@@ -6,7 +6,7 @@ import { htmlTransfer } from "./transfer.ts";
 import { htmlMint } from "./mint.ts";
 import * as utils from "./utils.ts";
 
-let div_dashboard: HTMLDivElement;
+export let div_dashboard: HTMLDivElement;
 let session: Session;
 let privateKey: string;
 let current: string;
@@ -19,7 +19,7 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
   div_dashboard = div_widget;
   div_dashboard.innerHTML = `
         <div class="session-window l-session-window first-layer-window">
-  
+
           <div class="widget-header">
             <button class="goback-button">
               <i class="fa-solid fa-angle-left"></i>
@@ -142,12 +142,14 @@ async function eventRestoreSession(privateKeyForRestore: string) {
 export function htmlDashboard() {
   div_dashboard.innerHTML = `
     <div class="transfer-window-container l-transfer-window-container first-layer-window">
-  
+
+        <div id="loading"></div>
+
         <div class="widget-header">
             <button class="goback-button">
               <i class="fa-solid fa-angle-left"></i>
             </button>
-            <div class="l-tab">
+            <div>
               <div id="transferTab" class="tab selected">Transfer</div>
               <div id="mintTab" class="tab">Mint</div>
             </div>
@@ -158,10 +160,9 @@ export function htmlDashboard() {
             />
         </div>
   
-        <h1 id="current tab label" class="l-transfer-title">Transfer</h1>
+        <h1 id="current-tab-label" class="l-transfer-title">Transfer</h1>
   
-        <div id="current tab">
-        </div>
+        <div id="current-tab"></div>
 
         <div class="transfer-footer l-transfer-footer">
             <span class="private-key">your private key</span>
@@ -170,28 +171,24 @@ export function htmlDashboard() {
     </div>
       
     `;
-  const head_currentTabLabel = document.getElementById("current tab label")!;
+  const head_currentTabLabel = document.getElementById("current-tab-label")!;
   const div_currentTab = <HTMLDivElement>(
-    document.getElementById("current tab")!
+    document.getElementById("current-tab")!
   );
   document
     .getElementById("transferTab")
     ?.addEventListener("click", () =>{
       setTransferTab(div_currentTab, head_currentTabLabel);
-      var element = document.querySelector("#transferTab");
-      element?.classList.add("selected");
-      var element = document.querySelector("#mintTab");
-      element?.classList.remove("selected");
+      document.querySelector("#transferTab")?.classList.add("selected");
+      document.querySelector("#mintTab")?.classList.remove("selected");
     }
   );
   document
     .getElementById("mintTab")
     ?.addEventListener("click", () => {
       setMintTab(div_currentTab, head_currentTabLabel);
-      var element = document.querySelector("#mintTab");
-      element?.classList.add("selected");
-      var element = document.querySelector("#transferTab");
-      element?.classList.remove("selected");
+      document.querySelector("#mintTab")?.classList.add("selected");
+      document.querySelector("#transferTab")?.classList.remove("selected");
     }
   );
   current = "";
@@ -256,3 +253,4 @@ function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   );
   htmlMint(div_tab, session);
 }
+

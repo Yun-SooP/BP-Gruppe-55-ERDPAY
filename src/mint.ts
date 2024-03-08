@@ -1,6 +1,7 @@
 import { Session } from "@polycrypt/erdstall";
 import { Address } from "@polycrypt/erdstall/ledger";
 import * as utils from "./utils.ts";
+import {div_dashboard} from "./dashboard.ts"
 
 //let session: Session;
 let div_mint: HTMLDivElement;
@@ -52,8 +53,9 @@ export async function htmlMint(div: HTMLDivElement, session: Session) {
   const btn_mint = document.querySelector<HTMLButtonElement>(
     ".mint-form .mint-btn"
   )!;
-  btn_mint.addEventListener("click", async () =>
+  btn_mint.addEventListener("click", async () => {
     chk_multiple.checked ? eventMultipleMint(session) : eventSingleMint(session)
+  }
   );
 
   const btn_randomAddress = document.querySelector<HTMLInputElement>(
@@ -86,15 +88,20 @@ async function eventSingleMint(session: Session) {
   if (!valid) {
     return;
   }
+
+  
+
   const { status, error } = await mint(
     session,
     tokenAddress,
     BigInt(parseFloat(tokenID))
   );
+
   if (status == 0) {
     const err: Error = <Error>error;
     alert("Minting failed: " + err.message);
     return;
+
   } else if (status == 1) {
     htmlMintSuccessful(session);
     //alert("Token succesfully minted!");
@@ -120,7 +127,11 @@ async function eventMultipleMint(session: Session) {
   if (!valid) {
     return;
   }
-  await multipleMint(session, tokenAddress, parseFloat(amount));
+  utils.loadingStart(div_dashboard);
+  const div_counter = document.querySelector<HTMLDivElement>("#token-counter")!;
+  await multipleMint(session, tokenAddress, parseFloat(amount), div_counter);
+  
+  utils.loadingEnd(div_dashboard);
   htmlMintSuccessful(session);
   //alert("Tokens succesfully minted!");
   //await htmlMint(div_mint, session);
@@ -193,9 +204,12 @@ async function mint(session: Session, tokenAddress: string, tokenID: bigint) {
 async function multipleMint(
   session: Session,
   tokenAddress: string,
-  amount: number
+  amount: number,
+  div_counter:HTMLDivElement
 ): Promise<bigint[]> {
   const tokenIDs: bigint[] = [];
+  div_counter.innerText = `0/${amount}`;
+
   for (let i = 0; i < amount; i++) {
     let status = 0;
     let tokenID;
@@ -206,6 +220,7 @@ async function multipleMint(
         utils.generateRandomTokenID()
       );
       status = <number>transaction.status;
+      div_counter.innerText = `${i}/${amount}`;
     }
     tokenIDs.push(tokenID!);
   }
