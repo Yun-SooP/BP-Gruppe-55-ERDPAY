@@ -26,6 +26,30 @@ export function checkTokenAddress(tokenAddress: string, errDisplay: string, inpu
     }
     return true;
 }
+
+/**
+ * Function to check if the account address for balance check is valid.
+ * A valid account address must start with '0x' followed by 40 hexadecimal characters.
+ * @param address The account address to validate.
+ * @param errDisplay The element ID where the error message should be displayed.
+ * @param inputBox The input element ID that receives focus on error.
+ * @returns {boolean} True if the address is valid; false otherwise.
+ */
+export function checkBalanceAddress(address: string, errDisplay: string, inputBox: string) : boolean {
+    resetErrorDisplay(errDisplay, inputBox);
+
+    if (address == ""){
+        displayErrorMessage("Please enter a token address.", errDisplay, inputBox);
+        return false;
+    }
+    const hex = /[0-9A-Fa-f]{40}/g;
+    if (address.slice(0,2) != "0x" || !hex.test(address.slice(2)) ||address.length > 42) {
+        displayErrorMessage("Please enter a valid address. (Hexadecimal of length 40, starting with 0x)", errDisplay, inputBox);
+        return false;
+    }
+    return true;
+}
+
 /**
  * 
  * @param tokenAddress 
