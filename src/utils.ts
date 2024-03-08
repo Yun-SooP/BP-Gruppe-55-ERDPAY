@@ -104,12 +104,12 @@ export function checkAmount(amount: string, errDisplay: string, inputBox: string
         displayErrorMessage("Please input the amount of tokens.", errDisplay, inputBox);
         return false;
     }
-    const amountParsed = parseFloat(amount)
 
-    if (Number.isNaN(amountParsed) || amountParsed <= 0 || !Number.isInteger(amountParsed)){
+    const specialCharacters = /^[0-9]+$/;
+    if (!specialCharacters.test(amount)){
         displayErrorMessage("Please enter a number.", errDisplay, inputBox);
         return false;
-    } 
+    }
     return true;
 }
 
