@@ -13,6 +13,8 @@ let session: Session;
 let privateKey: string;
 let account: Account;
 let tokenIDs: bigint[];
+let newTokenIDs: bigint[];
+let btn_cancelChangeTokenIDs : HTMLButtonElement;
 
 let paid: boolean;
 let div_pay: HTMLDivElement;
@@ -268,7 +270,9 @@ async function htmlPay(
       } (available: ${amountAvailable} Token${amountAvailable > 1 ? "s" : ""})</div>
 
       <h2 id="token ID label">token ID${amount > 1 ? "s" : ""}:</h2>
-      <button type="button" class="changeTokenIDs-btn">change</button>
+      <div id="changeTokenIDs">
+        <button type="button" class="changeTokenIDs-btn">change</button>
+      </div>
       <div class="tokenIDs-div third-layer-window"> 
         <div id="tokenIDs">
         </div>
@@ -334,22 +338,120 @@ function htmlPayNotPossible(tokensForPayment : Tokens){
     btn_close.addEventListener("click", dispatchCloseEvent);
 }
 
+/**
+ * Initializes an event on the given 'Change Token IDs' button to enable the selection of new token IDs for payment.
+ * When the button event is triggered, it toggles the form state between selection and confirmation modes.
+ * In selection mode, a form is presented to the user to choose new token IDs from available options.
+ * @param selecting A wrapper object for a boolean flag indicating if the selection mode is active.
+ * @param tokenIDsAvailable An array of available token IDs for selection.
+ * @param div_tokenIDs The container element where the token IDs selection form is rendered.
+ * @param btn_changeTokenIDs The button element that toggles the selection mode.
+ * @returns 
+ */
 function changeTokenIDsButtonEvent(selecting:BooleanWrapper, tokenIDsAvailable:bigint[], div_tokenIDs:HTMLDivElement, btn_changeTokenIDs:HTMLButtonElement){
+  
   if (!selecting.value){
     selecting.value = true;
     btn_changeTokenIDs.innerText = "confirm";
+    const div_changeTokenIDs = document.getElementById("changeTokenIDs");
+    btn_cancelChangeTokenIDs = document.createElement("button");
+    btn_cancelChangeTokenIDs.innerText = "cancel";
+    btn_cancelChangeTokenIDs.addEventListener("click", ()=>{
+      selecting.value = false;
+      btn_changeTokenIDs.innerText = "change";
+      div_tokenIDs.innerHTML = "";
+      makeTokenIDsList(div_tokenIDs, tokenIDs);
+      btn_cancelChangeTokenIDs.remove();
+    });
+    div_changeTokenIDs?.appendChild(btn_cancelChangeTokenIDs);
     div_tokenIDs.innerHTML ="";
-    tokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
+    newTokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
   } else {
-    if(tokenIDs.length != amountToPay){
+    if(newTokenIDs.length != amountToPay){
       alert(`Please select ${amountToPay} token ID${amountToPay > 1 ? "s" : ""}!`);
       return;
     }
     selecting.value = false;
     btn_changeTokenIDs.innerText = "change";
     div_tokenIDs.innerHTML ="";
-    makeTokenIDsList(div_tokenIDs, tokenIDs);
+    newTokenIDs.sort((a,b) => a < b ? -1 : a >b ? 1: 0)
+    tokenIDs = newTokenIDs;
+    makeTokenIDsList(div_tokenIDs, newTokenIDs);
+    btn_cancelChangeTokenIDs!.remove();
   }
+}
+
+/**
+ * Populates a given div element with a list of token IDs.
+ * Each token ID is displayed in a truncated format for better readability.
+ *
+ * @param div_tokenIDs The HTMLDivElement where the token IDs will be displayed.
+ * @param tokenIDs An array of token IDs to display.
+ * @returns
+ */
+function makeTokenIDsList(
+  div_tokenIDs: HTMLDivElement,
+  tokenIDs: bigint[],
+) {
+  for (let i = 0; i < tokenIDs.length; i++) {
+    const span = document.createElement("span");
+    span.classList.add("token-id", "third-layer-window");
+    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+    span.innerHTML = `${tokenIDTODisplay}`;
+    div_tokenIDs.appendChild(span);
+  }
+}
+
+/**
+ * Creates a clickable list of token IDs for the user to select from for the payment.
+ * Each token ID is truncated for display and can be selected or deselected, updating the array of selected token IDs.
+ *
+ * @param div_tokenIDs The HTMLDivElement that will contain the list of token IDs.
+ * @param tokenIDs An array of token IDs that the user can select from.
+ * @returns An array of the selected token IDs.
+ */
+function makeTokenIDsSelection(
+  div_tokenIDs: HTMLDivElement,
+  tokenIDs: bigint[],
+): bigint[] {
+  const selectedTokenIDs : bigint[] = [];
+  for (let i = 0; i < tokenIDs.length; i++) {
+    const span = document.createElement("span");
+    span.classList.add("token-id", "third-layer-window");
+    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+    span.innerHTML = `${tokenIDTODisplay}`;
+    span.addEventListener('click', ()=>{
+      if (!span.classList.contains("clicked-clickable-token-id")){
+        span.classList.add("clicked-clickable-token-id");
+        selectedTokenIDs.push(tokenIDs[i])
+      } else{
+        span.classList.remove("clicked-clickable-token-id");
+        const index = selectedTokenIDs.indexOf(tokenIDs[i]);
+        selectedTokenIDs.splice(index, 1);
+      }
+    });
+    div_tokenIDs.appendChild(span);
+  }
+
+  return selectedTokenIDs;
 }
 
 /**
@@ -405,80 +507,6 @@ function htmlPaySuccesful() {
   )!;
   btn_return.addEventListener("click", dispatchCloseEvent);
 }
-
-/**
- * Creates a clickable list of token IDs for the user to select from for the payment.
- * Each token ID is truncated for display and can be selected or deselected, updating the array of selected token IDs.
- *
- * @param div_tokenIDs The HTMLDivElement that will contain the list of token IDs.
- * @param tokenIDs An array of token IDs that the user can select from.
- * @returns An array of the selected token IDs.
- */
-function makeTokenIDsSelection(
-  div_tokenIDs: HTMLDivElement,
-  tokenIDs: bigint[],
-): bigint[] {
-  const selectedTokenIDs : bigint[] = [];
-  for (let i = 0; i < tokenIDs.length; i++) {
-    const span = document.createElement("span");
-    span.classList.add("token-id", "third-layer-window");
-    const tokenIDString = tokenIDs[i] + "";
-    const tokenIDTODisplay =
-      tokenIDString.length > 6
-        ? tokenIDString.substring(0, 3) +
-          "..." +
-          tokenIDString.substring(
-            tokenIDString.length - 3,
-            tokenIDString.length
-          )
-        : tokenIDString;
-    span.innerHTML = `${tokenIDTODisplay}`;
-    span.addEventListener('click', ()=>{
-      if (!span.classList.contains("clicked-clickable-token-id")){
-        span.classList.add("clicked-clickable-token-id");
-        selectedTokenIDs.push(tokenIDs[i])
-      } else{
-        span.classList.remove("clicked-clickable-token-id");
-        const index = selectedTokenIDs.indexOf(tokenIDs[i]);
-        selectedTokenIDs.splice(index, 1);
-      }
-    });
-    div_tokenIDs.appendChild(span);
-  }
-
-  return selectedTokenIDs;
-}
-
-/**
- * Populates a given div element with a list of token IDs.
- * Each token ID is displayed in a truncated format for better readability.
- *
- * @param div_tokenIDs The HTMLDivElement where the token IDs will be displayed.
- * @param tokenIDs An array of token IDs to display.
- * @returns
- */
-function makeTokenIDsList(
-  div_tokenIDs: HTMLDivElement,
-  tokenIDs: bigint[],
-) {
-  for (let i = 0; i < tokenIDs.length; i++) {
-    const span = document.createElement("span");
-    span.classList.add("token-id", "third-layer-window");
-    const tokenIDString = tokenIDs[i] + "";
-    const tokenIDTODisplay =
-      tokenIDString.length > 6
-        ? tokenIDString.substring(0, 3) +
-          "..." +
-          tokenIDString.substring(
-            tokenIDString.length - 3,
-            tokenIDString.length
-          )
-        : tokenIDString;
-    span.innerHTML = `${tokenIDTODisplay}`;
-    div_tokenIDs.appendChild(span);
-  }
-}
-
 
 
 /**
