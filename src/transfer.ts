@@ -233,7 +233,12 @@ function changeTokenIDsButtonEvent(selecting:BooleanWrapper, tokenIDsAvailable:b
     div_changeTokenIDs?.appendChild(btn_cancelChangeTokenIDs);
     div_tokenIDs.innerHTML ="";
     newTokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
-  } else {    
+  } else {
+    if (newTokenIDs.length == 0){
+      const message = "Select at least 1 token ID.";
+      utils.displayErrorMessage(message, "errTokenIDs", "tokenIDs");
+      return;
+    }
     selecting.value = false;
     btn_changeTokenIDs.innerText = "change";
     div_tokenIDs.innerHTML ="";
