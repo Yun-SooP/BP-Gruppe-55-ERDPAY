@@ -43,7 +43,7 @@ export async function htmlTransfer(
       <p>You have no token available.</p>
     `;
   } else {
-    utils.setWindowHeight(div_transfer, 500);
+    utils.setWindowHeight(div_transfer, 670);
     div_transfer.innerHTML = `
       <h2>Choose your token and the amount of tokens you want to send</h2>
       <header class="token-list-header">
@@ -115,6 +115,7 @@ export async function htmlTransfer(
       const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
       selectedTokenIDs = firstTokenID;
       makeTokenIDsList(div_tokenIDs, firstTokenID);
+
     });
 
     const selecting: BooleanWrapper = { value: false };
