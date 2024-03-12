@@ -19,6 +19,7 @@
   height: 55px;
   display: flex;
   align-items: center;
+  -webkit-backdrop-filter: blur(30px);
   backdrop-filter: blur(30px);
   background-color: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -550,7 +551,8 @@ input:checked + .slider:before {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.create-account-window-header h1, .create-account-window-header p {
+.create-account-window-header h1,
+.create-account-window-header p {
   color: rgba(255, 255, 255, 0.8);
   padding: 10px;
 }
@@ -573,13 +575,10 @@ input:checked + .slider:before {
   padding-top: 10px;
 }
 
-.create-account-session-address-container ,.create-account-private-key-container {
+.create-account-session-address-container,
+.create-account-private-key-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 30px;
 }
-
-
-
-
