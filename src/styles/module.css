@@ -580,3 +580,23 @@ input:checked + .slider:before {
   align-items: center;
   margin: 30px;
 }
+/**
+
+
+*/
+/*log out button*/
+.logout {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: rgb(255, 255, 255);
+  /*padding: 4px;*/
+  position: absolute;
+  width: 90px;
+  height: 25px;
+  border-radius: 2px;
+  text-align: center;
+  padding-top: 5px;
+  cursor: pointer;
+  box-shadow: inset 0.7px 0.7px 0px rgba(255, 255, 255, 0.4),
+    4px 4px 5px rgba(0, 0, 0, 0.1), -4px -4px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+}

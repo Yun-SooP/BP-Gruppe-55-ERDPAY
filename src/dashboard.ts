@@ -254,6 +254,10 @@ export function htmlDashboard(div_dashboard : HTMLDivElement, session : Session,
             <span class="private-key">your private key</span>
             <span class="session-address">your address</span>
         </div>
+
+        <div class="logout, l-logout"> 
+          <span class="logout"> log out</span>
+        </div>
     </div>
       
     `;
@@ -339,7 +343,7 @@ function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
     ".l-transfer-window-container"
   )!;
-  windowContainer.style.height = "890px";
+  windowContainer.style.height = "930px";
   current = "Transfer";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
