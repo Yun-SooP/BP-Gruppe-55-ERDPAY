@@ -453,7 +453,7 @@ function checkInputsForTransfer(
   )
     ? false
     : valid;
-  if (selecting){
+  if (selecting.value){
     const message = "Please confirm the token IDs selection first.";
     utils.displayErrorMessage(message, "errTokenIDs", "tokenIDs");
     valid = false;
