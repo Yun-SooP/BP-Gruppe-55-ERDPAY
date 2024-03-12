@@ -261,6 +261,9 @@ export function htmlDashboard(div_dashboard : HTMLDivElement, session : Session,
     </div>
       
     `;
+
+  document.querySelector('.logout')?.addEventListener('click', logout);
+  
   const head_currentTabLabel = document.getElementById("current-tab-label")!;
   const div_currentTab = <HTMLDivElement>(
     document.getElementById("current-tab")!
