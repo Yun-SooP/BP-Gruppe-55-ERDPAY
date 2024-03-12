@@ -65,7 +65,8 @@
 
 .first-layer-window,
 .second-layer-window,
-.third-layer-window {
+.third-layer-window,
+.popup-visible {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -109,7 +110,11 @@
 }
 
 .tooltip {
+  display: flex;
+  flex-direction: column;
+  align-items:center;
   position: relative;
+  align-content: center;
   color: rgba(255, 255, 255, 0.8);
   width: 17px;
   height: 17px;
@@ -117,26 +122,30 @@
 
 .tooltip .tooltiptext-top,
 .tooltip .tooltiptext-bottom {
+  display: inline-block;
   visibility: hidden;
-  width: 300px;
+  width: 150px;
+  height: max-content;
+  position: absolute;
+  translate: -50% -50%;
   background-color: rgba(255, 255, 255, 0.8);
   color: rgba(0, 0, 0, 0.8);
   text-align: center;
   border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
+  padding: 5px;
+  margin: 280% 0;
+
   z-index: 1;
   left: 50%;
-  margin-left: -60px;
 }
 
-.tooltiptext-top {
-  bottom: 150%;
+/* .tooltiptext-top {
+  bottom: 100%;
 }
 
 .tooltiptext-bottom {
-  top: 150%;
-}
+  top: 80px;
+} */
 
 .tooltip .tooltiptext-top::after,
 .tooltip .tooltiptext-bottom::after {
@@ -162,6 +171,15 @@
 .tooltip:hover .tooltiptext-bottom {
   visibility: visible;
 }
+
+.tooltip .clicked {
+  visibility: visible;
+}
+
+.textbox p {
+  padding: 5px;
+}
+
 
 /* .tooltip-icon-frame {
   position: relative;
@@ -238,3 +256,32 @@
   visibility: hidden;
   display: none;
 }
+
+.popup {
+  visibility: hidden;
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  translate: 0 25%;
+  z-index: -100;
+}
+
+.popup-visible {
+  visibility: visible;
+  z-index: 99;
+  border-radius: 5px;
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
+}
+
+
+.info-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: justify;
+  width: 300px;
+  color: rgba(0, 0, 0, 1);
+}
+
+

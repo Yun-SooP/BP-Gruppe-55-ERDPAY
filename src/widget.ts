@@ -1,5 +1,6 @@
 import { htmlBalanceForGuest } from "./balance";
 import { htmlCreateSession } from "./dashboard";
+import {createInfoBox } from "./utils";
 import * as utils from "./utils";
 
 /**
@@ -9,12 +10,6 @@ import * as utils from "./utils";
 export function widget(html_widget: HTMLDivElement) {
   html_widget.innerHTML = `
     <div class="main-window l-main-window first-layer-window">
-
-    <div class="tooltip l-main-tooltip">        
-            <i class="fa-solid fa-circle-info tooltip tooltip-icon"></i> 
-            <span class="tooltiptext-bottom">Tooltip text</span> 
-    </div>
-
     <img
       class="l-main-logo erdstall-logo"
       src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
@@ -39,6 +34,12 @@ export function widget(html_widget: HTMLDivElement) {
     </form>
     </div>
     `;
+    const content =`
+      <h1 class="erdpay-h1"> Hi! </h1>
+      <p class="erdpay-p"> You can start viewing any account you like by putting in the address below <br>
+          or you can checkout more individual features on our dashhboard! </p>
+    `
+    createInfoBox(document.querySelector<HTMLElement>(".main-window")!, content);
 
   const btn_transfer = document.querySelector(
     ".main-window__form .transfer-btn"
@@ -72,6 +73,7 @@ export function widget(html_widget: HTMLDivElement) {
       btn_balance.click();
     }
   });
+
 }
 
 // change the inner HTML of the HTML div element "app" to the main interface

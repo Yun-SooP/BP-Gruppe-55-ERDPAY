@@ -448,3 +448,28 @@ function removeLoadingScreen(loading_div: HTMLDivElement) {
     loadingDiv.innerHTML = "";
   }
 }
+
+export function createInfoBox(element: HTMLElement, content: string ) {
+    const iconFrame = document.createElement("div");
+    iconFrame.classList.add("tooltip", "l-main-infobox")
+
+    const icon = document.createElement("i");
+    icon.classList.add("fa-solid", "fa-circle-info", "tooltip", "info-icon")
+
+    const frame = document.createElement("div");
+    frame.classList.add("l-popup", "popup");
+
+    
+    const info_content = document.createElement("div");
+    info_content.classList.add("info-content");
+    info_content.innerHTML = content;
+
+    frame.appendChild(info_content)
+    iconFrame.appendChild(icon);
+    element.prepend(iconFrame);
+    element.prepend(frame);
+
+    iconFrame.addEventListener("click", () => {
+        frame.classList.toggle("popup-visible")
+    });
+}

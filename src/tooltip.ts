@@ -11,10 +11,10 @@
  * @param selectorClass The wrapper element of the HTML-Element you want to attach the tooltip to
  * @param box_position A string that defines the position of the tooltip box relative to the icon. There are 4 possible inputs 'top', 'bottom, 'left' and 'right'
  */
-export function createToolTip(
-  message: string,
+export function createToolTipIntegrated(
+  text: string,
   selectorClass: string,
-  box_position: string
+  text_position: string
 ) {
   const iconFrame = document.createElement("div");
   iconFrame.classList.add("tooltip-icon-frame");
@@ -24,9 +24,9 @@ export function createToolTip(
   element.classList.add("content-with-tooltip");
 
   const tooltip = document.createElement("span");
-  tooltip.classList.add("message-box-" + box_position);
+  tooltip.classList.add("message-box-" + text_position);
   iconFrame.appendChild(tooltip);
-  tooltip.innerHTML = message;
+  tooltip.innerHTML = text;
   tooltip.querySelector("p")!.classList.add("message-box-text");
 
   iconFrame.addEventListener("click", () => {
@@ -35,3 +35,30 @@ export function createToolTip(
 
   element.appendChild(iconFrame);
 }
+
+/**
+ * This method creates a tooltip in the upper right corner of the widget by default.
+ * @param text_position The position of the textbox
+ */
+export function createToolTipCorner(element: HTMLElement, textbox_position: string, text: string) {
+    const iconFrame = document.createElement("div");
+    iconFrame.classList.add("tooltip", "l-main-tooltip")
+
+    const icon = document.createElement("i");
+    icon.classList.add("fa-solid", "fa-circle-info", "tooltip", "tooltip-icon")
+
+    const textbox = document.createElement("span");
+    textbox.classList.add("tooltiptext-" + textbox_position);
+
+    textbox.textContent = text
+    iconFrame.appendChild(icon);
+    iconFrame.appendChild(textbox);
+
+    element.prepend(iconFrame);
+
+    iconFrame.addEventListener("click", () => {
+        textbox.classList.toggle("clicked");
+      });
+}
+
+
