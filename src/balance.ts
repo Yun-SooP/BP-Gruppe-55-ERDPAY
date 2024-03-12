@@ -203,6 +203,7 @@ async function viewBalance(client: Client, address: string) {
  * @param input Account address
  */
 function transformToTokenListWindow(address: string) {
+  // balance_for_guest wildow height changer
   if (div_balanceWindowContainer.className != "transfer-window-container l-transfer-window-container first-layer-window"){
     setWindowHeight(div_balanceWindowContainer, 550 );
   }

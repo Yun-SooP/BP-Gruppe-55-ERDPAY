@@ -336,14 +336,13 @@ function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
     ".l-transfer-window-container"
   )!;
-  windowContainer.style.height = "750px";
+  windowContainer.style.height = "890px";
   current = "Transfer";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
     "class",
     "transfer-window l-transfer-window second-layer-window"
   );
-  // div_tab.style.height = "500px";
   htmlTransfer(div_tab, session);
 }
 
