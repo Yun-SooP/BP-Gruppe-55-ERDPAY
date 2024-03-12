@@ -3,7 +3,7 @@ import { setupClient } from "./setup_client.ts";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { Client } from "@polycrypt/erdstall";
 import { widget } from "./widget.ts";
-import { getTokenIDs, makeTokensList } from "./utils.ts";
+import { getTokenIDs, makeTokensList, setWindowHeight} from "./utils.ts";
 
 let div_balanceWindow: HTMLDivElement;
 let div_address: HTMLDivElement;
@@ -29,8 +29,11 @@ export async function htmlBalanceForGuest(
         alt="TypeScript" 
       />
     </div>
-    <div id="balance">
-    </div>
+    <h1 class="l-balance-title">Balance</h1>
+    <div class="balance-window-container__address"></div>
+    <div class="balance-window l-balance-window second-layer-window"></div>
+    <div id="balance"></div>
+    
   </div>
   `;
 
@@ -47,8 +50,23 @@ export async function htmlBalanceForGuest(
     alert(error);
     return;
   }
-  const div_balance = document.querySelector<HTMLDivElement>("#balance")!;
-  htmlBalance(div_balance, address, client!);
+  // const div_balance = document.querySelector<HTMLDivElement>("#balance")!;
+  // htmlBalance(div_balance, address, client!);
+
+  //Used in viewBalance() to change the content
+  div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
+    ".balance-window-container"
+  )!;
+  div_balanceWindow = document.querySelector<HTMLDivElement>(
+    ".balance-window-container .balance-window"
+  )!;
+  div_address = document.querySelector<HTMLDivElement>(
+    ".balance-window-container__address"
+  )!;
+  h1_title = document.querySelector<HTMLHeadingElement>(
+    ".balance-window-container h1"
+  )!;
+  viewBalance(client!, address);
 
   btn_return.addEventListener("click", () => widget(div_widget));
   logo_return.addEventListener("click", () => widget(div_widget));
@@ -66,7 +84,6 @@ export async function htmlBalance(
   client: Client
 ) {
   div_balance.innerHTML = `
-    <h1 class="l-balance-title">Balance</h1>
     <div class="balance-window-container__address"></div>
     <div class="balance-window l-balance-window second-layer-window"></div>
   `;
@@ -74,16 +91,16 @@ export async function htmlBalance(
   //Used in viewBalance() to change the content
 
   div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
-    ".balance-window-container"
+    ".transfer-window-container"
   )!;
   div_balanceWindow = document.querySelector<HTMLDivElement>(
-    ".balance-window-container .balance-window"
+    ".transfer-window-container .balance-window"
   )!;
   div_address = document.querySelector<HTMLDivElement>(
     ".balance-window-container__address"
   )!;
   h1_title = document.querySelector<HTMLHeadingElement>(
-    ".balance-window-container h1"
+    ".transfer-window-container h1"
   )!;
 
   viewBalance(client, address);
@@ -186,7 +203,9 @@ async function viewBalance(client: Client, address: string) {
  * @param input Account address
  */
 function transformToTokenListWindow(address: string) {
-  div_balanceWindowContainer.style.height = "580px";
+  if (div_balanceWindowContainer.className != "transfer-window-container l-transfer-window-container first-layer-window"){
+    setWindowHeight(div_balanceWindowContainer, 550 );
+  }
   div_balanceWindow.style.height = "270px";
   // div_balanceWindow.style.width = "450px";
   h1_title.textContent = "Balance of";
