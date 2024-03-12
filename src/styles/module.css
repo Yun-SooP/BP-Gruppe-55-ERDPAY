@@ -454,15 +454,18 @@ input:checked + .slider:before {
   border-top-right-radius: 5px;
   will-change: transform;
 }
-.tab:first-child {
+.tab {
   position: absolute;
-  left: 18%;
   bottom: 90%;
 }
-.tab:last-child {
-  position: absolute;
+#balanceTab {
+  left: 18%;
+}
+#transferTab {
   left: 34%;
-  bottom: 90%;
+}
+#mintTab {
+  left: 50%;
 }
 
 .selected {

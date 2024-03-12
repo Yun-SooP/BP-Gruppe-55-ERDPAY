@@ -137,9 +137,8 @@
 
 
 
-*/
+
 /* Tab layout */
-/* .widget-header .l-tab {
-  align-items:end;
-  border-bottom: solid 2px rgba(255,255,255,0.7);
-} */
+.widget-header .l-tab {
+  gap: 10px;
+}
