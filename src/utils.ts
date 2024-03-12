@@ -437,7 +437,7 @@ export function loadingEnd(html_div: HTMLDivElement){
  */
 function setLoadingScreen(loading_div: HTMLDivElement){
     
-    let loadingDiv = loading_div.querySelector("#loading");
+    const loadingDiv = loading_div.querySelector("#loading");
     if (loadingDiv != null) {
         loadingDiv.innerHTML = `
         <div id="loading" class="l-center">
@@ -455,7 +455,7 @@ function setLoadingScreen(loading_div: HTMLDivElement){
  * @param loading_div - The HTML div from which the loading screen content is to be removed.
  */
 function removeLoadingScreen(loading_div: HTMLDivElement){
-    let loadingDiv = loading_div.querySelector("#loading");
+    const loadingDiv = loading_div.querySelector("#loading");
     if (loadingDiv != null) {
         loadingDiv.innerHTML = "";
     }
