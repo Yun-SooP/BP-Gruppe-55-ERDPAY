@@ -12,7 +12,10 @@ let div_balanceWindowContainer: HTMLDivElement;
 let btn_return: HTMLButtonElement;
 let logo_return: HTMLButtonElement;
 
-export async function htmlBalanceForGuest(div_widget: HTMLDivElement, address: string) {
+export async function htmlBalanceForGuest(
+  div_widget: HTMLDivElement,
+  address: string
+) {
   div_widget.innerHTML = `
   <div class = "balance-window-container l-balance-window-container first-layer-window">
 
@@ -31,7 +34,6 @@ export async function htmlBalanceForGuest(div_widget: HTMLDivElement, address: s
   </div>
   `;
 
-
   //Selecting HTML Elements
   btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
   logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
@@ -47,7 +49,6 @@ export async function htmlBalanceForGuest(div_widget: HTMLDivElement, address: s
   }
   const div_balance = document.querySelector<HTMLDivElement>("#balance")!;
   htmlBalance(div_balance, address, client!);
-  
 
   btn_return.addEventListener("click", () => widget(div_widget));
   logo_return.addEventListener("click", () => widget(div_widget));
@@ -59,13 +60,16 @@ export async function htmlBalanceForGuest(div_widget: HTMLDivElement, address: s
  * @param address account address for balance check
  * @param session optional parameter, if a session already exists, use this session instead of creating a new client
  */
-export async function htmlBalance(div_balance: HTMLDivElement, address: string, client: Client) {
+export async function htmlBalance(
+  div_balance: HTMLDivElement,
+  address: string,
+  client: Client
+) {
   div_balance.innerHTML = `
     <h1 class="l-balance-title">Balance</h1>
     <div class="balance-window-container__address"></div>
     <div class="balance-window l-balance-window second-layer-window"></div>
   `;
-
 
   //Used in viewBalance() to change the content
 
@@ -83,7 +87,6 @@ export async function htmlBalance(div_balance: HTMLDivElement, address: string, 
   )!;
 
   viewBalance(client, address);
-
 }
 
 /**
@@ -128,10 +131,10 @@ async function viewBalance(client: Client, address: string) {
 
   select_tokens.options.length = 0;
 
-  makeTokensList(select_tokens, select_amount, entries)
+  makeTokensList(select_tokens, select_amount, entries);
 
   //Make select_id, if a token is selected
-  const select_id = document.querySelector<HTMLSelectElement>(
+  const div_id = document.querySelector<HTMLSelectElement>(
     ".balance-window__id-list"
   )!;
 
@@ -139,34 +142,44 @@ async function viewBalance(client: Client, address: string) {
     //move spans to left
     document.querySelector<HTMLSpanElement>(
       ".balance-window header span:first-child"
-    )!.style.marginLeft = "85px";
+    )!.style.marginLeft = "30px";
     document.querySelector<HTMLSpanElement>(
       ".balance-window header span:nth-child(2)"
-    )!.style.marginLeft = "110px";
+    )!.style.marginLeft = "200px";
     const span_id = document.querySelector<HTMLSpanElement>(
       ".balance-window header span:last-child"
     )!;
-    span_id.style.marginLeft = "50px";
+    span_id.style.marginLeft = "70px";
     span_id.style.color = "rgba(255, 255, 255, 0.7)";
 
-    select_id.options.length = 0;
-
     //make id-list visible
-    select_id.classList.remove("invisible-balance-window__id-list");
-    select_id.classList.add("visible-balance-window__id-list");
+    div_id.classList.remove("invisible-balance-window__id-list");
+    div_id.classList.add("visible-balance-window__id-list");
     const selectedIds = getTokenIDs(account, select_tokens.value);
 
+    //reset id list
+    div_id.innerHTML = ``;
     //fill id-list
     for (let i = 0; i < selectedIds.length; i++) {
-      const option = document.createElement("option");
+      const span = document.createElement("span");
+      span.classList.add("token-id", "third-layer-window");
 
-      option.text = selectedIds[i].toString();
-      //option.value = null; You Can link Value of ID here
-      select_id.add(option);
+      const tokenIDString = selectedIds[i] + "";
+      const tokenIDTODisplay =
+        tokenIDString.length > 6
+          ? tokenIDString.substring(0, 3) +
+            "..." +
+            tokenIDString.substring(
+              tokenIDString.length - 3,
+              tokenIDString.length
+            )
+          : tokenIDString;
+
+      span.innerHTML = `${tokenIDTODisplay}`;
+      div_id.appendChild(span);
     }
   });
 }
-
 
 /**
  * Function to display token list
@@ -196,7 +209,7 @@ function transformToTokenListWindow(address: string) {
               <select class="token-list__tokens" size = "5"></select>
               <select class="token-list__amount" disabled size = "5"></select>
           </div>
-          <select class="balance-window__id-list invisible-balance-window__id-list" size = "5"></select>
+          <div class="balance-window__id-list invisible-balance-window__id-list"></div>
       </div>
       
     `;

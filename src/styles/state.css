@@ -18,12 +18,8 @@
 }
 
 .visible-balance-window__id-list {
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background-color: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(30px);
   height: 150px;
-  width: 75px;
-  border-radius: 10px;
+  width: 110px;
   margin-left: 15px;
 }
 

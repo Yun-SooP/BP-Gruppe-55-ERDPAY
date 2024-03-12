@@ -104,12 +104,12 @@
 }
 
 .balance-window .token-list-header span:first-child {
-  margin-left: 130px;
+  margin-left: 90px;
   transition: all 0.3s ease-in-out;
 }
 
 .balance-window .token-list-header span:nth-child(2) {
-  margin-left: 115px;
+  margin-left: 200px;
   transition: all 0.3s ease-in-out;
 }
 
@@ -128,15 +128,54 @@
 
 .balance-window .token-list {
   height: 150px;
-  width: 300px;
+  width: 400px;
 }
 
 .balance-window .token-list__tokens {
-  width: 245px;
+  width: 375px;
 }
 
 .balance-window .token-list__amount {
   width: 50px;
+}
+
+.balance-window__id-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  border-radius: 10px;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+    0.8px 0.8px 1px rgba(255, 255, 255, 0.3);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.25);
+  overflow-y: scroll;
+  /* scrollbar erase for Internet Explorer 10+ */
+  -ms-overflow-style: none;
+  /* scrollbar erase for Firefox */
+  scrollbar-width: none;
+  will-change: width;
+  transition: all 0.3s ease-out;
+}
+
+.balance-window__id-list .token-id:first-child {
+  margin-top: 10px;
+}
+
+.balance-window__id-list .token-id {
+  margin-top: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+
+  background-color: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0.5px 0.5px 0px rgba(255, 255, 255, 0.4),
+    2px 2px 2px rgba(0, 0, 0, 0.1), -2px -2px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* scrollbar erase for safari & chrome */
+.balance-window__id-list::-webkit-scrollbar {
+  display: none;
 }
 
 .token-list__amount option {
