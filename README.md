@@ -1,5 +1,4 @@
 # BP-Gruppe-55-ERDPAY
-### Readme für das ErdPay Dashboard-Projekt
 
 Dieses Projekt bietet ein umfangreiches Dashboard für die Verwaltung von digitalen Assets im Erdstall-Netzwerk. Es ermöglicht Benutzern, Sitzungen zu erstellen und wiederherzustellen, Kontostände einzusehen, Tokens zu übertragen und zu minten.
 
