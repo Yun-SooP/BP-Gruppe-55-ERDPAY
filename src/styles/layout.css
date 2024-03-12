@@ -22,6 +22,11 @@
 .l-main-window {
   width: 500px;
   height: 500px;
+  padding: 15px;
+}
+
+.l-main-tooltip {
+  align-self: self-end;
 }
 
 .l-main-logo {
@@ -39,6 +44,7 @@
   margin-top: 40px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 15px;
 }
 /* 

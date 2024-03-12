@@ -346,11 +346,31 @@ input:checked + .slider:before {
   font-weight: 500;
 }
 #tokenIDs {
-  align-self: self-start;
+  border: 1px solid rgba(255, 255, 255, 0);
+  border-radius: 20px;
+  position: relative;
+  right: 15px;
+
+  box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.5),
+    0.8px 0.8px 1px rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.15);
   margin-left: 35px;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  max-height: 90px;
+  padding: 7px;
+  overflow-y: scroll;
   gap: 10px;
+
+  /* scrollbar erase for Internet Explorer 10+ */
+  -ms-overflow-style: none;
+  /* scrollbar erase for Firefox */
+  scrollbar-width: none;
+}
+
+#tokenIDs::-webkit-scrollbar {
+  display: none;
 }
 
 .confirm-transfer-form {

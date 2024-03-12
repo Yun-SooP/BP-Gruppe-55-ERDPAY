@@ -10,6 +10,11 @@ export function widget(html_widget: HTMLDivElement) {
   html_widget.innerHTML = `
     <div class="main-window l-main-window first-layer-window">
 
+    <div class="tooltip l-main-tooltip">        
+            <i class="fa-solid fa-circle-info tooltip tooltip-icon"></i> 
+            <span class="tooltiptext-bottom">Tooltip text</span> 
+    </div>
+
     <img
       class="l-main-logo erdstall-logo"
       src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
@@ -24,12 +29,13 @@ export function widget(html_widget: HTMLDivElement) {
       <div class='button2'>
         <button type="button" class="transfer-btn">Dashboard</button>
       </div>
+
       <span>or</span>
       <span id="errBalanceAccAddr"></span>
       <input type="text" placeholder="account address" spellcheck="false" id="inputAddress"/>
-      <div class='button1'>
-        <button type="button" class="view-balance-btn">View Any Balance</button>
-      </div>
+      
+      <button type="button" class="view-balance-btn">View Any Balance</button>
+      
     </form>
     </div>
     `;
