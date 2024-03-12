@@ -263,7 +263,7 @@ function changeTokenIDsButtonEvent(
       selecting.value = false;
       btn_changeTokenIDs.innerText = "change";
       makeTokenIDsList(div_tokenIDs, selectedTokenIDs);
-      txt_amount.value = selectedTokenIDs.toString();
+      txt_amount.value = selectedTokenIDs.length.toString();
       btn_cancelChangeTokenIDs.remove();
     });
     div_changeTokenIDs?.appendChild(btn_cancelChangeTokenIDs);
