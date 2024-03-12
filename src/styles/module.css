@@ -215,7 +215,8 @@
 }
 
 .session-window__form span {
-  margin: 10px 0px;
+  margin-top: 10px;
+
   color: rgba(255, 255, 255, 0.6);
 }
 /* 
