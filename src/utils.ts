@@ -167,25 +167,37 @@ export function checkTokenID(
  */
 export function checkAmount(
     amount: string,
+    tokens: Tokens,
     errDisplay: string, 
     inputBox: string
 ): boolean {
-    resetErrorDisplay(errDisplay, inputBox);
+  resetErrorDisplay(errDisplay, inputBox);
 
-    if (amount == "") {
-        displayErrorMessage(
-          "Please input the amount of tokens.",
-          errDisplay,
-          inputBox
-        );
-        return false;
-    }
+  if (amount == "") {
+      displayErrorMessage(
+        "Please input the amount of tokens.",
+        errDisplay,
+        inputBox
+      );
+      return false;
+  }
 
-    const specialCharacters = /^[0-9]+$/;
-    if (!specialCharacters.test(amount)) {
-        displayErrorMessage("Please enter a number.", errDisplay, inputBox);
-        return false;
-    }
+  const specialCharacters = /^[0-9]+$/;
+  if (!specialCharacters.test(amount)) {
+      displayErrorMessage("Please enter a number.", errDisplay, inputBox);
+      return false;
+  }
+  if (parseFloat(amount) <= 0){
+    displayErrorMessage("The amount must be greater than zero.", errDisplay, inputBox);
+      return false;
+  }
+  const amountParsed = parseFloat(amount);
+  if (amountParsed > tokens.value.length) {
+    const message = "Insufficient tokens, please enter smaller number.";
+    displayErrorMessage(message, "errTokenAmount", "tokenAmount");
+    return false;
+  }
+  
     return true;
 }
 
