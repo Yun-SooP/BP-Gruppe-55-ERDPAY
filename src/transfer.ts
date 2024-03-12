@@ -275,7 +275,7 @@ function changeTokenIDsButtonEvent(
     div_tokenIDs.innerHTML = "";
     newTokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
   } else {
-    if (newTokenIDs.length == 0){
+    if (newTokenIDs.length == 0) {
       const message = "Select at least 1 token ID.";
       utils.displayErrorMessage(message, "errTokenIDs", "tokenIDs");
       return;
@@ -452,7 +452,7 @@ function checkInputsForTransfer(
     tokens
   )
     ? false
-    : valid;
+    : valid);
   valid = !utils.checkRecipientAddress(
     recipientAddress,
     "errRecipientAddr",
