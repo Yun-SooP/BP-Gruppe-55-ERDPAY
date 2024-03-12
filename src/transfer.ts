@@ -6,6 +6,7 @@ import { Asset } from "@polycrypt/erdstall/ledger/assets";
 import { Assets } from "@polycrypt/erdstall/ledger/assets";
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 import * as utils from "./utils.ts";
+import {div_dashboard} from "./dashboard.ts"
 
 let session: Session;
 let account: Account;
@@ -138,6 +139,13 @@ export async function htmlTransfer(
   }
 }
 
+/**
+ * Function for continue event in transfer.
+ * @param advanced Selection of advanced transfer functionality.
+ * @param tokenAddress Token address for transfer.
+ * @param amount Amount of tokens to transfer.
+ * @param recipientAddress Recipient address for transfer.
+ */
 function transferContinueButtonEvent(
   advanced: boolean,
   tokenAddress: string,
@@ -164,13 +172,21 @@ function transferContinueButtonEvent(
   }
 }
 
+/**
+ * Functionality to check the inputs for the transfer.
+ * @param tokenAddress Token address for transfer.
+ * @param amount Amount of tokens to transfer.
+ * @param recipientAddress Recipient address for transfer.
+ * @returns valid If the transfer inputs are valid.
+ * @returns message If input is unvalid.
+ */
 function checkInputsForTransfer(
   tokenAddress: string,
   amount: string,
   recipientAddress: string
 ): boolean {
   let valid = true;
-  valid = !utils.checkTokenAddress(
+  valid = !utils.checkTokenAddressSelected(
     tokenAddress,
     "errTokenAddress",
     "token-list"
@@ -196,6 +212,14 @@ function checkInputsForTransfer(
   return valid;
 }
 
+/**
+ * Function for transfer event.
+ * Execute the transfer and display whether the transfer was successful or not.
+ * @param tokenAddress Token address for transfer.
+ * @param amount Amount of tokens to transfer.
+ * @param recipientAddress Recipient address for transfer.
+ * @param tokenIDs Optional, IDs to transfer.
+ */
 async function transferEvent(
   tokenAddress: string,
   amount: number,
@@ -213,7 +237,7 @@ async function transferEvent(
     tokenIDs
   );
   if (status == 1) {
-    htmlTransferSuccesful();
+    htmlTransferSuccessful();
   } else {
     const err: Error = <Error>error;
 
@@ -225,15 +249,15 @@ async function transferEvent(
 /**
  * Function to display successful transfer.
  */
-function htmlTransferSuccesful() {
+function htmlTransferSuccessful() {
   div_transfer.innerHTML = `
     <div class="successful-div third-layer-window">Transfer Successful!</div>
-    <form class="successful-transfer-form">
+    <form class="successful-form">
       <button type="button" class="return-btn">return</button>
     </form>
   `;
   const btn_return = document.querySelector<HTMLInputElement>(
-    ".successful-transfer-form .return-btn"
+    ".successful-form .return-btn"
   )!;
   btn_return.addEventListener("click", () =>
     htmlTransfer(div_transfer, session)
@@ -367,9 +391,6 @@ function advancedTransferContinueButtonEvent(
 ) {
   const chk_checkedIDs = chk_IDs.filter((checkbox) => checkbox.checked);
   if (chk_checkedIDs.length != amount) {
-    // alert(
-    //   `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`
-    // );
     const message = `Please choose ${amount} token ID(s)! (currently ${chk_checkedIDs.length} chosen)`;
     utils.displayErrorMessage(message, "errTransferConfirm", "tokenCheckBox");
     return;
@@ -438,8 +459,11 @@ function htmlTransferConfirmation(
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
     ".confirm-transfer-form .confirm-transfer-btn"
   )!;
-  btn_makeTransfer.addEventListener("click", () =>
-    transferEvent(tokenAddress, amount, recipientAddress, tokenIDs)
+  btn_makeTransfer.addEventListener("click", () => {
+    
+    transferEvent(tokenAddress, amount, recipientAddress, tokenIDs);
+    
+  }
   );
 
   const btn_return = document.querySelector<HTMLInputElement>(
@@ -498,3 +522,5 @@ async function transferTo(
   }
   return { status, error };
 }
+
+

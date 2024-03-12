@@ -2,11 +2,12 @@ import { widget } from "./widget";
 import { newSession } from "./setup_session";
 import { restoreSession } from "./setup_session";
 import { Session } from "@polycrypt/erdstall";
-import { htmlTransfer } from "./transfer.ts";
-import { htmlMint } from "./mint.ts";
-import * as utils from "./utils.ts";
+import { htmlBalance } from "./balance";
+import { htmlTransfer } from "./transfer";
+import { htmlMint } from "./mint";
+import * as utils from "./utils";
 
-let div_dashboard: HTMLDivElement;
+export let div_dashboard: HTMLDivElement;
 let session: Session;
 let privateKey: string;
 let current: string;
@@ -19,7 +20,7 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
   div_dashboard = div_widget;
   div_dashboard.innerHTML = `
         <div class="session-window l-session-window first-layer-window">
-  
+
           <div class="widget-header">
             <button class="goback-button">
               <i class="fa-solid fa-angle-left"></i>
@@ -166,10 +167,14 @@ function createAccount(session: Session, privateKey:string, html_widget: HTMLDiv
 
 }
 
-async function eventRestoreSession(privateKey: string) {
-  const restoredSession = await restoreSession(privateKey);
+/**
+ * Function for restore session event.
+ * @param privateKey Private key to restore the session.
+ */
+async function eventRestoreSession(privateKeyForRestore: string) {
+  const restoredSession = await restoreSession(privateKeyForRestore);
   const valid = utils.checkPrivateKey(
-    privateKey,
+    privateKeyForRestore,
     "errRestoreSession",
     "inputPrivateKey"
   );
@@ -185,6 +190,7 @@ async function eventRestoreSession(privateKey: string) {
     return;
   }
   session = restoredSession.session!;
+  privateKey = privateKeyForRestore;
   htmlDashboard();
 }
 
@@ -195,13 +201,19 @@ async function eventRestoreSession(privateKey: string) {
 export function htmlDashboard() {
   div_dashboard.innerHTML = `
     <div class="transfer-window-container l-transfer-window-container first-layer-window">
-  
+
+        <div id="loading"></div>
+
         <div class="widget-header">
             <button class="goback-button">
               <i class="fa-solid fa-angle-left"></i>
             </button>
-            <div id="transferTab">Transfer</div>
-            <div id="mintTab">Mint</div>
+
+            <div class="l-tab">
+              <div id="balanceTab" class="tab selected">Balance</div>
+              <div id="transferTab" class="tab">Transfer</div>
+              <div id="mintTab" class="tab">Mint</div>
+            </div>
             <img
               class="erdstall-logo"
               src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png"
@@ -209,10 +221,9 @@ export function htmlDashboard() {
             />
         </div>
   
-        <h1 id="current tab label" class="l-transfer-title">Transfer</h1>
+        <h1 id="current-tab-label" class="l-transfer-title">Transfer</h1>
   
-        <div id="current tab">
-        </div>
+        <div id="current-tab"></div>
 
         <div class="transfer-footer l-transfer-footer">
             <span class="private-key">your private key</span>
@@ -221,22 +232,39 @@ export function htmlDashboard() {
     </div>
       
     `;
-  const head_currentTabLabel = document.getElementById("current tab label")!;
+  const head_currentTabLabel = document.getElementById("current-tab-label")!;
   const div_currentTab = <HTMLDivElement>(
-    document.getElementById("current tab")!
+    document.getElementById("current-tab")!
+  );
+  document
+    .getElementById("balanceTab")
+    ?.addEventListener("click", () =>{
+      setBalanceTab(div_currentTab, head_currentTabLabel);
+      document.querySelector("#balanceTab")?.classList.add("selected");
+      document.querySelector("#transferTab")?.classList.remove("selected");
+      document.querySelector("#mintTab")?.classList.remove("selected");
+    }
   );
   document
     .getElementById("transferTab")
-    ?.addEventListener("click", () =>
-      setTransferTab(div_currentTab, head_currentTabLabel)
-    );
+    ?.addEventListener("click", () =>{
+      setTransferTab(div_currentTab, head_currentTabLabel);
+      document.querySelector("#transferTab")?.classList.add("selected");
+      document.querySelector("#balanceTab")?.classList.remove("selected");
+      document.querySelector("#mintTab")?.classList.remove("selected");
+    }
+  );
   document
     .getElementById("mintTab")
-    ?.addEventListener("click", () =>
-      setMintTab(div_currentTab, head_currentTabLabel)
-    );
+    ?.addEventListener("click", () => {
+      setMintTab(div_currentTab, head_currentTabLabel);
+      document.querySelector("#mintTab")?.classList.add("selected");
+      document.querySelector("#balanceTab")?.classList.remove("selected");
+      document.querySelector("#transferTab")?.classList.remove("selected");
+    }
+  );
   current = "";
-  setTransferTab(div_currentTab, head_currentTabLabel);
+  setBalanceTab(div_currentTab, head_currentTabLabel);
 
   const btn_privateKey =
     document.querySelector<HTMLButtonElement>(".private-key")!;
@@ -260,6 +288,24 @@ export function htmlDashboard() {
   logo_return.addEventListener("click", () => {
     widget(div_dashboard);
   });
+}
+
+/**
+ * set the given tab and label to balance
+ * @param div_tab tab to set
+ * @param head_tabLabel label to set
+ */
+function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
+  if (current == "Balance") {
+    return;
+  }
+  current = "Balance";
+  head_tabLabel.innerHTML = current;
+  div_tab.setAttribute(
+    "class",
+    "balance-window l-balance-window second-layer-window"
+  );
+  htmlBalance(div_tab, session!.address.toString(), session);
 }
 
 /**
@@ -297,3 +343,4 @@ function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   );
   htmlMint(div_tab, session);
 }
+
