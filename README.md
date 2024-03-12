@@ -31,14 +31,6 @@ Dieses Projekt bietet ein umfangreiches Dashboard für die Verwaltung von digita
 9. **widget.ts**:
    - Das Haupt-Widget, das den Zugangspunkt für Benutzerinteraktionen bietet und auf das Hauptdashboard, die Kontostandsanzeige für Gäste und weitere Funktionen verweist.
 
-#### HTML-Datei (index.html):
-
-- **Struktur**: Definiert den Rahmen der Webseite, einschließlich des `head` für Metadaten und des `body` für den Inhalt.
-- **Font Awesome Icons**: Für die Verwendung von Icons innerhalb des Dashboards.
-- **Style Link**: Bindet das Stylesheet `style.css` für die Gestaltung ein.
-- **App Container**: Ein `div`-Element mit der ID `app`, das als Container für das Haupt-Widget dient.
-- **Script Tag**: Lädt das `widget.ts` Script, welches das Dashboard initialisiert.
-
 ### Entwicklungssetup:
 
 Um das Projekt zu starten, folgen Sie diesen Schritten:
