@@ -388,7 +388,7 @@ async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
     ".l-transfer-window-container"
   )!;
 
-  windowContainer.style.height = "700px";
+  windowContainer.style.height = "740px";
 
   current = "Mint";
   head_tabLabel.innerHTML = current;
@@ -396,6 +396,6 @@ async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
     "class",
     "mint-window l-mint-window second-layer-window"
   );
-  div_tab.style.height = "430px";
+  div_tab.style.height = "470px";
   await htmlMint(div_tab, session);
 }
