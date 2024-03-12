@@ -105,10 +105,16 @@ async function eventNewSession(html_widget:HTMLDivElement) {
   }
   session = newSession_.session!;
   privateKey = newSession_.privateKey!;
-  welcome(session, privateKey, html_widget);
+  createAccount(session, privateKey, html_widget);
 }
 
-function welcome(session: Session, privateKey:string, html_widget: HTMLDivElement) {
+/**
+ * This method creates an interface when creating a new account where the session address and the private key are displayed and can be copied.
+ * @param session The session address of a newly created account
+ * @param privateKey The private key of a newly created account
+ * @param html_widget The widget which interface should be changed to the new interface
+ */
+function createAccount(session: Session, privateKey:string, html_widget: HTMLDivElement) {
   const sessionAsString = session.address.toString();
   html_widget.innerHTML = `
     <div class="l-create-account-window-container create-window-account-container first-layer-window">
@@ -126,7 +132,7 @@ function welcome(session: Session, privateKey:string, html_widget: HTMLDivElemen
           </div>
 
 
-          <div class="copy-icon-session third-layer-window">
+          <div class="copy-icon-session">
              <span class="session-address">${utils.shortenString(sessionAsString,3)}</span>
              <i class="fa-solid fa-copy copy-button"></i>
           </div>
@@ -139,7 +145,7 @@ function welcome(session: Session, privateKey:string, html_widget: HTMLDivElemen
             <p> Your private key </p>
           </div>
 
-          <div class="copy-icon-private-key third-layer-window">
+          <div class="copy-icon-private-key">
              <span class="private-key">${utils.shortenString(privateKey,3)}</span>
              <i class="fa-solid fa-copy copy-button"></i>
           </div>
