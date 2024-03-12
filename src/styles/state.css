@@ -1,3 +1,7 @@
+#app {
+  --toggleBlue: #6f8898;
+}
+
 .visible-balance-window__address {
   flex-direction: row;
   justify-content: center;
@@ -36,4 +40,22 @@
   visibility: visible;
   z-index: 100;
   opacity: 1;
+}
+
+.clicked-clickable-token-id {
+  background-color: var(--toggleBlue);
+}
+
+.invisible-transfer-window__id-list {
+  z-index: -1;
+  visibility: hidden;
+  width: 510px;
+  border: none;
+  height: 0px;
+}
+
+.visible-transfer-window__id-list {
+  height: 180px;
+  width: 510px;
+  visibility: visible;
 }

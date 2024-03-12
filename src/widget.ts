@@ -1,14 +1,19 @@
 import { htmlBalanceForGuest } from "./balance";
-import { htmlCreateSession } from "./dashboard";
+import { htmlCreateSession, htmlDashboard } from "./dashboard";
+import { Session } from "@polycrypt/erdstall";
 import {createInfoBox } from "./utils";
 import * as utils from "./utils";
 
+let session : Session | undefined;
+let privateKey : string | undefined;
+
 /**
  * Function to display selection between transfer and view balance.
- * @param html_widget HTML element to display to
+ * @param div_widget HTML element to display to
  */
-export function widget(html_widget: HTMLDivElement) {
-  html_widget.innerHTML = `
+export function widget(div_widget: HTMLDivElement) {
+
+  div_widget.innerHTML = `
     <div class="main-window l-main-window first-layer-window">
     <img
       class="l-main-logo erdstall-logo"
@@ -44,8 +49,13 @@ export function widget(html_widget: HTMLDivElement) {
   const btn_transfer = document.querySelector(
     ".main-window__form .transfer-btn"
   );
-  btn_transfer?.addEventListener("click", () => {
-    htmlCreateSession(html_widget);
+  
+  btn_transfer?.addEventListener("click", async () => {
+    if (session && privateKey){
+      await htmlDashboard(div_widget, session, privateKey);
+    } else {
+      htmlCreateSession(div_widget);
+    }
   });
 
   const txt_balanceAddress = document.querySelector<HTMLInputElement>(
@@ -54,17 +64,16 @@ export function widget(html_widget: HTMLDivElement) {
   const btn_balance = document.querySelector<HTMLButtonElement>(
     ".main-window__form .view-balance-btn"
   )!;
-  btn_balance.addEventListener("click", () => {
+  btn_balance.addEventListener("click", async () => {
     const valid = utils.checkBalanceAddress(
       txt_balanceAddress.value,
       "errBalanceAccAddr",
       "inputAddress"
     );
     if (!valid) {
-      utils.setWindowHeight("balanceAddressEnterWindow", 210);
       return;
     }
-    htmlBalanceForGuest(html_widget, txt_balanceAddress.value);
+    await htmlBalanceForGuest(div_widget, txt_balanceAddress.value);
   });
 
   txt_balanceAddress.addEventListener("keypress", (event) => {
@@ -78,3 +87,22 @@ export function widget(html_widget: HTMLDivElement) {
 
 // change the inner HTML of the HTML div element "app" to the main interface
 widget(document.querySelector<HTMLDivElement>("#app")!);
+
+/**
+ * Log-in with session and private key.
+ * Once logged-in, the user don't have to log-in again for dashboard.
+ * @param sessionForLogin session for login
+ * @param privateKeyForLogin private key for login
+ */
+export function login(sessionForLogin: Session, privateKeyForLogin: string){
+  session = sessionForLogin;
+  privateKey = privateKeyForLogin;
+}
+/**
+ * Log-out and display the start page.
+ */
+export function logout(){
+  session = undefined;
+  privateKey = undefined;
+  widget(document.querySelector<HTMLDivElement>("#app")!);
+}

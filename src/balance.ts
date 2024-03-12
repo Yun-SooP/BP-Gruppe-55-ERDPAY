@@ -3,7 +3,12 @@ import { setupClient } from "./setup_client.ts";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { Client } from "@polycrypt/erdstall";
 import { widget } from "./widget.ts";
-import { getTokenIDs, makeTokensList } from "./utils.ts";
+import {
+  getTokenIDs,
+  makeTokensList,
+  setWindowHeight,
+  selectedTokenToBlue,
+} from "./utils.ts";
 
 let div_balanceWindow: HTMLDivElement;
 let div_address: HTMLDivElement;
@@ -29,8 +34,11 @@ export async function htmlBalanceForGuest(
         alt="TypeScript" 
       />
     </div>
-    <div id="balance">
-    </div>
+
+    <h1 class="l-balance-title">Balance</h1>
+    <div class="balance-window-container__address"></div>
+    <div class="balance-window l-balance-window second-layer-window"></div>
+    
   </div>
   `;
 
@@ -47,32 +55,8 @@ export async function htmlBalanceForGuest(
     alert(error);
     return;
   }
-  const div_balance = document.querySelector<HTMLDivElement>("#balance")!;
-  htmlBalance(div_balance, address, client!);
-
-  btn_return.addEventListener("click", () => widget(div_widget));
-  logo_return.addEventListener("click", () => widget(div_widget));
-}
-
-/**
- * Function to change to the HTML of balance viewer.
- * @param html_widget Main body of widget
- * @param address account address for balance check
- * @param session optional parameter, if a session already exists, use this session instead of creating a new client
- */
-export async function htmlBalance(
-  div_balance: HTMLDivElement,
-  address: string,
-  client: Client
-) {
-  div_balance.innerHTML = `
-    <h1 class="l-balance-title">Balance</h1>
-    <div class="balance-window-container__address"></div>
-    <div class="balance-window l-balance-window second-layer-window"></div>
-  `;
 
   //Used in viewBalance() to change the content
-
   div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
     ".balance-window-container"
   )!;
@@ -85,7 +69,41 @@ export async function htmlBalance(
   h1_title = document.querySelector<HTMLHeadingElement>(
     ".balance-window-container h1"
   )!;
+  viewBalance(client!, address);
 
+  btn_return.addEventListener("click", () => widget(div_widget));
+  logo_return.addEventListener("click", () => widget(div_widget));
+}
+
+/**
+ * Function to change to the HTML of balance viewer in dashboard after logging in.
+ * @param html_widget Main body of widget
+ * @param address account address for balance check
+ * @param session optional parameter, if a session already exists, use this session instead of creating a new client
+ */
+export async function htmlBalance(
+  div_balance: HTMLDivElement,
+  address: string,
+  client: Client
+) {
+  div_balance.innerHTML = `
+    <div class="balance-window-container__address"></div>
+    <div class="balance-window l-balance-window second-layer-window"></div>
+  `;
+
+  //Used in viewBalance() to change the content
+  div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
+    ".transfer-window-container"
+  )!;
+  div_balanceWindow = document.querySelector<HTMLDivElement>(
+    ".transfer-window-container .balance-window"
+  )!;
+  div_address = document.querySelector<HTMLDivElement>(
+    ".balance-window-container__address"
+  )!;
+  h1_title = document.querySelector<HTMLHeadingElement>(
+    ".transfer-window-container h1"
+  )!;
   viewBalance(client, address);
 }
 
@@ -130,7 +148,6 @@ async function viewBalance(client: Client, address: string) {
   };
 
   select_tokens.options.length = 0;
-
   makeTokensList(select_tokens, select_amount, entries);
 
   //Make select_id, if a token is selected
@@ -151,6 +168,9 @@ async function viewBalance(client: Client, address: string) {
     )!;
     span_id.style.marginLeft = "70px";
     span_id.style.color = "rgba(255, 255, 255, 0.7)";
+
+    //change color of selecteed token color
+    selectedTokenToBlue(select_tokens);
 
     //make id-list visible
     div_id.classList.remove("invisible-balance-window__id-list");
@@ -186,10 +206,19 @@ async function viewBalance(client: Client, address: string) {
  * @param input Account address
  */
 function transformToTokenListWindow(address: string) {
-  div_balanceWindowContainer.style.height = "580px";
+  // balance_for_guest window height changer
+  if (
+    div_balanceWindowContainer.className !=
+    "transfer-window-container l-transfer-window-container first-layer-window"
+  ) {
+    setWindowHeight(div_balanceWindowContainer, 550);
+    h1_title.textContent = "Balance of";
+  } else {
+    //header for dashboard balance section is different to guest balance.
+    h1_title.textContent = "My Balance";
+  }
   div_balanceWindow.style.height = "270px";
-  // div_balanceWindow.style.width = "450px";
-  h1_title.textContent = "Balance of";
+
   div_address.innerHTML = `<span>${address}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
   div_address.classList.add(
     "second-layer-window",
@@ -206,7 +235,7 @@ function transformToTokenListWindow(address: string) {
 
       <div class="list-container">
           <div class="token-list">
-              <select class="token-list__tokens" size = "5"></select>
+              <select class="token-list__tokens" size = "5" id="tokenSelector"></select>
               <select class="token-list__amount" disabled size = "5"></select>
           </div>
           <div class="balance-window__id-list invisible-balance-window__id-list"></div>
@@ -214,7 +243,7 @@ function transformToTokenListWindow(address: string) {
       
     `;
   const btn_copy = document.querySelector<HTMLButtonElement>(".copy-button");
-  btn_copy!.addEventListener("click", () => {
-    navigator.clipboard.writeText(address);
+  btn_copy!.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(address);
   });
 }

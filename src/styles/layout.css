@@ -87,7 +87,7 @@
 /* Account */
 .l-session-window {
   width: 550px;
-  height: 550px;
+  height: 520px;
 }
 
 .l-session-window__header {
@@ -95,7 +95,7 @@
 }
 
 .l-session-window__form {
-  margin-top: 50px;
+  margin-top: 20px;
 }
 /* 
 
@@ -135,6 +135,11 @@
   margin-top: 15px;
 }
 
+.l-logout {
+  margin-left: 450px;
+  margin-top: 20px;
+}
+
 /* 
 
 
@@ -171,6 +176,9 @@
 
 /* Tab layout */
 .widget-header .l-tab {
+  position: relative;
+  width: 65%;
+  height: 100%;
   gap: 10px;
 }
 

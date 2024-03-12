@@ -5,6 +5,7 @@ import { Session } from "@polycrypt/erdstall";
 import { htmlBalance } from "./balance";
 import { htmlTransfer } from "./transfer";
 import { htmlMint } from "./mint";
+import { login, logout } from "./widget";
 import * as utils from "./utils";
 
 export let div_dashboard: HTMLDivElement;
@@ -41,12 +42,15 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
           </header>
   
         <form class="session-window__form l-session-window__form">
-          <span id="errNewAccount"></span>
-          <button type="button" class="new-session-btn" id="newAccount">New Account</button>
-          <span>or</span>
+
           <span id="errRestoreSession"></span>
           <input type="password" placeholder="your private key (ex. 0x1234...)" id="inputPrivateKey"/>
           <button type="button" class="restore-session-btn" >Log-in</button>
+          <span>or</span>
+          <span id="errNewAccount"></span>
+          <button type="button" class="new-session-btn" id="newAccount">New Account</button>
+          
+          
         </form>
       </div>
     `;
@@ -74,7 +78,10 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
   )!;
   btn_return.addEventListener("click", () => widget(div_dashboard));
 
-  btn_newSession.addEventListener("click", () => eventNewSession(div_widget));
+  btn_newSession.addEventListener(
+    "click",
+    async () => await eventNewSession(div_widget)
+  );
 
   txt_previousPrivateKey.addEventListener("keypress", (event) => {
     if (event.key == "Enter") {
@@ -89,23 +96,29 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
   //   txt_previousPrivateKey.style.width = "380px";
   // });
 
-  btn_restoreSession.addEventListener("click", () =>
-    eventRestoreSession(txt_previousPrivateKey.value)
+  btn_restoreSession.addEventListener(
+    "click",
+    async () => await eventRestoreSession(txt_previousPrivateKey.value)
   );
 }
 
 /**
  * Function for new session event.
  */
-async function eventNewSession(html_widget:HTMLDivElement) {
+async function eventNewSession(html_widget: HTMLDivElement) {
   const newSession_ = await newSession();
   if (newSession_.message != undefined) {
-    utils.displayErrorMessage(newSession_.message,'errNewAccount','newAccount'); 
+    utils.displayErrorMessage(
+      newSession_.message,
+      "errNewAccount",
+      "newAccount"
+    );
 
     return;
   }
   session = newSession_.session!;
   privateKey = newSession_.privateKey!;
+  login(session, privateKey);
   createAccount(session, privateKey, html_widget);
 }
 
@@ -115,7 +128,11 @@ async function eventNewSession(html_widget:HTMLDivElement) {
  * @param privateKey The private key of a newly created account
  * @param html_widget The widget which interface should be changed to the new interface
  */
-function createAccount(session: Session, privateKey:string, html_widget: HTMLDivElement) {
+function createAccount(
+  session: Session,
+  privateKey: string,
+  html_widget: HTMLDivElement
+) {
   const sessionAsString = session.address.toString();
   html_widget.innerHTML = `
     <div class="l-create-account-window-container create-window-account-container first-layer-window">
@@ -134,7 +151,10 @@ function createAccount(session: Session, privateKey:string, html_widget: HTMLDiv
 
 
           <div class="copy-icon-session">
-             <span class="session-address">${utils.shortenString(sessionAsString,3)}</span>
+             <span class="session-address">${utils.shortenString(
+               sessionAsString,
+               3
+             )}</span>
              <i class="fa-solid fa-copy copy-button"></i>
           </div>
 
@@ -147,7 +167,10 @@ function createAccount(session: Session, privateKey:string, html_widget: HTMLDiv
           </div>
 
           <div class="copy-icon-private-key">
-             <span class="private-key">${utils.shortenString(privateKey,3)}</span>
+             <span class="private-key">${utils.shortenString(
+               privateKey,
+               3
+             )}</span>
              <i class="fa-solid fa-copy copy-button"></i>
           </div>
         </div>
@@ -155,16 +178,24 @@ function createAccount(session: Session, privateKey:string, html_widget: HTMLDiv
       </div>
       <button type="button" class="transfer-btn"> Go to Dashboard </button>
     </div>
-  `
-  const copy_button_privatekey = document.querySelector<HTMLElement>(".copy-icon-private-key .fa-copy")!
-  utils.copyToClipboard(privateKey,copy_button_privatekey);
-  
-  const copy_button_session = document.querySelector<HTMLElement>(".copy-icon-session .fa-copy")!
-  utils.copyToClipboard(sessionAsString,copy_button_session);
+  `;
+  const copy_button_privatekey = document.querySelector<HTMLElement>(
+    ".copy-icon-private-key .fa-copy"
+  )!;
+  utils.copyToClipboard(privateKey, copy_button_privatekey);
 
-  const dashboard = html_widget.querySelector<HTMLButtonElement>('.l-create-account-window-container .transfer-btn')!;
-  dashboard.addEventListener("click", () => htmlDashboard());
+  const copy_button_session = document.querySelector<HTMLElement>(
+    ".copy-icon-session .fa-copy"
+  )!;
+  utils.copyToClipboard(sessionAsString, copy_button_session);
 
+  const dashboard = html_widget.querySelector<HTMLButtonElement>(
+    ".l-create-account-window-container .transfer-btn"
+  )!;
+  dashboard.addEventListener(
+    "click",
+    async () => await htmlDashboard(div_dashboard, session, privateKey)
+  );
 }
 
 /**
@@ -191,14 +222,19 @@ async function eventRestoreSession(privateKeyForRestore: string) {
   }
   session = restoredSession.session!;
   privateKey = privateKeyForRestore;
-  htmlDashboard();
+  login(session, privateKey);
+  await htmlDashboard(div_dashboard, session, privateKey);
 }
 
 /**
  * Function to make window for transfer and minting.
  */
 
-export function htmlDashboard() {
+export async function htmlDashboard(
+  div_dashboard: HTMLDivElement,
+  session: Session,
+  privateKey: string
+) {
   div_dashboard.innerHTML = `
     <div class="transfer-window-container l-transfer-window-container first-layer-window">
 
@@ -210,7 +246,7 @@ export function htmlDashboard() {
             </button>
 
             <div class="l-tab">
-              <div id="balanceTab" class="tab selected">Balance</div>
+              <div id="balanceTab" class="tab selected-tab">My Balance</div>
               <div id="transferTab" class="tab">Transfer</div>
               <div id="mintTab" class="tab">Mint</div>
             </div>
@@ -229,42 +265,42 @@ export function htmlDashboard() {
             <span class="private-key">your private key</span>
             <span class="session-address">your address</span>
         </div>
+
+        <div class="logout, l-logout"> 
+          <span class="logout"> log out</span>
+        </div>
     </div>
       
     `;
+
+  document.querySelector(".logout")?.addEventListener("click", logout);
+
   const head_currentTabLabel = document.getElementById("current-tab-label")!;
   const div_currentTab = <HTMLDivElement>(
     document.getElementById("current-tab")!
   );
-  document
-    .getElementById("balanceTab")
-    ?.addEventListener("click", () =>{
-      setBalanceTab(div_currentTab, head_currentTabLabel);
-      document.querySelector("#balanceTab")?.classList.add("selected");
-      document.querySelector("#transferTab")?.classList.remove("selected");
-      document.querySelector("#mintTab")?.classList.remove("selected");
-    }
-  );
+  document.getElementById("balanceTab")?.addEventListener("click", async () => {
+    await setBalanceTab(div_currentTab, head_currentTabLabel);
+    document.querySelector("#balanceTab")?.classList.add("selected-tab");
+    document.querySelector("#transferTab")?.classList.remove("selected-tab");
+    document.querySelector("#mintTab")?.classList.remove("selected-tab");
+  });
   document
     .getElementById("transferTab")
-    ?.addEventListener("click", () =>{
-      setTransferTab(div_currentTab, head_currentTabLabel);
-      document.querySelector("#transferTab")?.classList.add("selected");
-      document.querySelector("#balanceTab")?.classList.remove("selected");
-      document.querySelector("#mintTab")?.classList.remove("selected");
-    }
-  );
-  document
-    .getElementById("mintTab")
-    ?.addEventListener("click", () => {
-      setMintTab(div_currentTab, head_currentTabLabel);
-      document.querySelector("#mintTab")?.classList.add("selected");
-      document.querySelector("#balanceTab")?.classList.remove("selected");
-      document.querySelector("#transferTab")?.classList.remove("selected");
-    }
-  );
+    ?.addEventListener("click", async () => {
+      await setTransferTab(div_currentTab, head_currentTabLabel);
+      document.querySelector("#transferTab")?.classList.add("selected-tab");
+      document.querySelector("#balanceTab")?.classList.remove("selected-tab");
+      document.querySelector("#mintTab")?.classList.remove("selected-tab");
+    });
+  document.getElementById("mintTab")?.addEventListener("click", async () => {
+    await setMintTab(div_currentTab, head_currentTabLabel);
+    document.querySelector("#mintTab")?.classList.add("selected-tab");
+    document.querySelector("#balanceTab")?.classList.remove("selected-tab");
+    document.querySelector("#transferTab")?.classList.remove("selected-tab");
+  });
   current = "";
-  setBalanceTab(div_currentTab, head_currentTabLabel);
+  await setBalanceTab(div_currentTab, head_currentTabLabel);
 
   const btn_privateKey =
     document.querySelector<HTMLButtonElement>(".private-key")!;
@@ -280,7 +316,7 @@ export function htmlDashboard() {
     ".transfer-window-container .goback-button"
   )!;
   btn_return.addEventListener("click", () => {
-    htmlCreateSession(div_dashboard);
+    widget(div_dashboard);
   });
 
   const logo_return =
@@ -295,17 +331,23 @@ export function htmlDashboard() {
  * @param div_tab tab to set
  * @param head_tabLabel label to set
  */
-function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
-  if (current == "Balance") {
+async function setBalanceTab(
+  div_tab: HTMLDivElement,
+  head_tabLabel: HTMLElement
+) {
+  if (current == "Balance of") {
     return;
   }
-  current = "Balance";
+  const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
+    ".l-transfer-window-container"
+  )!;
+  windowContainer.style.height = "600px";
+
+  current = "Balance of";
   head_tabLabel.innerHTML = current;
-  div_tab.setAttribute(
-    "class",
-    "balance-window l-balance-window second-layer-window"
-  );
-  htmlBalance(div_tab, session!.address.toString(), session);
+  div_tab.setAttribute("class", "");
+  div_tab.style.height = "345px";
+  await htmlBalance(div_tab, session!.address.toString(), session);
 }
 
 /**
@@ -313,17 +355,24 @@ function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
  * @param div_tab tab to set
  * @param head_tabLabel label to set
  */
-function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
+async function setTransferTab(
+  div_tab: HTMLDivElement,
+  head_tabLabel: HTMLElement
+) {
   if (current == "Transfer") {
     return;
   }
+  const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
+    ".l-transfer-window-container"
+  )!;
+  windowContainer.style.height = "730px";
   current = "Transfer";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
     "class",
     "transfer-window l-transfer-window second-layer-window"
   );
-  htmlTransfer(div_tab, session);
+  await htmlTransfer(div_tab, session);
 }
 
 /**
@@ -331,16 +380,22 @@ function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
  * @param div_tab tab to set
  * @param head_tabLabel label to set
  */
-function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
+async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   if (current == "Mint") {
     return;
   }
+  const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
+    ".l-transfer-window-container"
+  )!;
+
+  windowContainer.style.height = "700px";
+
   current = "Mint";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
     "class",
     "mint-window l-mint-window second-layer-window"
   );
-  htmlMint(div_tab, session);
+  div_tab.style.height = "430px";
+  await htmlMint(div_tab, session);
 }
-
