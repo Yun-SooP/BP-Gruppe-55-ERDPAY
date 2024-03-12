@@ -86,10 +86,19 @@ export function widget(div_widget: HTMLDivElement) {
 // change the inner HTML of the HTML div element "app" to the main interface
 widget(document.querySelector<HTMLDivElement>("#app")!);
 
+/**
+ * Log-in with session and private key.
+ * Once logged-in, the user don't have to log-in again for dashboard.
+ * @param sessionForLogin session for login
+ * @param privateKeyForLogin private key for login
+ */
 export function login(sessionForLogin: Session, privateKeyForLogin: string){
   session = sessionForLogin;
   privateKey = privateKeyForLogin;
 }
+/**
+ * Log-out and display the start page.
+ */
 export function logout(){
   session = undefined;
   privateKey = undefined;
