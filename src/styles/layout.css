@@ -21,7 +21,12 @@
 /* Main */
 .l-main-window {
   width: 500px;
-  height: 400px;
+  height: 500px;
+  padding: 15px;
+}
+
+.l-main-tooltip {
+  align-self: self-end;
 }
 
 .l-main-logo {
@@ -39,6 +44,7 @@
   margin-top: 40px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 15px;
 }
 /* 
@@ -135,3 +141,8 @@
   transform: translate(-50%, -50%);
 }
 
+
+/* Tab layout */
+.widget-header .l-tab {
+  gap: 10px;
+}

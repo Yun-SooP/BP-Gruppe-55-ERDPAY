@@ -2,9 +2,10 @@ import { widget } from "./widget";
 import { newSession } from "./setup_session";
 import { restoreSession } from "./setup_session";
 import { Session } from "@polycrypt/erdstall";
-import { htmlTransfer } from "./transfer.ts";
-import { htmlMint } from "./mint.ts";
-import * as utils from "./utils.ts";
+import { htmlBalance } from "./balance";
+import { htmlTransfer } from "./transfer";
+import { htmlMint } from "./mint";
+import * as utils from "./utils";
 
 export let div_dashboard: HTMLDivElement;
 let session: Session;
@@ -149,8 +150,10 @@ export function htmlDashboard() {
             <button class="goback-button">
               <i class="fa-solid fa-angle-left"></i>
             </button>
-            <div>
-              <div id="transferTab" class="tab selected">Transfer</div>
+
+            <div class="l-tab">
+              <div id="balanceTab" class="tab selected">Balance</div>
+              <div id="transferTab" class="tab">Transfer</div>
               <div id="mintTab" class="tab">Mint</div>
             </div>
             <img
@@ -176,10 +179,20 @@ export function htmlDashboard() {
     document.getElementById("current-tab")!
   );
   document
+    .getElementById("balanceTab")
+    ?.addEventListener("click", () =>{
+      setBalanceTab(div_currentTab, head_currentTabLabel);
+      document.querySelector("#balanceTab")?.classList.add("selected");
+      document.querySelector("#transferTab")?.classList.remove("selected");
+      document.querySelector("#mintTab")?.classList.remove("selected");
+    }
+  );
+  document
     .getElementById("transferTab")
     ?.addEventListener("click", () =>{
       setTransferTab(div_currentTab, head_currentTabLabel);
       document.querySelector("#transferTab")?.classList.add("selected");
+      document.querySelector("#balanceTab")?.classList.remove("selected");
       document.querySelector("#mintTab")?.classList.remove("selected");
     }
   );
@@ -188,11 +201,12 @@ export function htmlDashboard() {
     ?.addEventListener("click", () => {
       setMintTab(div_currentTab, head_currentTabLabel);
       document.querySelector("#mintTab")?.classList.add("selected");
+      document.querySelector("#balanceTab")?.classList.remove("selected");
       document.querySelector("#transferTab")?.classList.remove("selected");
     }
   );
   current = "";
-  setTransferTab(div_currentTab, head_currentTabLabel);
+  setBalanceTab(div_currentTab, head_currentTabLabel);
 
   const btn_privateKey =
     document.querySelector<HTMLButtonElement>(".private-key")!;
@@ -216,6 +230,24 @@ export function htmlDashboard() {
   logo_return.addEventListener("click", () => {
     widget(div_dashboard);
   });
+}
+
+/**
+ * set the given tab and label to balance
+ * @param div_tab tab to set
+ * @param head_tabLabel label to set
+ */
+function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
+  if (current == "Balance") {
+    return;
+  }
+  current = "Balance";
+  head_tabLabel.innerHTML = current;
+  div_tab.setAttribute(
+    "class",
+    "balance-window l-balance-window second-layer-window"
+  );
+  htmlBalance(div_tab, session!.address.toString(), session);
 }
 
 /**
