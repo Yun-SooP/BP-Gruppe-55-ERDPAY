@@ -551,7 +551,7 @@ input:checked + .slider:before {
   left: 76%;
 }
 
-.selected {
+.selected-tab {
   border-bottom: solid 3px var(--toggleBlue);
 }
 

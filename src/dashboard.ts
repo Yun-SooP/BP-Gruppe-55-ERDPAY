@@ -246,7 +246,7 @@ export async function htmlDashboard(
             </button>
 
             <div class="l-tab">
-              <div id="balanceTab" class="tab selected">My Balance</div>
+              <div id="balanceTab" class="tab selected-tab">My Balance</div>
               <div id="transferTab" class="tab">Transfer</div>
               <div id="mintTab" class="tab">Mint</div>
             </div>
@@ -281,23 +281,23 @@ export async function htmlDashboard(
   );
   document.getElementById("balanceTab")?.addEventListener("click", async () => {
     await setBalanceTab(div_currentTab, head_currentTabLabel);
-    document.querySelector("#balanceTab")?.classList.add("selected");
-    document.querySelector("#transferTab")?.classList.remove("selected");
-    document.querySelector("#mintTab")?.classList.remove("selected");
+    document.querySelector("#balanceTab")?.classList.add("selected-tab");
+    document.querySelector("#transferTab")?.classList.remove("selected-tab");
+    document.querySelector("#mintTab")?.classList.remove("selected-tab");
   });
   document
     .getElementById("transferTab")
     ?.addEventListener("click", async () => {
       await setTransferTab(div_currentTab, head_currentTabLabel);
-      document.querySelector("#transferTab")?.classList.add("selected");
-      document.querySelector("#balanceTab")?.classList.remove("selected");
-      document.querySelector("#mintTab")?.classList.remove("selected");
+      document.querySelector("#transferTab")?.classList.add("selected-tab");
+      document.querySelector("#balanceTab")?.classList.remove("selected-tab");
+      document.querySelector("#mintTab")?.classList.remove("selected-tab");
     });
   document.getElementById("mintTab")?.addEventListener("click", async () => {
     await setMintTab(div_currentTab, head_currentTabLabel);
-    document.querySelector("#mintTab")?.classList.add("selected");
-    document.querySelector("#balanceTab")?.classList.remove("selected");
-    document.querySelector("#transferTab")?.classList.remove("selected");
+    document.querySelector("#mintTab")?.classList.add("selected-tab");
+    document.querySelector("#balanceTab")?.classList.remove("selected-tab");
+    document.querySelector("#transferTab")?.classList.remove("selected-tab");
   });
   current = "";
   await setBalanceTab(div_currentTab, head_currentTabLabel);
