@@ -595,7 +595,7 @@ input:checked + .slider:before {
 /*log out button*/
 .logout {
   background-color: rgba(255, 255, 255, 0.08);
-  color: rgb(255, 255, 255);
+  color: rgba(255, 255, 255, 0.7);
   /*padding: 4px;*/
   position: absolute;
   width: 90px;
