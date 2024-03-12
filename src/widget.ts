@@ -1,13 +1,18 @@
 import { htmlBalanceForGuest } from "./balance";
-import { htmlCreateSession } from "./dashboard";
+import { htmlCreateSession, htmlDashboard } from "./dashboard";
+import { Session } from "@polycrypt/erdstall";
 import * as utils from "./utils";
+
+let session : Session | undefined;
+let privateKey : string | undefined;
 
 /**
  * Function to display selection between transfer and view balance.
- * @param html_widget HTML element to display to
+ * @param div_widget HTML element to display to
  */
-export function widget(html_widget: HTMLDivElement) {
-  html_widget.innerHTML = `
+export function widget(div_widget: HTMLDivElement) {
+
+  div_widget.innerHTML = `
     <div class="main-window l-main-window first-layer-window">
 
     <div class="tooltip l-main-tooltip">        
@@ -43,8 +48,13 @@ export function widget(html_widget: HTMLDivElement) {
   const btn_transfer = document.querySelector(
     ".main-window__form .transfer-btn"
   );
+  
   btn_transfer?.addEventListener("click", () => {
-    htmlCreateSession(html_widget);
+    if (session && privateKey){
+      htmlDashboard(div_widget, session, privateKey);
+    } else {
+      htmlCreateSession(div_widget);
+    }
   });
 
   const txt_balanceAddress = document.querySelector<HTMLInputElement>(
@@ -62,7 +72,7 @@ export function widget(html_widget: HTMLDivElement) {
     if (!valid) {
       return;
     }
-    htmlBalanceForGuest(html_widget, txt_balanceAddress.value);
+    htmlBalanceForGuest(div_widget, txt_balanceAddress.value);
   });
 
   txt_balanceAddress.addEventListener("keypress", (event) => {
@@ -75,3 +85,13 @@ export function widget(html_widget: HTMLDivElement) {
 
 // change the inner HTML of the HTML div element "app" to the main interface
 widget(document.querySelector<HTMLDivElement>("#app")!);
+
+export function login(sessionForLogin: Session, privateKeyForLogin: string){
+  session = sessionForLogin;
+  privateKey = privateKeyForLogin;
+}
+export function logout(){
+  session = undefined;
+  privateKey = undefined;
+  widget(document.querySelector<HTMLDivElement>("#app")!);
+}

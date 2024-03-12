@@ -5,6 +5,7 @@ import { Session } from "@polycrypt/erdstall";
 import { htmlBalance } from "./balance";
 import { htmlTransfer } from "./transfer";
 import { htmlMint } from "./mint";
+import { login, logout } from "./widget"
 import * as utils from "./utils";
 
 export let div_dashboard: HTMLDivElement;
@@ -113,6 +114,7 @@ async function eventNewSession(html_widget: HTMLDivElement) {
   }
   session = newSession_.session!;
   privateKey = newSession_.privateKey!;
+  login(session, privateKey);
   createAccount(session, privateKey, html_widget);
 }
 
@@ -186,7 +188,7 @@ function createAccount(
   const dashboard = html_widget.querySelector<HTMLButtonElement>(
     ".l-create-account-window-container .transfer-btn"
   )!;
-  dashboard.addEventListener("click", () => htmlDashboard());
+  dashboard.addEventListener("click", () => htmlDashboard(div_dashboard, session, privateKey));
 }
 
 /**
@@ -213,14 +215,15 @@ async function eventRestoreSession(privateKeyForRestore: string) {
   }
   session = restoredSession.session!;
   privateKey = privateKeyForRestore;
-  htmlDashboard();
+  login(session, privateKey);
+  htmlDashboard(div_dashboard, session, privateKey);
 }
 
 /**
  * Function to make window for transfer and minting.
  */
 
-export function htmlDashboard() {
+export function htmlDashboard(div_dashboard : HTMLDivElement, session : Session, privateKey: string) {
   div_dashboard.innerHTML = `
     <div class="transfer-window-container l-transfer-window-container first-layer-window">
 
@@ -293,7 +296,7 @@ export function htmlDashboard() {
     ".transfer-window-container .goback-button"
   )!;
   btn_return.addEventListener("click", () => {
-    htmlCreateSession(div_dashboard);
+    widget(div_dashboard);
   });
 
   const logo_return =
