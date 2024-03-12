@@ -271,7 +271,7 @@ async function htmlPay(
       <div class="pay__tokenID-header">
         <h2 id="token ID label">token ID${amount > 1 ? "s" : ""}:</h2>
         <div id="changeTokenIDs">
-          <button type="button" class="changeTokenIDs-btn">change</button>
+          <button type="button" class="changeTokenIDs-btn">edit</button>
         </div>
       </div>
       
