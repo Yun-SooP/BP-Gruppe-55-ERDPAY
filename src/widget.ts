@@ -60,7 +60,6 @@ export function widget(html_widget: HTMLDivElement) {
       "inputAddress"
     );
     if (!valid) {
-      utils.setWindowHeight("balanceAddressEnterWindow", 210);
       return;
     }
     htmlBalanceForGuest(html_widget, txt_balanceAddress.value);

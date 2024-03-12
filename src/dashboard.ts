@@ -296,14 +296,14 @@ export function htmlDashboard() {
  * @param head_tabLabel label to set
  */
 function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
-  if (current == "Balance") {
+  if (current == "Balance of") {
     return;
   }
-  current = "Balance";
+  current = "Balance of";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
     "class",
-    "balance-window l-balance-window second-layer-window"
+    ""
   );
   htmlBalance(div_tab, session!.address.toString(), session);
 }
