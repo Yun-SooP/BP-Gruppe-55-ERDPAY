@@ -234,7 +234,7 @@ function transformToTokenListWindow(address: string) {
       
     `;
   const btn_copy = document.querySelector<HTMLButtonElement>(".copy-button");
-  btn_copy!.addEventListener("click", () => {
-    navigator.clipboard.writeText(address);
+  btn_copy!.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(address);
   });
 }

@@ -78,7 +78,7 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
   )!;
   btn_return.addEventListener("click", () => widget(div_dashboard));
 
-  btn_newSession.addEventListener("click", () => eventNewSession(div_widget));
+  btn_newSession.addEventListener("click", async () => await eventNewSession(div_widget));
 
   txt_previousPrivateKey.addEventListener("keypress", (event) => {
     if (event.key == "Enter") {
@@ -93,8 +93,8 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
   //   txt_previousPrivateKey.style.width = "380px";
   // });
 
-  btn_restoreSession.addEventListener("click", () =>
-    eventRestoreSession(txt_previousPrivateKey.value)
+  btn_restoreSession.addEventListener("click", async () =>
+    await eventRestoreSession(txt_previousPrivateKey.value)
   );
 }
 
@@ -188,7 +188,7 @@ function createAccount(
   const dashboard = html_widget.querySelector<HTMLButtonElement>(
     ".l-create-account-window-container .transfer-btn"
   )!;
-  dashboard.addEventListener("click", () => htmlDashboard(div_dashboard, session, privateKey));
+  dashboard.addEventListener("click", async () => await htmlDashboard(div_dashboard, session, privateKey));
 }
 
 /**
@@ -216,14 +216,14 @@ async function eventRestoreSession(privateKeyForRestore: string) {
   session = restoredSession.session!;
   privateKey = privateKeyForRestore;
   login(session, privateKey);
-  htmlDashboard(div_dashboard, session, privateKey);
+  await htmlDashboard(div_dashboard, session, privateKey);
 }
 
 /**
  * Function to make window for transfer and minting.
  */
 
-export function htmlDashboard(div_dashboard : HTMLDivElement, session : Session, privateKey: string) {
+export async function htmlDashboard(div_dashboard : HTMLDivElement, session : Session, privateKey: string) {
   div_dashboard.innerHTML = `
     <div class="transfer-window-container l-transfer-window-container first-layer-window">
 
@@ -268,26 +268,26 @@ export function htmlDashboard(div_dashboard : HTMLDivElement, session : Session,
   const div_currentTab = <HTMLDivElement>(
     document.getElementById("current-tab")!
   );
-  document.getElementById("balanceTab")?.addEventListener("click", () => {
-    setBalanceTab(div_currentTab, head_currentTabLabel);
+  document.getElementById("balanceTab")?.addEventListener("click", async () => {
+    await setBalanceTab(div_currentTab, head_currentTabLabel);
     document.querySelector("#balanceTab")?.classList.add("selected");
     document.querySelector("#transferTab")?.classList.remove("selected");
     document.querySelector("#mintTab")?.classList.remove("selected");
   });
-  document.getElementById("transferTab")?.addEventListener("click", () => {
-    setTransferTab(div_currentTab, head_currentTabLabel);
+  document.getElementById("transferTab")?.addEventListener("click", async () => {
+    await setTransferTab(div_currentTab, head_currentTabLabel);
     document.querySelector("#transferTab")?.classList.add("selected");
     document.querySelector("#balanceTab")?.classList.remove("selected");
     document.querySelector("#mintTab")?.classList.remove("selected");
   });
-  document.getElementById("mintTab")?.addEventListener("click", () => {
-    setMintTab(div_currentTab, head_currentTabLabel);
+  document.getElementById("mintTab")?.addEventListener("click", async () => {
+    await setMintTab(div_currentTab, head_currentTabLabel);
     document.querySelector("#mintTab")?.classList.add("selected");
     document.querySelector("#balanceTab")?.classList.remove("selected");
     document.querySelector("#transferTab")?.classList.remove("selected");
   });
   current = "";
-  setBalanceTab(div_currentTab, head_currentTabLabel);
+  await setBalanceTab(div_currentTab, head_currentTabLabel);
 
   const btn_privateKey =
     document.querySelector<HTMLButtonElement>(".private-key")!;
@@ -318,7 +318,7 @@ export function htmlDashboard(div_dashboard : HTMLDivElement, session : Session,
  * @param div_tab tab to set
  * @param head_tabLabel label to set
  */
-function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
+async function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   if (current == "Balance of") {
     return;
   }
@@ -331,7 +331,7 @@ function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute("class", "");
   div_tab.style.height = "345px";
-  htmlBalance(div_tab, session!.address.toString(), session);
+  await htmlBalance(div_tab, session!.address.toString(), session);
 }
 
 /**
@@ -339,7 +339,7 @@ function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
  * @param div_tab tab to set
  * @param head_tabLabel label to set
  */
-function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
+async function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   if (current == "Transfer") {
     return;
   }
@@ -353,7 +353,7 @@ function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
     "class",
     "transfer-window l-transfer-window second-layer-window"
   );
-  htmlTransfer(div_tab, session);
+  await htmlTransfer(div_tab, session);
 }
 
 /**
@@ -361,7 +361,7 @@ function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
  * @param div_tab tab to set
  * @param head_tabLabel label to set
  */
-function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
+async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   if (current == "Mint") {
     return;
   }
@@ -378,5 +378,5 @@ function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
     "mint-window l-mint-window second-layer-window"
   );
   div_tab.style.height = "430px";
-  htmlMint(div_tab, session);
+  await htmlMint(div_tab, session);
 }

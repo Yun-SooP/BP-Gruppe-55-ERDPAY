@@ -402,8 +402,8 @@ function htmlTransferConfirmation(
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
     ".confirm-transfer-form .confirm-transfer-btn"
   )!;
-  btn_makeTransfer.addEventListener("click", () => {
-    transferEvent(tokenAddress, amount, recipientAddress, tokenIDs);
+  btn_makeTransfer.addEventListener("click", async () => {
+    await transferEvent(tokenAddress, amount, recipientAddress, tokenIDs);
   });
 
   const btn_return = document.querySelector<HTMLInputElement>(
