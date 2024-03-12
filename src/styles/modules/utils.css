@@ -214,4 +214,11 @@
   position: relative;
 
   left: 11px;
+
+}
+
 } */
+.hide {
+  visibility: hidden;
+  display: none;
+}

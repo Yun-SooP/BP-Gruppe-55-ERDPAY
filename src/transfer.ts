@@ -6,6 +6,7 @@ import { Asset } from "@polycrypt/erdstall/ledger/assets";
 import { Assets } from "@polycrypt/erdstall/ledger/assets";
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 import * as utils from "./utils.ts";
+import {div_dashboard} from "./dashboard.ts"
 
 let session: Session;
 let account: Account;
@@ -458,8 +459,11 @@ function htmlTransferConfirmation(
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
     ".confirm-transfer-form .confirm-transfer-btn"
   )!;
-  btn_makeTransfer.addEventListener("click", () =>
-    transferEvent(tokenAddress, amount, recipientAddress, tokenIDs)
+  btn_makeTransfer.addEventListener("click", () => {
+    
+    transferEvent(tokenAddress, amount, recipientAddress, tokenIDs);
+    
+  }
   );
 
   const btn_return = document.querySelector<HTMLInputElement>(
@@ -518,3 +522,5 @@ async function transferTo(
   }
   return { status, error };
 }
+
+

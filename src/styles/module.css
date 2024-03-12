@@ -526,3 +526,16 @@ input:checked + .slider:before {
 
   transition: 0.2s;
 }
+.loading div {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 20px;
+}
+.loading h1 {
+  display:inline-block;
+  white-space: nowrap;
+  margin-bottom: 20px;
+}
+
+.loading p {
+  color: rgba(255, 255, 255, 0.7);
+}

@@ -2,6 +2,7 @@ import { Account } from "@polycrypt/erdstall/ledger"
 import { Tokens } from "@polycrypt/erdstall/ledger/assets"
 import { Asset } from "@polycrypt/erdstall/ledger/assets"
 
+
 const errorRed = '#ff7979';
 
 /**
@@ -289,4 +290,53 @@ export function resetErrorDisplay(errDisplay:string, inputBox:string){
     const msg = "";
     errorMessageSpan(errDisplay, msg);
     errorRemoveHighlight(inputBox);
+}
+
+export function loadingStart(html_div: HTMLDivElement){
+    
+
+    var header = html_div.querySelector(".widget-header")
+    header?.classList.add("hide");
+    var title = html_div.querySelector("#current-tab-label")
+    title?.classList.add("hide");
+    var tab = html_div.querySelector("#current-tab")
+    tab?.classList.add("hide");
+    var footer = html_div.querySelector(".transfer-footer")
+    footer?.classList.add("hide");
+
+    setLoadingScreen(html_div);
+}
+export function loadingEnd(html_div: HTMLDivElement){
+    removeLoadingScreen(html_div);
+
+    var header = html_div.querySelector(".widget-header")
+    header?.classList.remove("hide");
+    var title = html_div.querySelector("#current-tab-label")
+    title?.classList.remove("hide");
+    var tab = html_div.querySelector("#current-tab")
+    tab?.classList.remove("hide");
+    var footer = html_div.querySelector(".transfer-footer")
+    footer?.classList.remove("hide");
+}
+function setLoadingScreen(loading_div: HTMLDivElement){
+    
+    let loadingDiv = loading_div.querySelector("#loading");
+    if (loadingDiv != null) {
+        loadingDiv.innerHTML = `
+        <div id="loading" class="l-center">
+            <div class="loading">
+                <h1> Generating Tokens... please wait</h1>
+                <div id="token-counter" class></div>
+                <p> Please do not leave this page. You will be redirected soon.</p>
+            </div>
+        </div>
+        `
+    }
+}
+    
+function removeLoadingScreen(loading_div: HTMLDivElement){
+    let loadingDiv = loading_div.querySelector("#loading");
+    if (loadingDiv != null) {
+        loadingDiv.innerHTML =""
+    }
 }
