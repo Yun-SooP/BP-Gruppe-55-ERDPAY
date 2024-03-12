@@ -85,7 +85,7 @@
 /* Account */
 .l-session-window {
   width: 550px;
-  height: 550px;
+  height: 520px;
 }
 
 .l-session-window__header {
@@ -93,7 +93,7 @@
 }
 
 .l-session-window__form {
-  margin-top: 50px;
+  margin-top: 20px;
 }
 /* 
 
