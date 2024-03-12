@@ -65,8 +65,8 @@ export async function htmlTransfer(
         <div id="changeTokenIDs">
           <button type="button" class="changeTokenIDs-btn">change</button>
         </div>
-        <div id="tokenIDs">
-        </div>
+        <span id = errTokenIDs> </span>
+        <div id="tokenIDs"></div>
         
         <span id="errRecipientAddr"></span>
         <input type="text" class="transfer-form__recipient-address" placeholder="recipient address (ex. 0x1234...)" spellcheck="false" id="recipientAddr"/>
