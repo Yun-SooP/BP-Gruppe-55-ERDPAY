@@ -3,7 +3,7 @@ import { setupClient } from "./setup_client.ts";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { Client } from "@polycrypt/erdstall";
 import { widget } from "./widget.ts";
-import { getTokenIDs, makeTokensList, setWindowHeight} from "./utils.ts";
+import { getTokenIDs, makeTokensList, setWindowHeight, selectedTokenToBlue} from "./utils.ts";
 
 let div_balanceWindow: HTMLDivElement;
 let div_address: HTMLDivElement;
@@ -169,6 +169,9 @@ async function viewBalance(client: Client, address: string) {
     span_id.style.marginLeft = "70px";
     span_id.style.color = "rgba(255, 255, 255, 0.7)";
 
+    //change color of selecteed token color
+    selectedTokenToBlue(select_tokens);
+
     //make id-list visible
     div_id.classList.remove("invisible-balance-window__id-list");
     div_id.classList.add("visible-balance-window__id-list");
@@ -226,7 +229,7 @@ function transformToTokenListWindow(address: string) {
 
       <div class="list-container">
           <div class="token-list">
-              <select class="token-list__tokens" size = "5"></select>
+              <select class="token-list__tokens" size = "5" id="tokenSelector"></select>
               <select class="token-list__amount" disabled size = "5"></select>
           </div>
           <div class="balance-window__id-list invisible-balance-window__id-list"></div>

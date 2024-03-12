@@ -1,3 +1,7 @@
+#app {
+  --toggleBlue: #6f8898;
+}
+
 .visible-balance-window__address {
   flex-direction: row;
   justify-content: center;
@@ -39,5 +43,5 @@
 }
 
 .clicked-clickable-token-id {
-  background-color: rgba(255, 0, 255, 0.2);
+  background-color: var(--toggleBlue);
 }

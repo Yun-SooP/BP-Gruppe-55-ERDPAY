@@ -135,6 +135,9 @@
 .balance-window .token-list__tokens {
   width: 375px;
 }
+.token-list__tokens option.selected {
+  background-color: var(--toggleBlue);
+}
 
 .balance-window .token-list__amount {
   width: 50px;
@@ -393,6 +396,11 @@ input:checked + .slider:before {
   font-size: 13px;
   font-weight: 500;
 }
+
+.transfer-form .token-id {
+  cursor: pointer;
+}
+
 #tokenIDs {
   border: 1px solid rgba(255, 255, 255, 0);
   border-radius: 20px;
