@@ -17,7 +17,7 @@ let btn_cancelChangeTokenIDs: HTMLButtonElement;
 
 type BooleanWrapper = {
   value: boolean;
-}
+};
 
 /**
  * Function to display transfer functionality.
@@ -43,7 +43,7 @@ export async function htmlTransfer(
       <p>You have no token available.</p>
     `;
   } else {
-    utils.setWindowHeight(div_transfer, 550);
+    utils.setWindowHeight(div_transfer, 500);
     div_transfer.innerHTML = `
       <h2>Choose your token and the amount of tokens you want to send</h2>
       <header class="token-list-header">
@@ -92,24 +92,32 @@ export async function htmlTransfer(
     )!;
     const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
 
-    txt_amount.addEventListener("input", ()=>{
+    txt_amount.addEventListener("input", () => {
       const tokenAddress = select_tokens.value;
       const tokens = <Tokens>account.values.values.get(tokenAddress);
-      const valid = utils.checkAmount(txt_amount.value, tokens, "errTokenAmount", "tokenAmount");
-      if (valid && tokenAddress !== "" && !selecting.value){
-        const initialTokenIDs = utils.getTokenIDs(account, tokenAddress, parseFloat(txt_amount.value));
+      const valid = utils.checkAmount(
+        txt_amount.value,
+        tokens,
+        "errTokenAmount",
+        "tokenAmount"
+      );
+      if (valid && tokenAddress !== "" && !selecting.value) {
+        const initialTokenIDs = utils.getTokenIDs(
+          account,
+          tokenAddress,
+          parseFloat(txt_amount.value)
+        );
         makeTokenIDsList(div_tokenIDs, initialTokenIDs);
       }
     });
-
 
     const txt_recipientAddress = document.querySelector<HTMLInputElement>(
       '.transfer-form input[placeholder="recipient address (ex. 0x1234...)"]'
     )!;
 
     utils.makeTokensList(select_tokens, select_amount, tokens);
-    
-    select_tokens.addEventListener("change", ()=>{
+
+    select_tokens.addEventListener("change", () => {
       const tokenAddress = select_tokens.value;
       txt_amount.value = "1";
       const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
@@ -117,29 +125,54 @@ export async function htmlTransfer(
       makeTokenIDsList(div_tokenIDs, firstTokenID);
     });
 
-    const selecting : BooleanWrapper = { value: false };
+    const selecting: BooleanWrapper = { value: false };
 
-    const btn_changeTokenIDs = document.querySelector<HTMLButtonElement>(".changeTokenIDs-btn")!;
-    btn_changeTokenIDs.addEventListener("click", ()=>{
+    const btn_changeTokenIDs = document.querySelector<HTMLButtonElement>(
+      ".changeTokenIDs-btn"
+    )!;
+    btn_changeTokenIDs.addEventListener("click", () => {
       const tokenAddress = select_tokens.value;
-      const tokenIDsAvailable = (<Tokens>account.values.values.get(tokenAddress))
-    .value;
-      changeTokenIDsButtonEvent(selecting, tokenIDsAvailable, txt_amount, div_tokenIDs, btn_changeTokenIDs)
+      const tokenIDsAvailable = (<Tokens>(
+        account.values.values.get(tokenAddress)
+      )).value;
+      changeTokenIDsButtonEvent(
+        selecting,
+        tokenIDsAvailable,
+        txt_amount,
+        div_tokenIDs,
+        btn_changeTokenIDs
+      );
     });
 
     const btn_confirm = document.querySelector<HTMLInputElement>(
       ".transfer-form__continue-btn"
     )!;
-    
-    btn_confirm.addEventListener('click', ()=>
-      transferContinueButtonEvent(select_tokens.value, txt_amount.value, selectedTokenIDs, txt_recipientAddress.value)
+
+    btn_confirm.addEventListener("click", () =>
+      transferContinueButtonEvent(
+        select_tokens.value,
+        txt_amount.value,
+        selectedTokenIDs,
+        txt_recipientAddress.value
+      )
     );
-    
-    restoreSelections(tokenAddressRestore, select_tokens, amountRestore, txt_amount, tokenIDsRestore, div_tokenIDs, recipientAddressRestore, txt_recipientAddress);
-    
+
+    restoreSelections(
+      tokenAddressRestore,
+      select_tokens,
+      amountRestore,
+      txt_amount,
+      tokenIDsRestore,
+      div_tokenIDs,
+      recipientAddressRestore,
+      txt_recipientAddress
+    );
   }
 }
-function syncScrolls(select_tokens:HTMLSelectElement, select_amount:HTMLSelectElement){
+function syncScrolls(
+  select_tokens: HTMLSelectElement,
+  select_amount: HTMLSelectElement
+) {
   let isSyncingLeftScroll = false;
   let isSyncingRightScroll = false;
 
@@ -161,14 +194,20 @@ function syncScrolls(select_tokens:HTMLSelectElement, select_amount:HTMLSelectEl
 }
 
 function restoreSelections(
-  tokenAddress:string | undefined, select_tokens:HTMLSelectElement,
-  amount:string | undefined, txt_amount:HTMLInputElement,
-  tokenIDs:bigint[] | undefined, div_tokenIDs:HTMLDivElement,
-  recipientAddress:string | undefined, txt_recipientAddress:HTMLInputElement
-  ){
+  tokenAddress: string | undefined,
+  select_tokens: HTMLSelectElement,
+  amount: string | undefined,
+  txt_amount: HTMLInputElement,
+  tokenIDs: bigint[] | undefined,
+  div_tokenIDs: HTMLDivElement,
+  recipientAddress: string | undefined,
+  txt_recipientAddress: HTMLInputElement
+) {
   select_tokens.value = tokenAddress ? tokenAddress : "";
   txt_amount.value = amount ? amount : "";
-  if (tokenIDs) {makeTokenIDsList(div_tokenIDs, tokenIDs);}
+  if (tokenIDs) {
+    makeTokenIDsList(div_tokenIDs, tokenIDs);
+  }
   txt_recipientAddress.value = recipientAddress ? recipientAddress : "";
 }
 
@@ -180,10 +219,7 @@ function restoreSelections(
  * @param tokenIDs An array of token IDs to display.
  * @returns
  */
-function makeTokenIDsList(
-  div_tokenIDs: HTMLDivElement,
-  tokenIDs: bigint[],
-  ) {
+function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
   div_tokenIDs.innerHTML = "";
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
@@ -213,17 +249,22 @@ function makeTokenIDsList(
  * @param txt_amount txt element for amount, it's value is adjusted when the token ids selection is confirmed
  * @param div_tokenIDs The container element where the token IDs selection form is rendered.
  * @param btn_changeTokenIDs The button element that toggles the selection mode.
- * @returns 
+ * @returns
  */
-function changeTokenIDsButtonEvent(selecting:BooleanWrapper, tokenIDsAvailable:bigint[], txt_amount: HTMLInputElement, div_tokenIDs:HTMLDivElement, btn_changeTokenIDs:HTMLButtonElement){
-  
-  if (!selecting.value){
+function changeTokenIDsButtonEvent(
+  selecting: BooleanWrapper,
+  tokenIDsAvailable: bigint[],
+  txt_amount: HTMLInputElement,
+  div_tokenIDs: HTMLDivElement,
+  btn_changeTokenIDs: HTMLButtonElement
+) {
+  if (!selecting.value) {
     selecting.value = true;
     btn_changeTokenIDs.innerText = "confirm";
     const div_changeTokenIDs = document.getElementById("changeTokenIDs");
     btn_cancelChangeTokenIDs = document.createElement("button");
     btn_cancelChangeTokenIDs.innerText = "cancel";
-    btn_cancelChangeTokenIDs.addEventListener("click", ()=>{
+    btn_cancelChangeTokenIDs.addEventListener("click", () => {
       selecting.value = false;
       btn_changeTokenIDs.innerText = "change";
       div_tokenIDs.innerHTML = "";
@@ -231,13 +272,13 @@ function changeTokenIDsButtonEvent(selecting:BooleanWrapper, tokenIDsAvailable:b
       btn_cancelChangeTokenIDs.remove();
     });
     div_changeTokenIDs?.appendChild(btn_cancelChangeTokenIDs);
-    div_tokenIDs.innerHTML ="";
+    div_tokenIDs.innerHTML = "";
     newTokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
-  } else {    
+  } else {
     selecting.value = false;
     btn_changeTokenIDs.innerText = "change";
-    div_tokenIDs.innerHTML ="";
-    newTokenIDs.sort((a,b) => a < b ? -1 : a >b ? 1: 0)
+    div_tokenIDs.innerHTML = "";
+    newTokenIDs.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
     selectedTokenIDs = newTokenIDs;
     makeTokenIDsList(div_tokenIDs, newTokenIDs);
     txt_amount.value = selectedTokenIDs.length.toString();
@@ -255,9 +296,9 @@ function changeTokenIDsButtonEvent(selecting:BooleanWrapper, tokenIDsAvailable:b
  */
 function makeTokenIDsSelection(
   div_tokenIDs: HTMLDivElement,
-  tokenIDs: bigint[],
+  tokenIDs: bigint[]
 ): bigint[] {
-  const selectedTokenIDs : bigint[] = [];
+  const selectedTokenIDs: bigint[] = [];
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
@@ -272,11 +313,11 @@ function makeTokenIDsSelection(
           )
         : tokenIDString;
     span.innerHTML = `${tokenIDTODisplay}`;
-    span.addEventListener('click', ()=>{
-      if (!span.classList.contains("clicked-clickable-token-id")){
+    span.addEventListener("click", () => {
+      if (!span.classList.contains("clicked-clickable-token-id")) {
         span.classList.add("clicked-clickable-token-id");
-        selectedTokenIDs.push(tokenIDs[i])
-      } else{
+        selectedTokenIDs.push(tokenIDs[i]);
+      } else {
         span.classList.remove("clicked-clickable-token-id");
         const index = selectedTokenIDs.indexOf(tokenIDs[i]);
         selectedTokenIDs.splice(index, 1);
@@ -301,7 +342,12 @@ function transferContinueButtonEvent(
   tokenIDs: bigint[],
   recipientAddress: string
 ) {
-  const valid = checkInputsForTransfer(tokenAddress, amount, tokenIDs, recipientAddress);
+  const valid = checkInputsForTransfer(
+    tokenAddress,
+    amount,
+    tokenIDs,
+    recipientAddress
+  );
   if (!valid) {
     return;
   }
@@ -312,10 +358,7 @@ function transferContinueButtonEvent(
     recipientAddress,
     tokenIDs
   );
-  
 }
-
-
 
 /**
  * Function to display transfer confirmation.
@@ -329,7 +372,7 @@ function htmlTransferConfirmation(
   tokenAddress: string,
   amount: number,
   recipientAddress: string,
-  tokenIDs: bigint[],
+  tokenIDs: bigint[]
 ) {
   div_transfer.innerHTML = `
     <h2>Please confirm the transfer</h2>
@@ -350,16 +393,14 @@ function htmlTransferConfirmation(
   `;
   const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
 
-  makeTokenIDsList(div_tokenIDs, tokenIDs)
-  
+  makeTokenIDsList(div_tokenIDs, tokenIDs);
+
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
     ".confirm-transfer-form .confirm-transfer-btn"
   )!;
   btn_makeTransfer.addEventListener("click", () => {
     transferEvent(tokenAddress, amount, recipientAddress, tokenIDs);
-    
-  }
-  );
+  });
 
   const btn_return = document.querySelector<HTMLInputElement>(
     ".confirm-transfer-form .return-btn"
@@ -399,9 +440,14 @@ function checkInputsForTransfer(
     ? false
     : valid;
   const tokens = <Tokens>account.values.values.get(tokenAddress)!;
-  const validAmount = valid = !utils.checkAmount(amount, tokens, "errTokenAmount", "tokenAmount")
+  const validAmount = (valid = !utils.checkAmount(
+    amount,
+    tokens,
+    "errTokenAmount",
+    "tokenAmount"
+  )
     ? false
-    : valid;
+    : valid);
   valid = !utils.checkRecipientAddress(
     recipientAddress,
     "errRecipientAddr",
@@ -411,8 +457,10 @@ function checkInputsForTransfer(
     : valid;
 
   const amountParsed = parseFloat(amount);
-  if (validAmount && tokenIDs.length != amountParsed){
-    const message = `Please select ${amountParsed} token ID${amountParsed > 1 ? "s" : ""}!`;
+  if (validAmount && tokenIDs.length != amountParsed) {
+    const message = `Please select ${amountParsed} token ID${
+      amountParsed > 1 ? "s" : ""
+    }!`;
     utils.displayErrorMessage(message, "errTokenAmount", "tokenAmount");
     valid = false;
   }
@@ -511,5 +559,3 @@ async function transferTo(
   }
   return { status, error };
 }
-
-

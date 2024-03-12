@@ -232,7 +232,7 @@ export function htmlDashboard() {
             </button>
 
             <div class="l-tab">
-              <div id="balanceTab" class="tab selected">Balance</div>
+              <div id="balanceTab" class="tab selected">My Balance</div>
               <div id="transferTab" class="tab">Transfer</div>
               <div id="mintTab" class="tab">Mint</div>
             </div>
@@ -312,12 +312,15 @@ function setBalanceTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   if (current == "Balance of") {
     return;
   }
+  const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
+    ".l-transfer-window-container"
+  )!;
+  windowContainer.style.height = "600px";
+
   current = "Balance of";
   head_tabLabel.innerHTML = current;
-  div_tab.setAttribute(
-    "class",
-    ""
-  );
+  div_tab.setAttribute("class", "");
+  div_tab.style.height = "345px";
   htmlBalance(div_tab, session!.address.toString(), session);
 }
 
@@ -330,12 +333,17 @@ function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   if (current == "Transfer") {
     return;
   }
+  const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
+    ".l-transfer-window-container"
+  )!;
+  windowContainer.style.height = "750px";
   current = "Transfer";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
     "class",
     "transfer-window l-transfer-window second-layer-window"
   );
+  // div_tab.style.height = "500px";
   htmlTransfer(div_tab, session);
 }
 
@@ -348,11 +356,18 @@ function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   if (current == "Mint") {
     return;
   }
+  const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
+    ".l-transfer-window-container"
+  )!;
+
+  windowContainer.style.height = "700px";
+
   current = "Mint";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
     "class",
     "mint-window l-mint-window second-layer-window"
   );
+  div_tab.style.height = "430px";
   htmlMint(div_tab, session);
 }

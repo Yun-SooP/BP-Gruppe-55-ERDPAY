@@ -488,14 +488,14 @@ input:checked + .slider:before {
   color: rgb(255, 255, 255);
   /*padding: 4px;*/
   display: inline-block;
-  position: relative;
-  width: 100px;
+  position: absolute;
+  bottom: 20%;
+  width: 115px;
   height: 30px;
   border-radius: 2px;
   text-align: center;
   padding-top: 15px;
   cursor: pointer;
-  margin: 0px;
   box-shadow: inset 0.7px 0.7px 0px rgba(255, 255, 255, 0.4),
     4px 4px 5px rgba(0, 0, 0, 0.1), -4px -4px 5px rgba(0, 0, 0, 0.1);
   /*border-bottom: solid 2px rgb(255, 255, 255);*/
@@ -503,18 +503,15 @@ input:checked + .slider:before {
   border-top-right-radius: 5px;
   will-change: transform;
 }
-.tab {
-  position: absolute;
-  bottom: 90%;
-}
+
 #balanceTab {
-  left: 18%;
+  left: 10%;
 }
 #transferTab {
-  left: 34%;
+  left: 43%;
 }
 #mintTab {
-  left: 50%;
+  left: 76%;
 }
 
 .selected {

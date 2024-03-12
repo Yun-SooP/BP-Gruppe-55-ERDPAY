@@ -169,5 +169,8 @@
 
 /* Tab layout */
 .widget-header .l-tab {
+  position: relative;
+  width: 65%;
+  height: 100%;
   gap: 10px;
 }
