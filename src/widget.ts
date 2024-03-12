@@ -49,9 +49,9 @@ export function widget(div_widget: HTMLDivElement) {
     ".main-window__form .transfer-btn"
   );
   
-  btn_transfer?.addEventListener("click", () => {
+  btn_transfer?.addEventListener("click", async () => {
     if (session && privateKey){
-      htmlDashboard(div_widget, session, privateKey);
+      await htmlDashboard(div_widget, session, privateKey);
     } else {
       htmlCreateSession(div_widget);
     }
@@ -63,7 +63,7 @@ export function widget(div_widget: HTMLDivElement) {
   const btn_balance = document.querySelector<HTMLButtonElement>(
     ".main-window__form .view-balance-btn"
   )!;
-  btn_balance.addEventListener("click", () => {
+  btn_balance.addEventListener("click", async () => {
     const valid = utils.checkBalanceAddress(
       txt_balanceAddress.value,
       "errBalanceAccAddr",
@@ -72,7 +72,7 @@ export function widget(div_widget: HTMLDivElement) {
     if (!valid) {
       return;
     }
-    htmlBalanceForGuest(div_widget, txt_balanceAddress.value);
+    await htmlBalanceForGuest(div_widget, txt_balanceAddress.value);
   });
 
   txt_balanceAddress.addEventListener("keypress", (event) => {

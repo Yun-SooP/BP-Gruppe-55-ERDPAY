@@ -136,6 +136,7 @@ export async function htmlTransfer(
       div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
       div_tokenIdSection.classList.add("visible-transfer-window__id-list");
       makeTokenIDsList(div_tokenIDs, firstTokenID);
+      utils.selectedTokenToBlue(select_tokens);
     });
 
     const selecting: BooleanWrapper = { value: false };
@@ -282,6 +283,7 @@ function changeTokenIDsButtonEvent(
       selecting.value = false;
       btn_changeTokenIDs.innerText = "change";
       makeTokenIDsList(div_tokenIDs, selectedTokenIDs);
+      txt_amount.value = selectedTokenIDs.length.toString();
       btn_cancelChangeTokenIDs.remove();
     });
     div_changeTokenIDs?.appendChild(btn_cancelChangeTokenIDs);
@@ -424,8 +426,8 @@ function htmlTransferConfirmation(
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
     ".confirm-transfer-form .confirm-transfer-btn"
   )!;
-  btn_makeTransfer.addEventListener("click", () => {
-    transferEvent(tokenAddress, amount, recipientAddress, tokenIDs);
+  btn_makeTransfer.addEventListener("click", async () => {
+    await transferEvent(tokenAddress, amount, recipientAddress, tokenIDs);
   });
 
   const btn_return = document.querySelector<HTMLInputElement>(

@@ -474,3 +474,10 @@ function removeLoadingScreen(loading_div: HTMLDivElement){
         loadingDiv.innerHTML = "";
     }
 }
+
+export function selectedTokenToBlue( div_select:HTMLSelectElement) {
+    const tokenOptions = div_select.querySelectorAll("option");
+    tokenOptions.forEach(option => option.classList.remove("selected"));
+    const selectedOption = div_select.options[div_select.selectedIndex];
+        selectedOption.classList.add("selected");
+}
