@@ -95,7 +95,7 @@ export async function htmlTransfer(
     txt_amount.addEventListener("input", ()=>{
       const tokenAddress = select_tokens.value;
       const tokens = <Tokens>account.values.values.get(tokenAddress);
-      const valid = utils.checkAmount(txt_amount.value, tokens, "errTokenAmount", "tokenAmount");
+      const valid = utils.checkAmount(txt_amount.value, "errTokenAmount", "tokenAmount", tokens);
       if (valid && tokenAddress !== "" && !selecting.value){
         const initialTokenIDs = utils.getTokenIDs(account, tokenAddress, parseFloat(txt_amount.value));
         makeTokenIDsList(div_tokenIDs, initialTokenIDs);
@@ -399,7 +399,7 @@ function checkInputsForTransfer(
     ? false
     : valid;
   const tokens = <Tokens>account.values.values.get(tokenAddress)!;
-  const validAmount = valid = !utils.checkAmount(amount, tokens, "errTokenAmount", "tokenAmount")
+  const validAmount = valid = !utils.checkAmount(amount, "errTokenAmount", "tokenAmount", tokens)
     ? false
     : valid;
   valid = !utils.checkRecipientAddress(
@@ -411,6 +411,7 @@ function checkInputsForTransfer(
     : valid;
 
   const amountParsed = parseFloat(amount);
+  
   if (validAmount && tokenIDs.length != amountParsed){
     const message = `Please select ${amountParsed} token ID${amountParsed > 1 ? "s" : ""}!`;
     utils.displayErrorMessage(message, "errTokenAmount", "tokenAmount");
