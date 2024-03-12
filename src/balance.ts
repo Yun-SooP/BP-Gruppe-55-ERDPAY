@@ -3,7 +3,7 @@ import { setupClient } from "./setup_client.ts";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { Client } from "@polycrypt/erdstall";
 import { widget } from "./widget.ts";
-import { getTokenIDs, makeTokensList, setWindowHeight} from "./utils.ts";
+import { getTokenIDs, makeTokensList, setWindowHeight } from "./utils.ts";
 
 let div_balanceWindow: HTMLDivElement;
 let div_address: HTMLDivElement;
@@ -204,8 +204,11 @@ async function viewBalance(client: Client, address: string) {
  */
 function transformToTokenListWindow(address: string) {
   // balance_for_guest wildow height changer
-  if (div_balanceWindowContainer.className != "transfer-window-container l-transfer-window-container first-layer-window"){
-    setWindowHeight(div_balanceWindowContainer, 550 );
+  if (
+    div_balanceWindowContainer.className !=
+    "transfer-window-container l-transfer-window-container first-layer-window"
+  ) {
+    setWindowHeight(div_balanceWindowContainer, 550);
   }
   div_balanceWindow.style.height = "270px";
   // div_balanceWindow.style.width = "450px";

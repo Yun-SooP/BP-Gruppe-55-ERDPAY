@@ -43,7 +43,7 @@ export async function htmlTransfer(
       <p>You have no token available.</p>
     `;
   } else {
-    utils.setWindowHeight(div_transfer, 670);
+    utils.setWindowHeight(div_transfer, 470);
     div_transfer.innerHTML = `
       <h2>Choose your token and the amount of tokens you want to send</h2>
       <header class="token-list-header">
@@ -62,12 +62,16 @@ export async function htmlTransfer(
               <input type = "text" placeholder="amount" spellcheck="false" id="tokenAmount"/>
               <span>Tokens</span>
         </div>
-        <div id="changeTokenIDs">
-          <button type="button" class="changeTokenIDs-btn">change</button>
+        <div class="transfer-tokenID-section invisible-transfer-window__id-list">
+          <div class="transfer__tokenID-header">
+            <h2 id="token ID label">token ID:</h2>
+            <div id="changeTokenIDs">
+              <button type="button" class="changeTokenIDs-btn">edit</button>
+            </div>
+          </div>
+          <div id="tokenIDs"></div>
+          <span id = errTokenIDs> </span>
         </div>
-        <span id = errTokenIDs> </span>
-        <div id="tokenIDs"></div>
-        
         <span id="errRecipientAddr"></span>
         <input type="text" class="transfer-form__recipient-address" placeholder="recipient address (ex. 0x1234...)" spellcheck="false" id="recipientAddr"/>
         
@@ -82,6 +86,9 @@ export async function htmlTransfer(
       ".token-list__amount"
     )!;
 
+    const div_tokenIdSection = document.querySelector<HTMLSelectElement>(
+      ".transfer-tokenID-section"
+    )!;
     //Synchronize scroll of select_tokens and select_amount
     syncScrolls(select_tokens, select_amount);
 
@@ -95,9 +102,18 @@ export async function htmlTransfer(
     txt_amount.addEventListener("input", () => {
       const tokenAddress = select_tokens.value;
       const tokens = <Tokens>account.values.values.get(tokenAddress);
-      const valid = utils.checkAmount(txt_amount.value, "errTokenAmount", "tokenAmount", tokens);
-      if (valid && tokenAddress !== "" && !selecting.value){
-        const initialTokenIDs = utils.getTokenIDs(account, tokenAddress, parseFloat(txt_amount.value));
+      const valid = utils.checkAmount(
+        txt_amount.value,
+        "errTokenAmount",
+        "tokenAmount",
+        tokens
+      );
+      if (valid && tokenAddress !== "" && !selecting.value) {
+        const initialTokenIDs = utils.getTokenIDs(
+          account,
+          tokenAddress,
+          parseFloat(txt_amount.value)
+        );
         selectedTokenIDs = initialTokenIDs;
         makeTokenIDsList(div_tokenIDs, initialTokenIDs);
       }
@@ -110,12 +126,16 @@ export async function htmlTransfer(
     utils.makeTokensList(select_tokens, select_amount, tokens);
 
     select_tokens.addEventListener("change", () => {
+      utils.setWindowHeight(div_transfer, 670);
+      div_transfer.parentElement!.style.height = "930px";
       const tokenAddress = select_tokens.value;
       txt_amount.value = "1";
       const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
       selectedTokenIDs = firstTokenID;
-      makeTokenIDsList(div_tokenIDs, firstTokenID);
 
+      div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
+      div_tokenIdSection.classList.add("visible-transfer-window__id-list");
+      makeTokenIDsList(div_tokenIDs, firstTokenID);
     });
 
     const selecting: BooleanWrapper = { value: false };
@@ -141,15 +161,15 @@ export async function htmlTransfer(
       ".transfer-form__continue-btn"
     )!;
 
-    btn_confirm.addEventListener("click", () =>
+    btn_confirm.addEventListener("click", () => {
       transferContinueButtonEvent(
         select_tokens.value,
         txt_amount.value,
         selectedTokenIDs,
         txt_recipientAddress.value,
         selecting
-      )
-    );
+      );
+    });
 
     restoreSelections(
       tokenAddressRestore,
@@ -322,7 +342,7 @@ function makeTokenIDsSelection(
         newTokenIDs.splice(index, 1);
       }
     });
-    if (selectedTokenIDs.includes(tokenIDs[i])){
+    if (selectedTokenIDs.includes(tokenIDs[i])) {
       span.classList.add("clicked-clickable-token-id");
       newTokenIDs.push(tokenIDs[i]);
     }
@@ -355,6 +375,8 @@ function transferContinueButtonEvent(
   if (!valid) {
     return;
   }
+  utils.setWindowHeight(div_transfer, 540);
+  div_transfer.parentElement!.style.height = "830px";
   const amountParsed = parseFloat(amount);
   htmlTransferConfirmation(
     tokenAddress,
@@ -409,7 +431,7 @@ function htmlTransferConfirmation(
   const btn_return = document.querySelector<HTMLInputElement>(
     ".confirm-transfer-form .return-btn"
   )!;
-  btn_return.addEventListener("click", () =>
+  btn_return.addEventListener("click", () => {
     htmlTransfer(
       div_transfer,
       session,
@@ -417,8 +439,8 @@ function htmlTransferConfirmation(
       amount.toString(),
       tokenIDs,
       recipientAddress
-    )
-  );
+    );
+  });
 }
 
 /**
@@ -454,7 +476,7 @@ function checkInputsForTransfer(
   )
     ? false
     : valid;
-  if (selecting.value){
+  if (selecting.value) {
     const message = "Please confirm the token IDs selection first.";
     utils.displayErrorMessage(message, "errTokenIDs", "tokenIDs");
     valid = false;
@@ -509,9 +531,10 @@ function htmlTransferSuccessful() {
   const btn_return = document.querySelector<HTMLInputElement>(
     ".successful-form .return-btn"
   )!;
-  btn_return.addEventListener("click", () =>
-    htmlTransfer(div_transfer, session)
-  );
+  btn_return.addEventListener("click", () => {
+    div_transfer.parentElement!.style.height = "730px";
+    htmlTransfer(div_transfer, session);
+  });
 }
 
 /**

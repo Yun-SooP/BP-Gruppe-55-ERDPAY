@@ -5,7 +5,7 @@ import { Session } from "@polycrypt/erdstall";
 import { htmlBalance } from "./balance";
 import { htmlTransfer } from "./transfer";
 import { htmlMint } from "./mint";
-import { login, logout } from "./widget"
+import { login, logout } from "./widget";
 import * as utils from "./utils";
 
 export let div_dashboard: HTMLDivElement;
@@ -188,7 +188,9 @@ function createAccount(
   const dashboard = html_widget.querySelector<HTMLButtonElement>(
     ".l-create-account-window-container .transfer-btn"
   )!;
-  dashboard.addEventListener("click", () => htmlDashboard(div_dashboard, session, privateKey));
+  dashboard.addEventListener("click", () =>
+    htmlDashboard(div_dashboard, session, privateKey)
+  );
 }
 
 /**
@@ -223,7 +225,11 @@ async function eventRestoreSession(privateKeyForRestore: string) {
  * Function to make window for transfer and minting.
  */
 
-export function htmlDashboard(div_dashboard : HTMLDivElement, session : Session, privateKey: string) {
+export function htmlDashboard(
+  div_dashboard: HTMLDivElement,
+  session: Session,
+  privateKey: string
+) {
   div_dashboard.innerHTML = `
     <div class="transfer-window-container l-transfer-window-container first-layer-window">
 
@@ -262,8 +268,8 @@ export function htmlDashboard(div_dashboard : HTMLDivElement, session : Session,
       
     `;
 
-  document.querySelector('.logout')?.addEventListener('click', logout);
-  
+  document.querySelector(".logout")?.addEventListener("click", logout);
+
   const head_currentTabLabel = document.getElementById("current-tab-label")!;
   const div_currentTab = <HTMLDivElement>(
     document.getElementById("current-tab")!
@@ -346,7 +352,7 @@ function setTransferTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
     ".l-transfer-window-container"
   )!;
-  windowContainer.style.height = "930px";
+  windowContainer.style.height = "730px";
   current = "Transfer";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
