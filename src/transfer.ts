@@ -95,18 +95,10 @@ export async function htmlTransfer(
     txt_amount.addEventListener("input", () => {
       const tokenAddress = select_tokens.value;
       const tokens = <Tokens>account.values.values.get(tokenAddress);
-      const valid = utils.checkAmount(
-        txt_amount.value,
-        "errTokenAmount",
-        "tokenAmount",
-        tokens
-      );
-      if (valid && tokenAddress !== "" && !selecting.value) {
-        const initialTokenIDs = utils.getTokenIDs(
-          account,
-          tokenAddress,
-          parseFloat(txt_amount.value)
-        );
+      const valid = utils.checkAmount(txt_amount.value, "errTokenAmount", "tokenAmount", tokens);
+      if (valid && tokenAddress !== "" && !selecting.value){
+        const initialTokenIDs = utils.getTokenIDs(account, tokenAddress, parseFloat(txt_amount.value));
+        selectedTokenIDs = initialTokenIDs;
         makeTokenIDsList(div_tokenIDs, initialTokenIDs);
       }
     });
@@ -154,7 +146,8 @@ export async function htmlTransfer(
         select_tokens.value,
         txt_amount.value,
         selectedTokenIDs,
-        txt_recipientAddress.value
+        txt_recipientAddress.value,
+        selecting
       )
     );
 
@@ -268,7 +261,6 @@ function changeTokenIDsButtonEvent(
     btn_cancelChangeTokenIDs.addEventListener("click", () => {
       selecting.value = false;
       btn_changeTokenIDs.innerText = "change";
-      div_tokenIDs.innerHTML = "";
       makeTokenIDsList(div_tokenIDs, selectedTokenIDs);
       btn_cancelChangeTokenIDs.remove();
     });
@@ -280,10 +272,11 @@ function changeTokenIDsButtonEvent(
       const message = "Select at least 1 token ID.";
       utils.displayErrorMessage(message, "errTokenIDs", "tokenIDs");
       return;
+    } else {
+      utils.resetErrorDisplay("errTokenIDs", "tokenIDs");
     }
     selecting.value = false;
     btn_changeTokenIDs.innerText = "change";
-    div_tokenIDs.innerHTML = "";
     newTokenIDs.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
     selectedTokenIDs = newTokenIDs;
     makeTokenIDsList(div_tokenIDs, newTokenIDs);
@@ -304,7 +297,7 @@ function makeTokenIDsSelection(
   div_tokenIDs: HTMLDivElement,
   tokenIDs: bigint[]
 ): bigint[] {
-  const selectedTokenIDs: bigint[] = [];
+  const newTokenIDs: bigint[] = [];
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
@@ -322,16 +315,20 @@ function makeTokenIDsSelection(
     span.addEventListener("click", () => {
       if (!span.classList.contains("clicked-clickable-token-id")) {
         span.classList.add("clicked-clickable-token-id");
-        selectedTokenIDs.push(tokenIDs[i]);
+        newTokenIDs.push(tokenIDs[i]);
       } else {
         span.classList.remove("clicked-clickable-token-id");
-        const index = selectedTokenIDs.indexOf(tokenIDs[i]);
-        selectedTokenIDs.splice(index, 1);
+        const index = newTokenIDs.indexOf(tokenIDs[i]);
+        newTokenIDs.splice(index, 1);
       }
     });
+    if (selectedTokenIDs.includes(tokenIDs[i])){
+      span.classList.add("clicked-clickable-token-id");
+      newTokenIDs.push(tokenIDs[i]);
+    }
     div_tokenIDs.appendChild(span);
   }
-  return selectedTokenIDs;
+  return newTokenIDs;
 }
 
 /**
@@ -346,13 +343,14 @@ function transferContinueButtonEvent(
   tokenAddress: string,
   amount: string,
   tokenIDs: bigint[],
-  recipientAddress: string
+  recipientAddress: string,
+  selecting: BooleanWrapper
 ) {
   const valid = checkInputsForTransfer(
     tokenAddress,
     amount,
-    tokenIDs,
-    recipientAddress
+    recipientAddress,
+    selecting
   );
   if (!valid) {
     return;
@@ -434,8 +432,8 @@ function htmlTransferConfirmation(
 function checkInputsForTransfer(
   tokenAddress: string,
   amount: string,
-  tokenIDs: bigint[],
-  recipientAddress: string
+  recipientAddress: string,
+  selecting: BooleanWrapper
 ): boolean {
   let valid = true;
   valid = !utils.checkTokenAddressSelected(
@@ -446,14 +444,9 @@ function checkInputsForTransfer(
     ? false
     : valid;
   const tokens = <Tokens>account.values.values.get(tokenAddress)!;
-  const validAmount = (valid = !utils.checkAmount(
-    amount,
-    "errTokenAmount",
-    "tokenAmount",
-    tokens
-  )
+  valid = !utils.checkAmount(amount, "errTokenAmount", "tokenAmount", tokens)
     ? false
-    : valid);
+    : valid;
   valid = !utils.checkRecipientAddress(
     recipientAddress,
     "errRecipientAddr",
@@ -461,14 +454,9 @@ function checkInputsForTransfer(
   )
     ? false
     : valid;
-
-  const amountParsed = parseFloat(amount);
-
-  if (validAmount && tokenIDs.length != amountParsed) {
-    const message = `Please select ${amountParsed} token ID${
-      amountParsed > 1 ? "s" : ""
-    }!`;
-    utils.displayErrorMessage(message, "errTokenAmount", "tokenAmount");
+  if (selecting.value){
+    const message = "Please confirm the token IDs selection first.";
+    utils.displayErrorMessage(message, "errTokenIDs", "tokenIDs");
     valid = false;
   }
   return valid;
