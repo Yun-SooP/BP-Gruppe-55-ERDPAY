@@ -438,7 +438,7 @@ function checkInputsForTransfer(
   const tokens = <Tokens>account.values.values.get(tokenAddress)!;
   const validAmount = valid = !utils.checkAmount(amount, "errTokenAmount", "tokenAmount", tokens)
     ? false
-    : valid);
+    : valid;
   valid = !utils.checkRecipientAddress(
     recipientAddress,
     "errRecipientAddr",
