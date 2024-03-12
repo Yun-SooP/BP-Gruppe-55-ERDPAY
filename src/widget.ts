@@ -74,22 +74,5 @@ export function widget(html_widget: HTMLDivElement) {
   });
 }
 
-/**
- * Function to display startpage of the widget.
- */
-export function makeWidgetButton() {
-  const html_dummy = document.querySelector<HTMLDivElement>("#app")!;
-  html_dummy.innerHTML = `
-    <div class="dummy">
-        <button class="main-button" type="button">
-            <img class="erdstall-logo" src="https://nifty.erdstall.dev/static/media/erdstall-logo.4ca5436f.png" class="logo" alt="TypeScript logo" />
-        </button>
-    </div>
-    `;
-  const btn_main = document.querySelector(".main-button");
-  btn_main?.addEventListener("click", () => {
-    widget(html_dummy);
-  });
-}
-
-makeWidgetButton();
+// change the inner HTML of the HTML div element "app" to the main interface
+widget(document.querySelector<HTMLDivElement>("#app")!);
