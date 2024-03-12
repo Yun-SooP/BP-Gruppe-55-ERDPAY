@@ -209,10 +209,13 @@ function transformToTokenListWindow(address: string) {
   // balance_for_guest wildow height changer
   if (div_balanceWindowContainer.className != "transfer-window-container l-transfer-window-container first-layer-window"){
     setWindowHeight(div_balanceWindowContainer, 550 );
+    h1_title.textContent = "Balance of";
+  } else{
+    h1_title.textContent = "My Balance";
   }
   div_balanceWindow.style.height = "270px";
   // div_balanceWindow.style.width = "450px";
-  h1_title.textContent = "Balance of";
+  
   div_address.innerHTML = `<span>${address}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
   div_address.classList.add(
     "second-layer-window",
