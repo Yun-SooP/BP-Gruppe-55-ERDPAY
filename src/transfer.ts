@@ -115,6 +115,7 @@ export async function htmlTransfer(
       const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
       selectedTokenIDs = firstTokenID;
       makeTokenIDsList(div_tokenIDs, firstTokenID);
+      utils.selectedTokenToBlue(select_tokens);
 
     });
 
