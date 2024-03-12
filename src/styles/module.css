@@ -5,15 +5,25 @@
 
 /* Dummy Page and Main button */
 .dummy {
+  position: relative;
   display: flex;
+  align-items: center;
   gap: 15px;
+}
+
+.dummy h2 {
+  position: relative;
+  top: -10px;
+  height: 20px;
+  padding: 10px;
 }
 
 .erdstall-logo {
   filter: brightness(0) invert(1);
 }
 
-.main-button {
+.main-button,
+.pay-button {
   width: 275px;
   height: 55px;
   display: flex;
@@ -22,6 +32,17 @@
   background-color: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
+.pay-button {
+  position: relative;
+}
+
+.pay-button span {
+  position: relative;
+  left: 25px;
+  font-weight: bold;
+}
+
 .main-button div {
   position: relative;
   font-size: 16px;
@@ -343,13 +364,6 @@ input:checked + .slider:before {
 }
 
 #tokenIDs {
-  align-self: self-start;
-  margin-left: 35px;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-}
-#tokenIDs {
   border: 1px solid rgba(255, 255, 255, 0);
   border-radius: 20px;
   position: relative;
@@ -404,6 +418,36 @@ input:checked + .slider:before {
   margin-top: 20px;
 }
 /* 
+
+
+*/
+.pay__tokenID-header {
+  position: relative;
+  margin-top: 10px;
+  bottom: -5px;
+  display: flex;
+  height: 65px;
+  width: 100%;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pay__tokenID-header h2 {
+  position: relative;
+  bottom: -5px;
+}
+
+.pay__tokenID-header button {
+  margin-right: 20px;
+  width: 80px;
+  height: 35px;
+}
+
+/* 
+
+
+
 
 
 */
