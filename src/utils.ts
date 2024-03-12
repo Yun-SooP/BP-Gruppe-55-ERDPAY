@@ -292,6 +292,40 @@ export function resetErrorDisplay(errDisplay:string, inputBox:string){
     errorRemoveHighlight(inputBox);
 }
 
+
+
+/**
+ * This method is used to show only the first and last n characters of long addresses or private keys that are in hexadecimal format.
+ * @param str The string that should be shortened
+ * @param shownNumber The number of characters from the beginning and the end of a string that should be displayed
+ * @returns The input string shortened to "0x" + the first n characters of the input string and the last n characters of the input string
+ */
+export function shortenString(str: string, showNumber:number){
+    const newString = str;
+    const bound = showNumber + 2
+    const tokenIDTODisplay =
+      newString.length > 6
+        ? newString.substring(0, bound) +
+          "..." +
+          newString.substring(
+            newString.length - showNumber,
+            newString.length
+          )
+        : newString;
+
+    return tokenIDTODisplay
+}
+
+/**
+ * This functions adds an event listener to a HTML element which copies the input text to the clipboard of the user on click
+ * @param text The text that should be copied to the clipboard
+ * @param element the HTML element the event listener should be added to
+ */
+export function copyToClipboard(text:string, element:HTMLElement) {
+    element.addEventListener("click", () => {
+        navigator.clipboard.writeText(text);
+    });
+
 export function loadingStart(html_div: HTMLDivElement){
     
 
@@ -339,4 +373,5 @@ function removeLoadingScreen(loading_div: HTMLDivElement){
     if (loadingDiv != null) {
         loadingDiv.innerHTML =""
     }
+
 }

@@ -540,3 +540,46 @@ input:checked + .slider:before {
 .loading p {
   color: rgba(255, 255, 255, 0.7);
 }
+
+/**
+
+
+*/
+/*Create Account*/
+.create-account-window-header {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.create-account-window-header h1, .create-account-window-header p {
+  color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+}
+
+.create-account-window-frame-icons {
+  position: relative;
+  width: 150px;
+  height: 50px;
+}
+
+.create-account-window-frame-icons p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 15px;
+}
+
+.create-account-window-container-body {
+  display: flex;
+  align-items: space-between center;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.create-account-session-address-container ,.create-account-private-key-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px;
+}
+
+
+
+

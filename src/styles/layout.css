@@ -133,6 +133,31 @@
   margin-top: 15px;
 }
 
+/* 
+
+
+
+
+*/
+/* Create Account */
+.l-create-account-window-container {
+  width: 700px;
+  height: 410px;
+}
+
+.l-create-account-window-header {
+  size: 80%;
+  padding: 40px 40px 0 40px ;
+}
+
+.l-create-account-window-container-body {
+  width: 400px;
+}
+
+.l-create-account-session-address-container, .l-create-account-private-key-container {
+  width: 200px;
+
+
 .l-center {
   position: absolute;
   top: 50%;
