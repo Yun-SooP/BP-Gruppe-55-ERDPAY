@@ -6,8 +6,10 @@ const url = "http://127.0.0.1:8545/"; // Ganache
 const provider = new ethers.providers.JsonRpcProvider(url);
 
 /**
- * sets up a new client
- * @returns new client
+ * Asynchronously sets up a new client, initializing and subscribing it to the desired services.
+ * If successful, returns the new client instance. If an error occurs, it displays an alert with the error message.
+ *
+ * @returns The newly created and initialized client, if the setup process is successful.
  */
 export async function setupClient() {
     try {
