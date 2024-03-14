@@ -20,7 +20,7 @@ html_widget.innerHTML = `
     </header>
 
     
-    <button type="button" id="1">Pay with ERDSTALL</button>
+    <button type="button" id="1">Dummy NFT Marketplace</button>
 
 
     
