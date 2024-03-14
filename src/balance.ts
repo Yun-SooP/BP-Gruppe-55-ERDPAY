@@ -41,16 +41,16 @@ export async function htmlBalanceForGuest(
     </div>
 
     <h1 class="l-balance-title">Balance</h1>
-    <div class="balance-window-container__address"></div>
-    <div class="balance-window l-balance-window second-layer-window"></div>
-    
+    <div id="balance-content"></div>
   </div>
   `;
 
+  //Selecting HTML Elements
   btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
   logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
 
-  // setup a new client for the guest user
+  //Used in viewBalance() to change the content
+
   let client;
   try {
     client = await setupClient();
@@ -58,6 +58,24 @@ export async function htmlBalanceForGuest(
     alert(error);
     return;
   }
+  // Change content of balance to empty box if there are no tokens to see
+  const account = await client!.getAccount(Address.fromString(address));
+  const div_balanceContent = document.querySelector<HTMLDivElement>("#balance-content")!;
+  if (account.values.values.size == 0) {
+    div_balanceContent.innerHTML = `
+      <div class = "transfer-window l-transfer-window second-layer-window">
+        <p>You have no token available.</p>
+      </div>
+    `;
+  } else {
+    div_balanceContent.innerHTML = `
+    <div class="balance-window-container__address"></div>
+    <div class="balance-window l-balance-window second-layer-window"></div>
+    `;
+  }
+
+  btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
+  logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
 
   //Used in viewBalance() to change the content
   div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
@@ -92,25 +110,37 @@ export async function htmlBalance(
   address: string,
   client: Client
 ) {
-  div_balance.innerHTML = `
+  const account = await client.getAccount(Address.fromString(address));
+  if (account.values.values.size == 0) {
+    div_balance.innerHTML = `
+      
+        <div class = "transfer-window l-transfer-window second-layer-window">
+          <p>You have no token available.</p>
+        </div>
+      
+    `;
+  } else {
+    div_balance.style.height = "340px";
+    div_balance.innerHTML = `
     <div class="balance-window-container__address"></div>
     <div class="balance-window l-balance-window second-layer-window"></div>
   `;
 
-  //Used in viewBalance() to change the content
-  div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
-    ".transfer-window-container"
-  )!;
-  div_balanceWindow = document.querySelector<HTMLDivElement>(
-    ".transfer-window-container .balance-window"
-  )!;
-  div_address = document.querySelector<HTMLDivElement>(
-    ".balance-window-container__address"
-  )!;
-  h1_title = document.querySelector<HTMLHeadingElement>(
-    ".transfer-window-container h1"
-  )!;
-  await viewBalance(client, address);
+    //Used in viewBalance() to change the content
+    div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
+      ".transfer-window-container"
+    )!;
+    div_balanceWindow = document.querySelector<HTMLDivElement>(
+      ".transfer-window-container .balance-window"
+    )!;
+    div_address = document.querySelector<HTMLDivElement>(
+      ".balance-window-container__address"
+    )!;
+    h1_title = document.querySelector<HTMLHeadingElement>(
+      ".transfer-window-container h1"
+    )!;
+    viewBalance(client, address);
+  }
 }
 
 /**

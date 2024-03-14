@@ -7,14 +7,17 @@ import {div_dashboard} from "./dashboard.ts"
 let div_mint: HTMLDivElement;
 
 /**
- * Function to display the functionality of minting.
- * @param div_mint HTML to display to
- * @param session The session in which the token will minted in.
+ * Sets up the minting interface, allowing users to input data for minting new tokens.
+ * It provides input fields for token address and token ID, and buttons for minting and generating a random address.
+ *
+ * @param div The HTMLDivElement where the minting interface will be displayed.
+ * @param session The session in which the token will be minted.
  */
 export async function htmlMint(div: HTMLDivElement, session: Session) {
+  // Assign the provided div element to a global variable for future manipulation
   div_mint = div;
-  //session = sessionForMint;
 
+  // Set the inner HTML of the div element to create the minting form
   div_mint.innerHTML = `
     <form class="mint-form">
 
@@ -35,14 +38,18 @@ export async function htmlMint(div: HTMLDivElement, session: Session) {
         <button type="button" class="mint-btn">mint new token</button>
     </form>
     `;
+
+  // Select the token address input field
   const txt_tokenAddress = document.querySelector<HTMLInputElement>(
     ".mint-form input[placeholder='token address (ex. 0x1234...)']"
   )!;
 
+  // Select the token ID input field
   const txt_tokenID = document.querySelector<HTMLInputElement>(
     ".mint-form input[placeholder='token ID']"
   )!;
 
+  // Select the checkbox for minting multiple tokens and set up an event listener to change the token ID input's placeholder
   const chk_multiple = document.querySelector<HTMLInputElement>("#multiple")!;
   chk_multiple.addEventListener(
     "click",
@@ -50,14 +57,17 @@ export async function htmlMint(div: HTMLDivElement, session: Session) {
       (txt_tokenID.placeholder = chk_multiple.checked ? "amount" : "token ID")
   );
 
+  // Select the mint button and attach an event listener for minting tokens
   const btn_mint = document.querySelector<HTMLButtonElement>(
     ".mint-form .mint-btn"
   )!;
   btn_mint.addEventListener("click", async () => {
+    // Determine whether to perform single or multiple minting based on the checkbox state
     chk_multiple.checked ? eventMultipleMint(session) : eventSingleMint(session)
   }
   );
 
+  // Select the button for generating a random token address and set up an event listener to populate the address
   const btn_randomAddress = document.querySelector<HTMLInputElement>(
     ".mint-form .random-address-btn"
   )!;
@@ -68,9 +78,12 @@ export async function htmlMint(div: HTMLDivElement, session: Session) {
 }
 
 /**
- * Function to mint a signle token.
- * @param session The session in which the token will be minted in.
- * @returns If minting fails.
+ * Handles the minting of a single token by capturing user inputs for token address and token ID,
+ * validating them, and then calling the mint function. If minting is successful, it shows a success message;
+ * otherwise, it alerts the user of the failure.
+ *
+ * @param session The session in which the token will be minted.
+ * @returns If minting fails, the function simply returns without proceeding further.
  */
 async function eventSingleMint(session: Session) {
   const txt_tokenAddress = document.querySelector<HTMLInputElement>(
@@ -85,31 +98,37 @@ async function eventSingleMint(session: Session) {
   //cannot differenciate if error is for token address or amount
   const valid = checkInputsForMint(tokenAddress, "1", tokenID);
   
+  // If validation fails, return early
   if (!valid) {
     return;
   }
+
+  // Attempt to mint the token with the provided address and ID
   const { status, error } = await mint(
     session,
     tokenAddress,
     BigInt(parseFloat(tokenID))
   );
 
+  // Check the status of the minting operation and alert the user accordingly
   if (status == 0) {
+    // If minting failed, display an error message
     const err: Error = <Error>error;
     alert("Minting failed: " + err.message);
     return;
-
   } else if (status == 1) {
+    // If minting succeeded, display the success interface
     htmlMintSuccessful(session);
-    //alert("Token succesfully minted!");
   }
-  //await htmlMint(div_mint, session);
 }
 
 /**
- * Function to mint multiple token.
- * @param session The session in which the token will be minted in.
- * @returns If minting fails.
+ * Handles the minting of multiple tokens by capturing user inputs for token address and the amount
+ * of tokens to mint, validating them, and then calling the multipleMint function. If minting is successful,
+ * it shows a success message; otherwise, it alerts the user of the failure.
+ *
+ * @param session The session in which the tokens will be minted.
+ * @returns If minting fails, the function simply returns without proceeding further.
  */
 async function eventMultipleMint(session: Session) {
   const txt_tokenAddress = document.querySelector<HTMLInputElement>(
@@ -124,22 +143,31 @@ async function eventMultipleMint(session: Session) {
   if (!valid) {
     return;
   }
+
+  // Start the loading animation during the minting process
   utils.loadingStart(div_dashboard);
+
+  // Select the counter div where minting progress will be displayed
   const div_counter = document.querySelector<HTMLDivElement>("#token-counter")!;
+
+  // Attempt to mint the specified amount of tokens
   await multipleMint(session, tokenAddress, parseFloat(amount), div_counter);
   
+  // End the loading animation once minting is complete
   utils.loadingEnd(div_dashboard);
+
+  // Show the minting success interface
   htmlMintSuccessful(session);
-  //alert("Tokens succesfully minted!");
-  //await htmlMint(div_mint, session);
 }
 
 /**
- * Function to check the inputs for minting.
- * @param tokenAddress Address of token to mint. 
- * @param amount Amount of tokens to mint.
- * @param tokenID ID of token to mint.
- * @returns Boolean if the inputs are valid or not.
+ * Validates the inputs for minting. It checks if the token address and amount are valid.
+ * Optionally, if a token ID is provided, it validates that as well.
+ *
+ * @param tokenAddress The address of the token to mint.
+ * @param amount The amount of tokens to mint.
+ * @param tokenID Optionally, the ID of the token to mint.
+ * @returns A boolean indicating whether the inputs are valid.
  */
 function checkInputsForMint(
   tokenAddress: string,
@@ -156,11 +184,34 @@ function checkInputsForMint(
 }
 
 /**
- * Function to mint a token.
- * @param session The session in which the token will minted in.
- * @param tokenAddress Token address to mint of.
- * @param tokenID Token ID to mint. Has to be non existing ID.
- * @returns Status and error message
+ * Updates the HTML content to display a message indicating a successful minting operation.
+ * It also provides a button to return to the minting interface.
+ *
+ * @param session The session that will be used for returning to the minting interface.
+ */
+function htmlMintSuccessful(session:Session) {
+  div_mint.innerHTML = `
+    <div class="successful-div third-layer-window">Mint Successful!</div>
+    <form class="successful-form">
+      <button type="button" class="return-btn">return</button>
+    </form>
+  `;
+  const btn_return = document.querySelector<HTMLInputElement>(
+    ".successful-form .return-btn"
+  )!;
+  btn_return.addEventListener("click", () =>
+    htmlMint(div_mint, session)
+  );
+}
+
+/**
+ * Mints a new token with the specified address and ID in the given session.
+ * Handles the mint transaction and interprets the receipt to return the status and any error messages.
+ *
+ * @param session The session in which the token will be minted.
+ * @param tokenAddress The token address for the token to be minted.
+ * @param tokenID The token ID for the token to be minted. It must be a unique ID.
+ * @returns An object containing the status of the mint operation and any error message.
  */
 async function mint(session: Session, tokenAddress: string, tokenID: bigint) {
   let transaction;
@@ -192,11 +243,14 @@ async function mint(session: Session, tokenAddress: string, tokenID: bigint) {
 }
 
 /**
- * Function to mint multiple token.
- * @param session The session in which the token will minted in.
- * @param tokenAddress Token address to mint of.
- * @param amount Amount to mint.
- * @returns Promise with the token IDs.
+ * Mints multiple tokens with the given token address for the specified amount.
+ * It keeps track of the minting progress and updates the counter on the page.
+ *
+ * @param session The session to use for minting.
+ * @param tokenAddress The address of the token contract where tokens will be minted.
+ * @param amount The number of tokens to mint.
+ * @param div_counter The HTMLDivElement that displays the minting progress counter.
+ * @returns A promise that resolves to an array of minted token IDs.
  */
 async function multipleMint(
   session: Session,
@@ -224,20 +278,3 @@ async function multipleMint(
   return tokenIDs;
 }
 
-/**
- * Function to display successful transfer.
- */
-function htmlMintSuccessful(session:Session) {
-  div_mint.innerHTML = `
-    <div class="successful-div third-layer-window">Mint Successful!</div>
-    <form class="successful-form">
-      <button type="button" class="return-btn">return</button>
-    </form>
-  `;
-  const btn_return = document.querySelector<HTMLInputElement>(
-    ".successful-form .return-btn"
-  )!;
-  btn_return.addEventListener("click", () =>
-    htmlMint(div_mint, session)
-  );
-}

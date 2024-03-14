@@ -116,9 +116,13 @@ export function checkPrivateKey(
         return false;
     }
     const hex = /[0-9A-Fa-f]{64}/g;
-    if (privateKey.slice(0, 2) != "0x" || !hex.test(privateKey.slice(2))) {
+    if (
+      privateKey.slice(0, 2) != "0x" || 
+      !hex.test(privateKey.slice(2)) ||
+      privateKey.length > 66
+      ) {
         displayErrorMessage(
-          `Please enter a valid private key. <br> The private key must be in hexadecimal and 64 characters long.`,
+          `Please enter a valid private key. (Hexadecimal of length 64, starting with 0x)`,
           errDisplay,
           inputBox
         );
@@ -230,7 +234,8 @@ export function checkRecipientAddress(
     const hex = /[0-9A-Fa-f]{40}/g;
     if (
         recipientAddress.slice(0, 2) != "0x" ||
-        !hex.test(recipientAddress.slice(2))
+        !hex.test(recipientAddress.slice(2)) ||
+        recipientAddress.length > 42
       ) {
         displayErrorMessage(
           "Please enter a valid address. (Hexadecimal of length 40, starting with 0x)",
@@ -502,6 +507,13 @@ function removeLoadingScreen(loading_div: HTMLDivElement){
     }
 }
 
+/**
+ * Applies a blue color to the selected token option in the provided HTMLSelectElement.
+ * It removes any existing 'selected' class from all options and then adds the 'selected'
+ * class to the currently selected option.
+ *
+ * @param div_select The HTMLSelectElement containing token options.
+ */
 export function selectedTokenToBlue( div_select:HTMLSelectElement) {
     const tokenOptions = div_select.querySelectorAll("option");
     tokenOptions.forEach(option => option.classList.remove("selected"));
@@ -509,6 +521,14 @@ export function selectedTokenToBlue( div_select:HTMLSelectElement) {
         selectedOption.classList.add("selected");
 }
 
+/**
+ * Creates an information box with a tooltip icon. When the icon is clicked, a popup with the
+ * provided content is displayed. This function dynamically creates the necessary HTML elements
+ * and appends them to the specified element.
+ *
+ * @param element The HTMLElement to which the info box will be appended.
+ * @param content The string content to be displayed in the popup when the info icon is clicked.
+ */
 export function createInfoBox(element: HTMLElement, content: string ) {
     const iconFrame = document.createElement("div");
     iconFrame.classList.add("tooltip", "l-main-infobox")
