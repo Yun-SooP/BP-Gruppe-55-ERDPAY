@@ -12,6 +12,16 @@ let div_balanceWindowContainer: HTMLDivElement;
 let btn_return: HTMLButtonElement;
 let logo_return: HTMLButtonElement;
 
+
+/**
+ * Renders the balance viewer interface for guest users within the specified HTMLDivElement.
+ * This function sets up the initial HTML structure and configures event listeners for navigation.
+ * It initializes the Erdstall client and invokes the viewBalance function to display the address's balance.
+ *
+ * @param div_widget The HTMLDivElement where the balance viewer interface will be injected.
+ * @param address The address whose balance information is to be displayed.
+ * @returns Nothing explicitly, but performs asynchronous operations to set up and display the balance viewer.
+ */
 export async function htmlBalanceForGuest(
   div_widget: HTMLDivElement,
   address: string
@@ -37,12 +47,10 @@ export async function htmlBalanceForGuest(
   </div>
   `;
 
-  //Selecting HTML Elements
   btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
   logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
 
-  //Used in viewBalance() to change the content
-
+  // setup a new client for the guest user
   let client;
   try {
     client = await setupClient();
@@ -64,17 +72,20 @@ export async function htmlBalanceForGuest(
   h1_title = document.querySelector<HTMLHeadingElement>(
     ".balance-window-container h1"
   )!;
-  viewBalance(client!, address);
+  await viewBalance(client!, address);
 
   btn_return.addEventListener("click", () => widget(div_widget));
   logo_return.addEventListener("click", () => widget(div_widget));
 }
 
 /**
- * Function to change to the HTML of balance viewer in dashboard after logging in.
- * @param html_widget Main body of widget
- * @param address account address for balance check
- * @param session optional parameter, if a session already exists, use this session instead of creating a new client
+ * Configures and injects the HTML content structure for the balance viewer into the provided div element.
+ * The function sets up the necessary containers and invokes the viewBalance function to populate them
+ * with the actual balance data for the given address using the provided client.
+ *
+ * @param div_balance The HTMLDivElement that serves as the container for the balance viewer content.
+ * @param address The blockchain address for which the balance will be checked and displayed.
+ * @param client The Erdstall client instance to use for retrieving balance information.
  */
 export async function htmlBalance(
   div_balance: HTMLDivElement,
@@ -99,15 +110,16 @@ export async function htmlBalance(
   h1_title = document.querySelector<HTMLHeadingElement>(
     ".transfer-window-container h1"
   )!;
-  viewBalance(client, address);
+  await viewBalance(client, address);
 }
 
 /**
- * Function to display current assets of the given address.
- * @param client Client to be used for the Erdstall connection
- * @param input Address to view the balance of
- * @param lbl_balance HTML body to display the balance to
- * @returns arrays with token names, ids and amounts of the tokens
+ * Retrieves and displays the balance of assets for a given address using the specified client to connect to Erdstall.
+ * It populates the token list and amount elements in the UI and sets up an interactive selection list for token IDs.
+ * The function also handles UI adjustments such as scrolling synchronization and visibility toggles for the ID list.
+ *
+ * @param client The Erdstall Client instance used to establish a connection and retrieve account information.
+ * @param address The address whose balance will be retrieved and displayed.
  */
 async function viewBalance(client: Client, address: string) {
   const account = await client.getAccount(Address.fromString(address));
@@ -180,8 +192,11 @@ async function viewBalance(client: Client, address: string) {
 }
 
 /**
- * Function to display token list
- * @param input Account address
+ * Transforms the user interface to display a list of tokens associated with the provided address.
+ * The function adjusts the display based on whether the view is for a guest or a dashboard user,
+ * sets the balance window height, and populates the address field with copy functionality.
+ *
+ * @param address The address for which the token list will be displayed.
  */
 function transformToTokenListWindow(address: string) {
   // balance_for_guest window height changer
