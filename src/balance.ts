@@ -21,6 +21,16 @@ export async function htmlBalanceForGuest(
   div_widget: HTMLDivElement,
   address: string
 ) {
+  //Used in viewBalance() to change the content
+  let client;
+  try {
+    client = await setupClient();
+  } catch (error) {
+    alert(error);
+    return;
+  }
+  
+
   div_widget.innerHTML = `
   <div class = "balance-window-container l-balance-window-container first-layer-window">
 
@@ -36,25 +46,33 @@ export async function htmlBalanceForGuest(
     </div>
 
     <h1 class="l-balance-title">Balance</h1>
-    <div class="balance-window-container__address"></div>
-    <div class="balance-window l-balance-window second-layer-window"></div>
+    <div id="balance-content"></div>
+    
     
   </div>
   `;
+
+  // Change content of balance to empty box if there are no tokens to see
+  const account = await client!.getAccount(Address.fromString(address));
+  const div_balanceContent = document.querySelector<HTMLDivElement>("#balance-content")!;
+  if (account.values.values.size == 0) {
+    div_balanceContent.innerHTML = `
+      <div class = "transfer-window l-transfer-window second-layer-window">
+        <p>You have no token available.</p>
+      </div>
+    `;
+  } else {
+    div_balanceContent.innerHTML = `
+    <div class="balance-window-container__address"></div>
+    <div class="balance-window l-balance-window second-layer-window"></div>
+    `;
+  }
 
   //Selecting HTML Elements
   btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
   logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
 
-  //Used in viewBalance() to change the content
 
-  let client;
-  try {
-    client = await setupClient();
-  } catch (error) {
-    alert(error);
-    return;
-  }
 
   //Used in viewBalance() to change the content
   div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
@@ -75,36 +93,42 @@ export async function htmlBalanceForGuest(
   logo_return.addEventListener("click", () => widget(div_widget));
 }
 
-/**
- * Function to change to the HTML of balance viewer in dashboard after logging in.
- * @param html_widget Main body of widget
- * @param address account address for balance check
- * @param session optional parameter, if a session already exists, use this session instead of creating a new client
- */
+// docu needed
 export async function htmlBalance(
   div_balance: HTMLDivElement,
   address: string,
   client: Client
 ) {
-  div_balance.innerHTML = `
+  const account = await client.getAccount(Address.fromString(address));
+  if (account.values.values.size == 0) {
+    div_balance.innerHTML = `
+      
+        <div class = "transfer-window l-transfer-window second-layer-window">
+          <p>You have no token available.</p>
+        </div>
+      
+    `;
+  } else {
+    div_balance.style.height = "340px";
+    div_balance.innerHTML = `
     <div class="balance-window-container__address"></div>
     <div class="balance-window l-balance-window second-layer-window"></div>
   `;
-
-  //Used in viewBalance() to change the content
-  div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
-    ".transfer-window-container"
-  )!;
-  div_balanceWindow = document.querySelector<HTMLDivElement>(
-    ".transfer-window-container .balance-window"
-  )!;
-  div_address = document.querySelector<HTMLDivElement>(
-    ".balance-window-container__address"
-  )!;
-  h1_title = document.querySelector<HTMLHeadingElement>(
-    ".transfer-window-container h1"
-  )!;
-  viewBalance(client, address);
+    //Used in viewBalance() to change the content
+    div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
+      ".transfer-window-container"
+    )!;
+    div_balanceWindow = document.querySelector<HTMLDivElement>(
+      ".transfer-window-container .balance-window"
+    )!;
+    div_address = document.querySelector<HTMLDivElement>(
+      ".balance-window-container__address"
+    )!;
+    h1_title = document.querySelector<HTMLHeadingElement>(
+      ".transfer-window-container h1"
+    )!;
+    viewBalance(client, address);
+  }
 }
 
 /**
