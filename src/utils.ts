@@ -116,7 +116,11 @@ export function checkPrivateKey(
         return false;
     }
     const hex = /[0-9A-Fa-f]{64}/g;
-    if (privateKey.slice(0, 2) != "0x" || !hex.test(privateKey.slice(2))) {
+    if (
+      privateKey.slice(0, 2) != "0x" || 
+      !hex.test(privateKey.slice(2)) ||
+      privateKey.length > 42
+      ) {
         displayErrorMessage(
           `Please enter a valid private key. <br> The private key must be in hexadecimal and 64 characters long.`,
           errDisplay,
@@ -230,7 +234,8 @@ export function checkRecipientAddress(
     const hex = /[0-9A-Fa-f]{40}/g;
     if (
         recipientAddress.slice(0, 2) != "0x" ||
-        !hex.test(recipientAddress.slice(2))
+        !hex.test(recipientAddress.slice(2)) ||
+        recipientAddress.length > 42
       ) {
         displayErrorMessage(
           "Please enter a valid address. (Hexadecimal of length 40, starting with 0x)",
