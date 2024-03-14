@@ -310,7 +310,7 @@ async function htmlPay(
         btn_changeTokenIDs
       )
     );
-
+    
     const btn_confirm = document.querySelector<HTMLInputElement>(
       ".confirm-transfer-form .confirm-transfer-btn"
     )!;
@@ -396,7 +396,7 @@ function changeTokenIDsButtonEvent(
     selecting.value = false;
     btn_changeTokenIDs.innerText = "edit";
     div_tokenIDs.innerHTML = "";
-    newTokenIDs.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+    newTokenIDs.sort();
     tokenIDs = newTokenIDs;
     makeTokenIDsList(div_tokenIDs, newTokenIDs);
     btn_cancelChangeTokenIDs!.remove();
@@ -435,18 +435,18 @@ function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
  * Each token ID is truncated for display and can be selected or deselected, updating the array of selected token IDs.
  *
  * @param div_tokenIDs The HTMLDivElement that will contain the list of token IDs.
- * @param tokenIDs An array of token IDs that the user can select from.
+ * @param tokenIDsAvailable An array of token IDs that the user can select from.
  * @returns An array of the selected token IDs.
  */
 function makeTokenIDsSelection(
   div_tokenIDs: HTMLDivElement,
-  tokenIDs: bigint[]
+  tokenIDsAvailable: bigint[]
 ): bigint[] {
-  const selectedTokenIDs: bigint[] = [];
-  for (let i = 0; i < tokenIDs.length; i++) {
+  const newTokenIDs: bigint[] = [];
+  for (let i = 0; i < tokenIDsAvailable.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
-    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDString = tokenIDsAvailable[i] + "";
     const tokenIDTODisplay =
       tokenIDString.length > 6
         ? tokenIDString.substring(0, 3) +
@@ -460,17 +460,21 @@ function makeTokenIDsSelection(
     span.addEventListener("click", () => {
       if (!span.classList.contains("clicked-clickable-token-id")) {
         span.classList.add("clicked-clickable-token-id");
-        selectedTokenIDs.push(tokenIDs[i]);
+        newTokenIDs.push(tokenIDsAvailable[i]);
       } else {
         span.classList.remove("clicked-clickable-token-id");
-        const index = selectedTokenIDs.indexOf(tokenIDs[i]);
-        selectedTokenIDs.splice(index, 1);
+        const index = newTokenIDs.indexOf(tokenIDsAvailable[i]);
+        newTokenIDs.splice(index, 1);
       }
     });
+    if (tokenIDs.includes(tokenIDsAvailable[i])) {
+      span.classList.add("clicked-clickable-token-id");
+      newTokenIDs.push(tokenIDsAvailable[i]);
+    }
     div_tokenIDs.appendChild(span);
   }
 
-  return selectedTokenIDs;
+  return newTokenIDs;
 }
 
 /**
