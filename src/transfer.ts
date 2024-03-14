@@ -100,7 +100,7 @@ export async function htmlTransfer(
       ".token-list__amount"
     )!;
 
-    const div_tokenIdSection = document.querySelector<HTMLSelectElement>(
+    const div_tokenIdSection = document.querySelector<HTMLDivElement>(
       ".transfer-tokenID-section"
     )!;
 
@@ -212,6 +212,7 @@ export async function htmlTransfer(
       txt_amount,
       tokenIDsRestore,
       div_tokenIDs,
+      div_tokenIdSection,
       recipientAddressRestore,
       txt_recipientAddress
     );
@@ -229,6 +230,7 @@ export async function htmlTransfer(
  * @param txt_amount - The input element for the token transfer amount.
  * @param tokenIDs - An array of token IDs to be transferred. If undefined, the token ID list is not updated.
  * @param div_tokenIDs - The container element where the list of token IDs will be displayed.
+ * @param div_tokenIdSection - The container element for the token ID section.
  * @param recipientAddress - The address of the transfer recipient. If undefined, the recipient address field is cleared.
  * @param txt_recipientAddress - The input element for the recipient's address.
  */
@@ -239,13 +241,25 @@ function restoreSelections(
   txt_amount: HTMLInputElement,
   tokenIDs: bigint[] | undefined,
   div_tokenIDs: HTMLDivElement,
+  div_tokenIdSection: HTMLDivElement,
   recipientAddress: string | undefined,
   txt_recipientAddress: HTMLInputElement
 ) {
   select_tokens.value = tokenAddress ? tokenAddress : "";
   txt_amount.value = amount ? amount : "";
   if (tokenIDs) {
+    // Adjust the window height for the additional token ID section
+    utils.setWindowHeight(div_transfer, 670);
+    div_transfer.parentElement!.style.height = "930px";
+
+    // Make the token ID section visible
+    div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
+    div_tokenIdSection.classList.add("visible-transfer-window__id-list");
+
     makeTokenIDsList(div_tokenIDs, tokenIDs);
+
+    // Change the selected token's background color to indicate selection
+    utils.selectedTokenToBlue(select_tokens);
   }
   txt_recipientAddress.value = recipientAddress ? recipientAddress : "";
 }
