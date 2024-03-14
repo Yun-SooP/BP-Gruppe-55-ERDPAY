@@ -313,6 +313,7 @@ function changeTokenIDsButtonEvent(
     btn_cancelChangeTokenIDs.addEventListener("click", () => {
       selecting.value = false;
       btn_changeTokenIDs.innerText = "edit";
+      utils.resetErrorDisplay("errTokenIDs", "tokenIDs");
       utils.makeTokenIDsList(div_tokenIDs, selectedTokenIDs);
       txt_amount.value = selectedTokenIDs.length.toString();
       btn_cancelChangeTokenIDs.remove();
