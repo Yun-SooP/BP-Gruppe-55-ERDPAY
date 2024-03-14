@@ -316,6 +316,33 @@ export function makeTokensList(
 }
 
 /**
+ * Extends the `currentTokenIDs` array to a specified `newAmount` length by adding non-duplicate 
+ * token IDs from the `availableTokenIDs` array. If `newAmount` is less than the current length, 
+ * the `currentTokenIDs` array is truncated. The resulting array is sorted in ascending order before returning.
+ *
+ * @param currentTokenIDs - An array of BigInt token IDs currently set.
+ * @param availableTokenIDs - An array of BigInt token IDs that are available to be added.
+ * @param newAmount - The desired length of the extended `currentTokenIDs` array.
+ * @returns A new array of BigInt token IDs with the length of `newAmount`, containing original tokens 
+ *          from `currentTokenIDs` and filled with non-duplicate tokens from `availableTokenIDs`, sorted in ascending order.
+ */
+export function extendTokenIDs(currentTokenIDs: bigint[], availableTokenIDs: bigint[], newAmount: number) : bigint[] {
+  if (newAmount < currentTokenIDs.length){
+    return currentTokenIDs.slice(0,newAmount);
+  }
+  const extendedTokenIDs = [...currentTokenIDs];
+  let i = 0;
+  while (extendedTokenIDs.length < newAmount){
+    if(!extendedTokenIDs.includes(availableTokenIDs[i])){
+      extendedTokenIDs.push(availableTokenIDs[i]);
+    }
+    i++;
+  }
+
+  return extendedTokenIDs.sort();
+}
+
+/**
  * Applies a red border style to the element with the given ID to highlight it as an error field.
  * @param id - The ID of the element to which the red border should be applied.
  */
@@ -506,4 +533,33 @@ export function createInfoBox(element: HTMLElement, content: string ) {
         frame.classList.toggle("popup-visible")
     });
 
+}
+
+/**
+ * Function to sync the scrolls of two seperate select elements
+ * @param select1 first select element
+ * @param select2 second select element
+ */
+export function syncScrolls(
+  select1: HTMLSelectElement,
+  select2: HTMLSelectElement
+) {
+  let isSyncingLeftScroll = false;
+  let isSyncingRightScroll = false;
+
+  select1.onscroll = function () {
+    if (!isSyncingLeftScroll) {
+      isSyncingRightScroll = true;
+      select2.scrollTop = select1.scrollTop;
+    }
+    isSyncingLeftScroll = false;
+  };
+
+  select2.onscroll = function () {
+    if (!isSyncingRightScroll) {
+      isSyncingLeftScroll = true;
+      select1.scrollTop = select2.scrollTop;
+    }
+    isSyncingRightScroll = false;
+  };
 }

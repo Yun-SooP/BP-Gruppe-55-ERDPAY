@@ -20,12 +20,15 @@ type BooleanWrapper = {
 };
 
 /**
- * Function to display transfer functionality.
- * Optional paramters fill out inputs in beforehand.
- * @param tokenAddressRestore Optional, token address for transfer.
- * @param amountRestore Optional, amount of tokens to transfer.
- * @param tokenIDsRestore Optional, token ids for transfer.
- * @param recipientAddressRestore Optional, recipient address for transfer.
+ * Renders the HTML interface for the transfer functionality, allowing users to select tokens,
+ * specify amounts, and enter recipient addresses for transfers. If provided, fills out inputs with pre-existing values.
+ *
+ * @param div The HTMLDivElement where the transfer interface will be injected.
+ * @param sessionForTransfer The session object used to execute the transfer.
+ * @param tokenAddressRestore Optional pre-selected token address for transfer.
+ * @param amountRestore Optional pre-filled amount of tokens to transfer.
+ * @param tokenIDsRestore Optional pre-selected token ids for transfer.
+ * @param recipientAddressRestore Optional pre-filled recipient address for transfer.
  */
 export async function htmlTransfer(
   div: HTMLDivElement,
@@ -35,16 +38,24 @@ export async function htmlTransfer(
   tokenIDsRestore?: bigint[],
   recipientAddressRestore?: string
 ) {
+
+  // Set the current session and div_transfer to the passed parameters
   session = sessionForTransfer;
   div_transfer = div;
+
+  // Get the account details from the session
   account = await session!.getAccount(session!.address);
+
+  // Check if the account has any tokens and display a message if it doesn't
   if (account.values.values.size == 0) {
     div_transfer.style.height = "70px";
     div_transfer.parentElement!.style.height = "600px";
+    // If no tokens are available, inform the user with a message
     div_transfer.innerHTML = `
       <p>You have no token available.</p>
     `;
   } else {
+    // If tokens are available, set up the transfer interface
     utils.setWindowHeight(div_transfer, 490);
     div_transfer.parentElement!.style.height = "750px";
     div_transfer.innerHTML = `
@@ -92,8 +103,10 @@ export async function htmlTransfer(
     const div_tokenIdSection = document.querySelector<HTMLSelectElement>(
       ".transfer-tokenID-section"
     )!;
+
+
     //Synchronize scroll of select_tokens and select_amount
-    syncScrolls(select_tokens, select_amount);
+    utils.syncScrolls(select_tokens, select_amount);
 
     const tokens = Array.from(account.values.values.entries());
 
@@ -102,23 +115,23 @@ export async function htmlTransfer(
     )!;
     const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
 
+    
+    // Set up an event listener for the amount input field to validate and adjust token IDs upon input
     txt_amount.addEventListener("input", () => {
       const tokenAddress = select_tokens.value;
       const tokens = <Tokens>account.values.values.get(tokenAddress);
-      const valid = utils.checkAmount(
+      const validAmount = utils.checkAmount(
         txt_amount.value,
         "errTokenAmount",
         "tokenAmount",
         tokens
       );
-      if (valid && tokenAddress !== "" && !selecting.value) {
-        const initialTokenIDs = utils.getTokenIDs(
-          account,
-          tokenAddress,
-          parseFloat(txt_amount.value)
-        );
-        selectedTokenIDs = initialTokenIDs;
-        makeTokenIDsList(div_tokenIDs, initialTokenIDs);
+      // If the amount is valid, not empty, and the user is not currently selecting token IDs
+      if (validAmount && tokenAddress !== "" && !selecting.value) {
+        // adjust the token ids to match the amount
+        newTokenIDs = utils.extendTokenIDs(selectedTokenIDs, tokens.value, Number(txt_amount.value));
+        selectedTokenIDs = newTokenIDs;
+        makeTokenIDsList(div_tokenIDs, newTokenIDs);
       }
     });
 
@@ -126,32 +139,45 @@ export async function htmlTransfer(
       '.transfer-form input[placeholder="recipient address (ex. 0x1234...)"]'
     )!;
 
+    // Populate the token and amount select lists with account data
     utils.makeTokensList(select_tokens, select_amount, tokens);
 
+    // Set up an event listener for when the user changes the selected token
     select_tokens.addEventListener("change", () => {
+      // Adjust the window height for the additional token ID section
       utils.setWindowHeight(div_transfer, 670);
       div_transfer.parentElement!.style.height = "930px";
+
+      // Retrieve the first token ID based on the selected token
       const tokenAddress = select_tokens.value;
       txt_amount.value = "1";
       const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
       selectedTokenIDs = firstTokenID;
 
+      // Make the token ID section visible
       div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
       div_tokenIdSection.classList.add("visible-transfer-window__id-list");
+      // Display the first token ID in the list
       makeTokenIDsList(div_tokenIDs, firstTokenID);
+      // Change the selected token's background color to indicate selection
       utils.selectedTokenToBlue(select_tokens);
     });
 
+    // Create a BooleanWrapper object to track the state of token ID selection
     const selecting: BooleanWrapper = { value: false };
 
     const btn_changeTokenIDs = document.querySelector<HTMLButtonElement>(
       ".changeTokenIDs-btn"
     )!;
+
+    // Set up an event listener for the edit button next to token IDs
     btn_changeTokenIDs.addEventListener("click", () => {
+       // Retrieve the token address and available IDs for the selected token
       const tokenAddress = select_tokens.value;
       const tokenIDsAvailable = (<Tokens>(
         account.values.values.get(tokenAddress)
       )).value;
+      // Invoke the function to handle the edit token IDs event
       changeTokenIDsButtonEvent(
         selecting,
         tokenIDsAvailable,
@@ -161,10 +187,12 @@ export async function htmlTransfer(
       );
     });
 
+    // Select the button to confirm the transfer and attach an event listener
     const btn_confirm = document.querySelector<HTMLInputElement>(
       ".transfer-form__continue-btn"
     )!;
 
+    // When the confirm button is clicked, validate the inputs and potentially proceed to the transfer confirmation
     btn_confirm.addEventListener("click", () => {
       transferContinueButtonEvent(
         select_tokens.value,
@@ -175,6 +203,8 @@ export async function htmlTransfer(
       );
     });
 
+
+    // If any pre-existing values are provided (e.g., from a previous state), restore those selections
     restoreSelections(
       tokenAddressRestore,
       select_tokens,
@@ -187,30 +217,21 @@ export async function htmlTransfer(
     );
   }
 }
-function syncScrolls(
-  select_tokens: HTMLSelectElement,
-  select_amount: HTMLSelectElement
-) {
-  let isSyncingLeftScroll = false;
-  let isSyncingRightScroll = false;
 
-  select_tokens.onscroll = function () {
-    if (!isSyncingLeftScroll) {
-      isSyncingRightScroll = true;
-      select_amount.scrollTop = select_tokens.scrollTop;
-    }
-    isSyncingLeftScroll = false;
-  };
 
-  select_amount.onscroll = function () {
-    if (!isSyncingRightScroll) {
-      isSyncingLeftScroll = true;
-      select_tokens.scrollTop = select_amount.scrollTop;
-    }
-    isSyncingRightScroll = false;
-  };
-}
 
+/**
+ * Restores the selections in the transfer form with previously inputted values.
+ * This is used when a user navigates back to the transfer form from a confirmation screen.
+ * @param tokenAddress - The address of the selected token. If undefined, the token selection is cleared.
+ * @param select_tokens - The dropdown element for selecting tokens.
+ * @param amount - The amount of the token to transfer. If undefined, the amount field is cleared.
+ * @param txt_amount - The input element for the token transfer amount.
+ * @param tokenIDs - An array of token IDs to be transferred. If undefined, the token ID list is not updated.
+ * @param div_tokenIDs - The container element where the list of token IDs will be displayed.
+ * @param recipientAddress - The address of the transfer recipient. If undefined, the recipient address field is cleared.
+ * @param txt_recipientAddress - The input element for the recipient's address.
+ */
 function restoreSelections(
   tokenAddress: string | undefined,
   select_tokens: HTMLSelectElement,
@@ -357,12 +378,14 @@ function makeTokenIDsSelection(
 }
 
 /**
- * Function for continue event in transfer.
- * If all inputs are valid, the user is passed to the confirmation.
- * @param advanced Selection of advanced transfer functionality.
- * @param tokenAddress Token address for transfer.
- * @param amount Amount of tokens to transfer.
- * @param recipientAddress Recipient address for transfer.
+ * Handles the click event for the "Continue" button during a transfer operation.
+ * This function validates the transfer input fields and, if valid, proceeds to display the transfer confirmation interface.
+ *
+ * @param tokenAddress The address of the token contract for the tokens being transferred.
+ * @param amount The string representing the quantity of tokens to transfer.
+ * @param tokenIDs The array of token IDs selected for transfer.
+ * @param recipientAddress The address of the recipient receiving the transfer.
+ * @param selecting A BooleanWrapper indicating whether token selection is in progress.
  */
 function transferContinueButtonEvent(
   tokenAddress: string,
@@ -392,12 +415,56 @@ function transferContinueButtonEvent(
 }
 
 /**
- * Function to display transfer confirmation.
- * @param tokenAddress Token address for transfer.
- * @param amount Amount of tokens to transfer.
- * @param recipientAddress Recipient address for transfer.
- * @param tokenIDs IDs to transfer.
- * @param chk_IDs Optional, list of checkboxes for token IDs.
+ * Validates the input fields for a token transfer, checking the token address, amount, and recipient address.
+ * It provides feedback for any validation errors and indicates whether the transfer inputs are valid.
+ *
+ * @param tokenAddress The blockchain address of the token to be transferred.
+ * @param amount The quantity of tokens to transfer.
+ * @param recipientAddress The address of the transfer recipient.
+ * @param selecting A BooleanWrapper indicating whether token selection is in progress.
+ * @returns A boolean indicating whether all transfer inputs are valid.
+ */
+function checkInputsForTransfer(
+  tokenAddress: string,
+  amount: string,
+  recipientAddress: string,
+  selecting: BooleanWrapper
+): boolean {
+  let valid = true;
+  valid = !utils.checkTokenAddressSelected(
+    tokenAddress,
+    "errTokenAddress",
+    "token-list"
+  )
+    ? false
+    : valid;
+  const tokens = <Tokens>account.values.values.get(tokenAddress)!;
+  valid = !utils.checkAmount(amount, "errTokenAmount", "tokenAmount", tokens)
+    ? false
+    : valid;
+  valid = !utils.checkRecipientAddress(
+    recipientAddress,
+    "errRecipientAddr",
+    "recipientAddr"
+  )
+    ? false
+    : valid;
+  if (selecting.value) {
+    const message = "Please confirm the token IDs selection first.";
+    utils.displayErrorMessage(message, "errTokenIDs", "tokenIDs");
+    valid = false;
+  }
+  return valid;
+}
+
+/**
+ * Renders the transfer confirmation interface, displaying the details of the transfer and 
+ * providing buttons for the user to confirm or return to the previous screen.
+ *
+ * @param tokenAddress The blockchain address of the token to be transferred.
+ * @param amount The quantity of tokens to transfer.
+ * @param recipientAddress The address of the transfer recipient.
+ * @param tokenIDs An array of token IDs that the user wishes to transfer.
  */
 function htmlTransferConfirmation(
   tokenAddress: string,
@@ -448,54 +515,15 @@ function htmlTransferConfirmation(
   });
 }
 
-/**
- * Functionality to check the inputs for the transfer.
- * @param tokenAddress Token address for transfer.
- * @param amount Amount of tokens to transfer.
- * @param recipientAddress Recipient address for transfer.
- * @returns valid If the transfer inputs are valid.
- * @returns message If input is unvalid.
- */
-function checkInputsForTransfer(
-  tokenAddress: string,
-  amount: string,
-  recipientAddress: string,
-  selecting: BooleanWrapper
-): boolean {
-  let valid = true;
-  valid = !utils.checkTokenAddressSelected(
-    tokenAddress,
-    "errTokenAddress",
-    "token-list"
-  )
-    ? false
-    : valid;
-  const tokens = <Tokens>account.values.values.get(tokenAddress)!;
-  valid = !utils.checkAmount(amount, "errTokenAmount", "tokenAmount", tokens)
-    ? false
-    : valid;
-  valid = !utils.checkRecipientAddress(
-    recipientAddress,
-    "errRecipientAddr",
-    "recipientAddr"
-  )
-    ? false
-    : valid;
-  if (selecting.value) {
-    const message = "Please confirm the token IDs selection first.";
-    utils.displayErrorMessage(message, "errTokenIDs", "tokenIDs");
-    valid = false;
-  }
-  return valid;
-}
 
 /**
- * Function for transfer event.
- * Execute the transfer and display whether the transfer was successful or not.
- * @param tokenAddress Token address for transfer.
- * @param amount Amount of tokens to transfer.
- * @param recipientAddress Recipient address for transfer.
- * @param tokenIDs Optional, IDs to transfer.
+ * Initiates the token transfer process based on the provided details. Upon completion,
+ * it displays a confirmation or an error message depending on the outcome of the transfer.
+ *
+ * @param tokenAddress The blockchain address of the token to be transferred.
+ * @param amount The quantity of tokens to transfer.
+ * @param recipientAddress The address of the recipient receiving the transfer.
+ * @param tokenIDs Optionally, the specific IDs of the tokens to transfer.
  */
 async function transferEvent(
   tokenAddress: string,
@@ -524,7 +552,7 @@ async function transferEvent(
 }
 
 /**
- * Function to display successful transfer.
+ * Displays a message indicating that the transfer was successful and provides a button to return to the transfer screen.
  */
 function htmlTransferSuccessful() {
   div_transfer.innerHTML = `
@@ -543,13 +571,14 @@ function htmlTransferSuccessful() {
 }
 
 /**
- * Function to carry out transfer of tokens.
- * @param session Session from which the transfer will happen
- * @param token Token to transfer
- * @param amount Amount of the token to transfer
- * @param address Address to transfer to
- * @param tokenIDs optional, IDs of token to transfer
- * @returns Status and error message
+ * Executes the transfer of specified tokens from the current session to a recipient address.
+ * It handles the transfer process and returns the status of the operation along with any error messages.
+ *
+ * @param session The current session from which the transfer will be initiated.
+ * @param tokenAddress The address of the token contract for the tokens being transferred.
+ * @param recipientAddress The address of the recipient to whom the tokens will be transferred.
+ * @param tokenIDs Optionally, the specific token IDs to transfer.
+ * @returns An object containing the status of the transfer and any error message if the transfer failed.
  */
 async function transferTo(
   session: Session,
