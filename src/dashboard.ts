@@ -7,7 +7,6 @@ import { htmlTransfer } from "./transfer";
 import { htmlMint } from "./mint";
 import { login, logout } from "./widget";
 import * as utils from "./utils";
-import { createToolTip} from "./tooltip";
 
 export let div_dashboard: HTMLDivElement;
 let session: Session;

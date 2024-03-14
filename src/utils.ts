@@ -615,3 +615,35 @@ export function syncScrolls(
     isSyncingRightScroll = false;
   };
 }
+
+/**
+ * This method creates an interactive tooltip icon inside an HTML-Div element.
+ * Hovering over the icon creates a message box that disappears when the mouse cursor leaves the icon.
+ * Clicking on the icon creates a static message box that disappears when the icon is clicked on once again.
+ *
+ * @param element The wrapper element of the HTML-Element you want to attach the tooltip to
+ * @param textbox_position A string that contains the position of where the textbox should appear. There are 4 possible inputs 'top', 'bottom, 'left' and 'right'
+ * @param text The text inside the textbox
+ * @param style_icon The css-class that contains the styling for the icon
+ * @param style_content The css-class that contains the styling for the textbox
+ */
+export function createToolTip(element: HTMLElement, textbox_position: string, text: string, style_icon: string, style_content: string) {
+  const iconFrame = document.createElement("div");
+  iconFrame.classList.add("tooltip", style_icon)
+
+  const icon = document.createElement("i");
+  icon.classList.add("fa-solid", "fa-circle-info", "tooltip", "tooltip-icon")
+
+  const textbox = document.createElement("span");
+  textbox.classList.add("tooltiptext-" + textbox_position, style_content);
+
+  textbox.textContent = text
+  iconFrame.appendChild(icon);
+  iconFrame.appendChild(textbox);
+
+  element.prepend(iconFrame);
+
+  iconFrame.addEventListener("click", () => {
+      textbox.classList.toggle("clicked");
+    });
+}
