@@ -1,23 +1,3 @@
-#app {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-
-  background: linear-gradient(to bottom, #603e9f, #2e0c4b);
-  background: linear-gradient(to right, #a5a4a4, #3b3c3c);
-  background: linear-gradient(to bottom, #bdc3c7, #2c3e50);
-  background: linear-gradient(to right, #e6dada, #274046);
-  background: linear-gradient(to right, #859398, #283048);
-  background-image: url(background/bback3.jpg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
 #paymentPopup {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -112,4 +92,27 @@
       0.8px 0.8px 1px rgba(255, 255, 255, 0.3);
     background-color: rgba(0, 0, 0, 0.15);
   }
+}
+
+/* css for Dummy page */
+#app {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+
+  color: white;
+
+  button {
+    cursor: pointer;
+  }
+
+  background-image: url(background/bback3.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
