@@ -365,7 +365,7 @@ async function setBalanceTab(
   current = "Balance of";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute("class", "");
-  div_tab.style.height = "345px";
+  div_tab.style.height = "70px";
   await htmlBalance(div_tab, session!.address.toString(), session);
 }
 
@@ -386,13 +386,14 @@ async function setTransferTab(
   const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
     ".l-transfer-window-container"
   )!;
-  windowContainer.style.height = "730px";
+  windowContainer.style.height = "600px";
   current = "Transfer";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
     "class",
     "transfer-window l-transfer-window second-layer-window"
   );
+  div_tab.style.height = "70px";
   await htmlTransfer(div_tab, session);
 }
 
@@ -412,7 +413,7 @@ async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
     ".l-transfer-window-container"
   )!;
 
-  windowContainer.style.height = "740px";
+  windowContainer.style.height = "750px";
 
   current = "Mint";
   head_tabLabel.innerHTML = current;

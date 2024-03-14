@@ -48,13 +48,16 @@ export async function htmlTransfer(
 
   // Check if the account has any tokens and display a message if it doesn't
   if (account.values.values.size == 0) {
+    div_transfer.style.height = "70px";
+    div_transfer.parentElement!.style.height = "600px";
     // If no tokens are available, inform the user with a message
     div_transfer.innerHTML = `
       <p>You have no token available.</p>
     `;
   } else {
     // If tokens are available, set up the transfer interface
-    utils.setWindowHeight(div_transfer, 470);
+    utils.setWindowHeight(div_transfer, 490);
+    div_transfer.parentElement!.style.height = "750px";
     div_transfer.innerHTML = `
       <h2>Choose your token and the amount of tokens you want to send</h2>
       <header class="token-list-header">
@@ -400,8 +403,8 @@ function transferContinueButtonEvent(
   if (!valid) {
     return;
   }
-  utils.setWindowHeight(div_transfer, 540);
-  div_transfer.parentElement!.style.height = "830px";
+  utils.setWindowHeight(div_transfer, 550);
+  div_transfer.parentElement!.style.height = "850px";
   const amountParsed = parseFloat(amount);
   htmlTransferConfirmation(
     tokenAddress,
@@ -562,7 +565,7 @@ function htmlTransferSuccessful() {
     ".successful-form .return-btn"
   )!;
   btn_return.addEventListener("click", () => {
-    div_transfer.parentElement!.style.height = "730px";
+    div_transfer.parentElement!.style.height = "750px";
     htmlTransfer(div_transfer, session);
   });
 }
