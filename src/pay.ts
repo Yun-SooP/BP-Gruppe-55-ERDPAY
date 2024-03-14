@@ -107,7 +107,7 @@ function htmlLogin() {
 
         <div class="widget-header">
           <button class="goback-button">
-            <i class="fa-solid fa-angle-left"></i>
+            x
           </button>
           <img
             class="erdstall-logo"
@@ -197,7 +197,7 @@ function htmlFrame() {
 
       <div class="widget-header">
           <button class="goback-button">
-            <i class="fa-solid fa-angle-left"></i>
+            x
           </button>
           <img
             class="erdstall-logo"
