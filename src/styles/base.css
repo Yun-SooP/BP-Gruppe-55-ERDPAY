@@ -12,13 +12,16 @@
   background: linear-gradient(to bottom, #bdc3c7, #2c3e50);
   background: linear-gradient(to right, #e6dada, #274046);
   background: linear-gradient(to right, #859398, #283048);
-  /* background-image: url(background/bback3.jpg);
+  background-image: url(background/bback3.jpg);
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center center; */
+  background-position: center center;
 }
 
 #paymentPopup {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
   h1 {
     font-size: 25px;
     color: rgba(255, 255, 255, 0.95);
@@ -61,24 +64,6 @@
   button:active {
     background-color: rgba(255, 255, 255, 0.02);
   }
-
-  /* 기준(transfer winddow) 와의 차이점
-  goback-button:
-  width: 30
-  height: 30
-  border radius: 10
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1), -1px -1px 4px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.05);
-
-  main-window:
-  width: 220
-  height: 50
-  border radius: 18
-
-
-  session-window(only first button):
-  height: 50 
-  */
 
   input[type="text"],
   input[type="password"] {
@@ -126,42 +111,5 @@
     box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.5),
       0.8px 0.8px 1px rgba(255, 255, 255, 0.3);
     background-color: rgba(0, 0, 0, 0.15);
-  }
-
-  select {
-    border: 1px solid rgba(255, 255, 255, 0);
-    background-color: rgba(0, 0, 0, 0);
-    color: rgba(255, 255, 255, 1);
-    caret-color: rgba(255, 255, 255, 0.6);
-    outline: none;
-    padding: 10px;
-
-    will-change: width;
-    transition: all 0.3s ease-out;
-
-    /* scrollbar erase for Internet Explorer 10+ */
-    -ms-overflow-style: none;
-    /* scrollbar erase for Firefox */
-    scrollbar-width: none;
-  }
-  /* scrollbar erase for safari & chrome */
-  select::-webkit-scrollbar {
-    display: none;
-  }
-
-  option {
-    font-size: 18px;
-    color: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0);
-    border-radius: 5px;
-    cursor: pointer;
-    will-change: transform;
-    transition: all 0.2s;
-  }
-
-  option:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    transform: scale(1.01);
   }
 }
