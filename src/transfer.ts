@@ -90,7 +90,7 @@ export async function htmlTransfer(
       ".transfer-tokenID-section"
     )!;
     //Synchronize scroll of select_tokens and select_amount
-    syncScrolls(select_tokens, select_amount);
+    utils.syncScrolls(select_tokens, select_amount);
 
     const tokens = Array.from(account.values.values.entries());
 
@@ -99,6 +99,7 @@ export async function htmlTransfer(
     )!;
     const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
 
+    // adjust the token ids to match the amount
     txt_amount.addEventListener("input", () => {
       const tokenAddress = select_tokens.value;
       const tokens = <Tokens>account.values.values.get(tokenAddress);
@@ -109,10 +110,11 @@ export async function htmlTransfer(
         tokens
       );
       if (valid && tokenAddress !== "" && !selecting.value) {
+        const newAmount = txt_amount.value;
         const initialTokenIDs = utils.getTokenIDs(
           account,
           tokenAddress,
-          parseFloat(txt_amount.value)
+          parseFloat(newAmount)
         );
         selectedTokenIDs = initialTokenIDs;
         makeTokenIDsList(div_tokenIDs, initialTokenIDs);
@@ -184,30 +186,20 @@ export async function htmlTransfer(
     );
   }
 }
-function syncScrolls(
-  select_tokens: HTMLSelectElement,
-  select_amount: HTMLSelectElement
-) {
-  let isSyncingLeftScroll = false;
-  let isSyncingRightScroll = false;
 
-  select_tokens.onscroll = function () {
-    if (!isSyncingLeftScroll) {
-      isSyncingRightScroll = true;
-      select_amount.scrollTop = select_tokens.scrollTop;
-    }
-    isSyncingLeftScroll = false;
-  };
 
-  select_amount.onscroll = function () {
-    if (!isSyncingRightScroll) {
-      isSyncingLeftScroll = true;
-      select_tokens.scrollTop = select_amount.scrollTop;
-    }
-    isSyncingRightScroll = false;
-  };
-}
-
+/**
+ * Function to retore the input values for transfer,
+ * if the user returns to the transfer form from the confirmation.
+ * @param tokenAddress 
+ * @param select_tokens 
+ * @param amount 
+ * @param txt_amount 
+ * @param tokenIDs 
+ * @param div_tokenIDs 
+ * @param recipientAddress 
+ * @param txt_recipientAddress 
+ */
 function restoreSelections(
   tokenAddress: string | undefined,
   select_tokens: HTMLSelectElement,

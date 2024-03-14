@@ -507,3 +507,32 @@ export function createInfoBox(element: HTMLElement, content: string ) {
     });
 
 }
+
+/**
+ * Function to sync the scrolls of two seperate select elements
+ * @param select1 first select element
+ * @param select2 second select element
+ */
+export function syncScrolls(
+  select1: HTMLSelectElement,
+  select2: HTMLSelectElement
+) {
+  let isSyncingLeftScroll = false;
+  let isSyncingRightScroll = false;
+
+  select1.onscroll = function () {
+    if (!isSyncingLeftScroll) {
+      isSyncingRightScroll = true;
+      select2.scrollTop = select1.scrollTop;
+    }
+    isSyncingLeftScroll = false;
+  };
+
+  select2.onscroll = function () {
+    if (!isSyncingRightScroll) {
+      isSyncingLeftScroll = true;
+      select1.scrollTop = select2.scrollTop;
+    }
+    isSyncingRightScroll = false;
+  };
+}

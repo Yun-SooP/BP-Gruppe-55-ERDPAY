@@ -3,12 +3,7 @@ import { setupClient } from "./setup_client.ts";
 import { Address } from "@polycrypt/erdstall/ledger";
 import { Client } from "@polycrypt/erdstall";
 import { widget } from "./widget.ts";
-import {
-  getTokenIDs,
-  makeTokensList,
-  setWindowHeight,
-  selectedTokenToBlue,
-} from "./utils.ts";
+import * as utils from "./utils";
 
 let div_balanceWindow: HTMLDivElement;
 let div_address: HTMLDivElement;
@@ -128,27 +123,10 @@ async function viewBalance(client: Client, address: string) {
   )!;
 
   //Synchronize scroll of select_tokens and select_amount
-  let isSyncingLeftScroll = false;
-  let isSyncingRightScroll = false;
-
-  select_tokens.onscroll = function () {
-    if (!isSyncingLeftScroll) {
-      isSyncingRightScroll = true;
-      select_amount.scrollTop = select_tokens.scrollTop;
-    }
-    isSyncingLeftScroll = false;
-  };
-
-  select_amount.onscroll = function () {
-    if (!isSyncingRightScroll) {
-      isSyncingLeftScroll = true;
-      select_tokens.scrollTop = select_amount.scrollTop;
-    }
-    isSyncingRightScroll = false;
-  };
+  utils.syncScrolls(select_tokens, select_amount);
 
   select_tokens.options.length = 0;
-  makeTokensList(select_tokens, select_amount, entries);
+  utils.makeTokensList(select_tokens, select_amount, entries);
 
   //Make select_id, if a token is selected
   const div_id = document.querySelector<HTMLSelectElement>(
@@ -170,12 +148,12 @@ async function viewBalance(client: Client, address: string) {
     span_id.style.color = "rgba(255, 255, 255, 0.7)";
 
     //change color of selecteed token color
-    selectedTokenToBlue(select_tokens);
+    utils.selectedTokenToBlue(select_tokens);
 
     //make id-list visible
     div_id.classList.remove("invisible-balance-window__id-list");
     div_id.classList.add("visible-balance-window__id-list");
-    const selectedIds = getTokenIDs(account, select_tokens.value);
+    const selectedIds = utils.getTokenIDs(account, select_tokens.value);
 
     //reset id list
     div_id.innerHTML = ``;
@@ -211,7 +189,7 @@ function transformToTokenListWindow(address: string) {
     div_balanceWindowContainer.className !=
     "transfer-window-container l-transfer-window-container first-layer-window"
   ) {
-    setWindowHeight(div_balanceWindowContainer, 550);
+    utils.setWindowHeight(div_balanceWindowContainer, 550);
     h1_title.textContent = "Balance of";
   } else {
     //header for dashboard balance section is different to guest balance.
