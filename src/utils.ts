@@ -502,6 +502,13 @@ function removeLoadingScreen(loading_div: HTMLDivElement){
     }
 }
 
+/**
+ * Applies a blue color to the selected token option in the provided HTMLSelectElement.
+ * It removes any existing 'selected' class from all options and then adds the 'selected'
+ * class to the currently selected option.
+ *
+ * @param div_select The HTMLSelectElement containing token options.
+ */
 export function selectedTokenToBlue( div_select:HTMLSelectElement) {
     const tokenOptions = div_select.querySelectorAll("option");
     tokenOptions.forEach(option => option.classList.remove("selected"));
@@ -509,6 +516,14 @@ export function selectedTokenToBlue( div_select:HTMLSelectElement) {
         selectedOption.classList.add("selected");
 }
 
+/**
+ * Creates an information box with a tooltip icon. When the icon is clicked, a popup with the
+ * provided content is displayed. This function dynamically creates the necessary HTML elements
+ * and appends them to the specified element.
+ *
+ * @param element The HTMLElement to which the info box will be appended.
+ * @param content The string content to be displayed in the popup when the info icon is clicked.
+ */
 export function createInfoBox(element: HTMLElement, content: string ) {
     const iconFrame = document.createElement("div");
     iconFrame.classList.add("tooltip", "l-main-infobox")
