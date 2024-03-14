@@ -14,11 +14,16 @@ let privateKey: string;
 let current: string;
 
 /**
- * Function to display selection between a new session and restoring old session.
- * @param html_widget HTML to display to
+ * Renders the user interface for session creation or restoration.
+ * It provides options for the user to either create a new account or log in with an existing private key.
+ *
+ * @param div_widget The HTMLDivElement where the session creation or restoration interface will be displayed.
  */
 export function htmlCreateSession(div_widget: HTMLDivElement) {
+  // Store the div_widget into div_dashboard for later use
   div_dashboard = div_widget;
+
+  // Set the HTML content of div_dashboard with session options
   div_dashboard.innerHTML = `
         <div class="session-window l-session-window first-layer-window">
 
@@ -54,21 +59,37 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
         </form>
       </div>
     `;
+
+   // Select the "New Account" button and attach the event for creating a new session
   const btn_newSession = document.querySelector<HTMLButtonElement>(
     ".session-window__form .new-session-btn"
   )!;
+  btn_newSession.addEventListener(
+    "click",
+    async () => await eventNewSession(div_widget)
+  );
+
+  // Select the "Log-in" button and attach the event for restoring a session with a private key
   const btn_restoreSession = document.querySelector<HTMLButtonElement>(
     ".session-window__form .restore-session-btn"
-    // to fix
   )!;
+  btn_restoreSession.addEventListener(
+    "click",
+    async () => await eventRestoreSession(txt_previousPrivateKey.value)
+  );
 
+   // Select the private key input field and set up an event listener for the "Enter" key
   const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
     ".session-window__form input[type='password']"
   )!;
+  txt_previousPrivateKey.addEventListener("keypress", (event) => {
+    if (event.key == "Enter") {
+      event.preventDefault();
+      btn_restoreSession.click();
+    }
+  });
 
-  /**
-   * Event listeners for going back to the main page
-   */
+  // Select and set up event listeners for logo and back button to navigate back to the previous widget view
   const logo_return =
     document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
   logo_return.addEventListener("click", () => widget(div_dashboard));
@@ -77,33 +98,14 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
     ".session-window .goback-button"
   )!;
   btn_return.addEventListener("click", () => widget(div_dashboard));
-
-  btn_newSession.addEventListener(
-    "click",
-    async () => await eventNewSession(div_widget)
-  );
-
-  txt_previousPrivateKey.addEventListener("keypress", (event) => {
-    if (event.key == "Enter") {
-      event.preventDefault();
-      btn_restoreSession.click();
-    }
-  });
-
-  //stretch window and password input, if click password input
-  // txt_previousPrivateKey.addEventListener("click", () => {
-  //   div_sessionWindow.style.width = "550px";
-  //   txt_previousPrivateKey.style.width = "380px";
-  // });
-
-  btn_restoreSession.addEventListener(
-    "click",
-    async () => await eventRestoreSession(txt_previousPrivateKey.value)
-  );
 }
 
 /**
- * Function for new session event.
+ * Initiates the creation of a new session and updates the interface accordingly.
+ * If successful, it establishes a new session and private key, performs a login,
+ * and proceeds to account creation within the provided HTML widget.
+ *
+ * @param html_widget The HTMLDivElement where the new account interface and information will be displayed.
  */
 async function eventNewSession(html_widget: HTMLDivElement) {
   const newSession_ = await newSession();
@@ -199,8 +201,11 @@ function createAccount(
 }
 
 /**
- * Function for restore session event.
- * @param privateKey Private key to restore the session.
+ * Handles the event to restore a user session using a provided private key.
+ * It attempts to restore the session, validates the private key, displays error messages if any,
+ * and updates the UI with the restored session details if successful.
+ *
+ * @param privateKeyForRestore The private key string used to attempt session restoration.
  */
 async function eventRestoreSession(privateKeyForRestore: string) {
   const restoredSession = await restoreSession(privateKeyForRestore);
