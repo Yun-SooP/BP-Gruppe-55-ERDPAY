@@ -374,7 +374,7 @@ function changeTokenIDsButtonEvent(
     btn_cancelChangeTokenIDs.innerText = "cancel";
     btn_cancelChangeTokenIDs.addEventListener("click", () => {
       selecting.value = false;
-      btn_changeTokenIDs.innerText = "change";
+      btn_changeTokenIDs.innerText = "edit";
       div_tokenIDs.innerHTML = "";
       makeTokenIDsList(div_tokenIDs, tokenIDs);
       btn_cancelChangeTokenIDs.remove();
@@ -390,7 +390,7 @@ function changeTokenIDsButtonEvent(
       return;
     }
     selecting.value = false;
-    btn_changeTokenIDs.innerText = "change";
+    btn_changeTokenIDs.innerText = "edit";
     div_tokenIDs.innerHTML = "";
     newTokenIDs.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
     tokenIDs = newTokenIDs;
