@@ -184,12 +184,12 @@ function createAccount(
   const copy_button_privatekey = document.querySelector<HTMLElement>(
     ".copy-icon-private-key .fa-copy"
   )!;
-  utils.copyToClipboard(privateKey, copy_button_privatekey);
+  utils.setCopyToClipboardListener(privateKey, copy_button_privatekey);
 
   const copy_button_session = document.querySelector<HTMLElement>(
     ".copy-icon-session .fa-copy"
   )!;
-  utils.copyToClipboard(sessionAsString, copy_button_session);
+  utils.setCopyToClipboardListener(sessionAsString, copy_button_session);
 
   const dashboard = html_widget.querySelector<HTMLButtonElement>(
     ".l-create-account-window-container .transfer-btn"
