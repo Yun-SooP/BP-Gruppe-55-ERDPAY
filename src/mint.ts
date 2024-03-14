@@ -88,9 +88,6 @@ async function eventSingleMint(session: Session) {
   if (!valid) {
     return;
   }
-
-  
-
   const { status, error } = await mint(
     session,
     tokenAddress,
