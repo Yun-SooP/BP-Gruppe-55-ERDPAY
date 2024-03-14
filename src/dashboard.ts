@@ -227,13 +227,19 @@ async function eventRestoreSession(privateKeyForRestore: string) {
 }
 
 /**
- * Function to make window for transfer and minting.
+ * Dynamically generates and updates the dashboard HTML content for transfer and minting operations.
+ * It sets up the interactive tabs for balance, transfer, and mint actions, and binds relevant event handlers.
+ *
+ * @param div_dashboard - The container div element where the dashboard will be rendered.
+ * @param session - The current user's session.
+ * @param privateKey - The private key of the account.
  */
 export async function htmlDashboard(
   div_dashboard: HTMLDivElement,
   session: Session,
   privateKey: string
 ) {
+  // Set up the initial HTML structure for the dashboard.
   div_dashboard.innerHTML = `
     <div class="transfer-window-container l-transfer-window-container first-layer-window">
 
@@ -272,12 +278,17 @@ export async function htmlDashboard(
       
     `;
 
+   // Add a click event listener to the logout element.
   document.querySelector(".logout")?.addEventListener("click", logout);
 
+  // Acquire references to DOM elements that will be dynamically updated.
   const head_currentTabLabel = document.getElementById("current-tab-label")!;
   const div_currentTab = <HTMLDivElement>(
     document.getElementById("current-tab")!
   );
+
+  // Tab event listeners for switching between balance, transfer, and mint views.
+  // Each tab click updates the view and highlights the selected tab.
   document.getElementById("balanceTab")?.addEventListener("click", async () => {
     await setBalanceTab(div_currentTab, head_currentTabLabel);
     document.querySelector("#balanceTab")?.classList.add("selected-tab");
@@ -298,9 +309,12 @@ export async function htmlDashboard(
     document.querySelector("#balanceTab")?.classList.remove("selected-tab");
     document.querySelector("#transferTab")?.classList.remove("selected-tab");
   });
+
+  // Initially set the dashboard to display the balance tab by default.
   current = "";
   await setBalanceTab(div_currentTab, head_currentTabLabel);
 
+  // Add event listeners to private key and session address elements to show alerts with the info on click.
   const btn_privateKey =
     document.querySelector<HTMLButtonElement>(".private-key")!;
   btn_privateKey.addEventListener("click", () => alert(privateKey));
@@ -309,8 +323,7 @@ export async function htmlDashboard(
     document.querySelector<HTMLButtonElement>(".session-address")!;
   btn_sessionAddress.addEventListener("click", () => alert(session!.address));
 
-  // Event listener for going back one page
-
+  // Event listeners for additional UI elements like the go back button and logo to perform navigation.
   const btn_return = document.querySelector<HTMLButtonElement>(
     ".transfer-window-container .goback-button"
   )!;
@@ -326,9 +339,11 @@ export async function htmlDashboard(
 }
 
 /**
- * set the given tab and label to balance
- * @param div_tab tab to set
- * @param head_tabLabel label to set
+ * Updates the dashboard to display the balance tab. Adjusts the user interface elements to show the user's balance,
+ * sets the header label to indicate the balance tab is active, and loads the balance data into the tab content area.
+ *
+ * @param div_tab The HTMLDivElement that will be updated with the balance content.
+ * @param head_tabLabel The HTMLElement that serves as the header label for the tab, to be set to "Balance".
  */
 async function setBalanceTab(
   div_tab: HTMLDivElement,
@@ -350,9 +365,11 @@ async function setBalanceTab(
 }
 
 /**
- * set the given tab and label to transfer
- * @param div_tab tab to set
- * @param head_tabLabel label to set
+ * Changes the dashboard view to the mint tab. Alters the UI to accommodate the minting features,
+ * sets the header label to show the mint tab is selected, and loads the minting interface into the tab content.
+ *
+ * @param div_tab The HTMLDivElement that will be updated with the mint content.
+ * @param head_tabLabel The HTMLElement that acts as the header label for the tab, to be set to "Mint".
  */
 async function setTransferTab(
   div_tab: HTMLDivElement,
@@ -375,9 +392,12 @@ async function setTransferTab(
 }
 
 /**
- * set the given tab and label to mint
- * @param div_tab tab to set
- * @param head_tabLabel label to set
+ * Activates the mint tab on the dashboard, updating the display to show minting options.
+ * This function changes the current visual state to the mint interface, modifies the header label to reflect the change,
+ * and invokes the minting content load into the provided tab element.
+ *
+ * @param div_tab The HTMLDivElement to be populated with mint tab content.
+ * @param head_tabLabel The HTMLElement that acts as the title label, to be updated to the minting context.
  */
 async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   if (current == "Mint") {
