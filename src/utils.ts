@@ -119,10 +119,10 @@ export function checkPrivateKey(
     if (
       privateKey.slice(0, 2) != "0x" || 
       !hex.test(privateKey.slice(2)) ||
-      privateKey.length > 42
+      privateKey.length > 66
       ) {
         displayErrorMessage(
-          `Please enter a valid private key. <br> The private key must be in hexadecimal and 64 characters long.`,
+          `Please enter a valid private key. (Hexadecimal of length 64, starting with 0x)`,
           errDisplay,
           inputBox
         );
