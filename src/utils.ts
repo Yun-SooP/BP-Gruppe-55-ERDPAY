@@ -310,6 +310,7 @@ export function makeTokensList(
       const option = document.createElement("option");
       const token = tokens[i];
       option.value = token[0];
+      option.title = token[0];
       option.text = token[0].substring(0, 6) + "..." + token[0].substring(38, 42)
       select_tokens.add(option);
 
