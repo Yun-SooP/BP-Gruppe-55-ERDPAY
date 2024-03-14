@@ -281,7 +281,7 @@ function changeTokenIDsButtonEvent(
     btn_cancelChangeTokenIDs.innerText = "cancel";
     btn_cancelChangeTokenIDs.addEventListener("click", () => {
       selecting.value = false;
-      btn_changeTokenIDs.innerText = "change";
+      btn_changeTokenIDs.innerText = "edit";
       makeTokenIDsList(div_tokenIDs, selectedTokenIDs);
       txt_amount.value = selectedTokenIDs.length.toString();
       btn_cancelChangeTokenIDs.remove();
@@ -298,7 +298,7 @@ function changeTokenIDsButtonEvent(
       utils.resetErrorDisplay("errTokenIDs", "tokenIDs");
     }
     selecting.value = false;
-    btn_changeTokenIDs.innerText = "change";
+    btn_changeTokenIDs.innerText = "edit";
     newTokenIDs.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
     selectedTokenIDs = newTokenIDs;
     makeTokenIDsList(div_tokenIDs, newTokenIDs);
