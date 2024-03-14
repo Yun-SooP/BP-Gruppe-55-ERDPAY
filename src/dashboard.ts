@@ -15,11 +15,16 @@ let privateKey: string;
 let current: string;
 
 /**
- * Function to display selection between a new session and restoring old session.
- * @param html_widget HTML to display to
+ * Renders the user interface for session creation or restoration.
+ * It provides options for the user to either create a new account or log in with an existing private key.
+ *
+ * @param div_widget The HTMLDivElement where the session creation or restoration interface will be displayed.
  */
 export function htmlCreateSession(div_widget: HTMLDivElement) {
+  // Store the div_widget into div_dashboard for later use
   div_dashboard = div_widget;
+
+  // Set the HTML content of div_dashboard with session options
   div_dashboard.innerHTML = `
         <div class="session-window l-session-window first-layer-window">
 
@@ -55,21 +60,37 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
         </form>
       </div>
     `;
+
+   // Select the "New Account" button and attach the event for creating a new session
   const btn_newSession = document.querySelector<HTMLButtonElement>(
     ".session-window__form .new-session-btn"
   )!;
+  btn_newSession.addEventListener(
+    "click",
+    async () => await eventNewSession(div_widget)
+  );
+
+  // Select the "Log-in" button and attach the event for restoring a session with a private key
   const btn_restoreSession = document.querySelector<HTMLButtonElement>(
     ".session-window__form .restore-session-btn"
-    // to fix
   )!;
+  btn_restoreSession.addEventListener(
+    "click",
+    async () => await eventRestoreSession(txt_previousPrivateKey.value)
+  );
 
+   // Select the private key input field and set up an event listener for the "Enter" key
   const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
     ".session-window__form input[type='password']"
   )!;
+  txt_previousPrivateKey.addEventListener("keypress", (event) => {
+    if (event.key == "Enter") {
+      event.preventDefault();
+      btn_restoreSession.click();
+    }
+  });
 
-  /**
-   * Event listeners for going back to the main page
-   */
+  // Select and set up event listeners for logo and back button to navigate back to the previous widget view
   const logo_return =
     document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
   logo_return.addEventListener("click", () => widget(div_dashboard));
@@ -78,33 +99,14 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
     ".session-window .goback-button"
   )!;
   btn_return.addEventListener("click", () => widget(div_dashboard));
-
-  btn_newSession.addEventListener(
-    "click",
-    async () => await eventNewSession(div_widget)
-  );
-
-  txt_previousPrivateKey.addEventListener("keypress", (event) => {
-    if (event.key == "Enter") {
-      event.preventDefault();
-      btn_restoreSession.click();
-    }
-  });
-
-  //stretch window and password input, if click password input
-  // txt_previousPrivateKey.addEventListener("click", () => {
-  //   div_sessionWindow.style.width = "550px";
-  //   txt_previousPrivateKey.style.width = "380px";
-  // });
-
-  btn_restoreSession.addEventListener(
-    "click",
-    async () => await eventRestoreSession(txt_previousPrivateKey.value)
-  );
 }
 
 /**
- * Function for new session event.
+ * Initiates the creation of a new session and updates the interface accordingly.
+ * If successful, it establishes a new session and private key, performs a login,
+ * and proceeds to account creation within the provided HTML widget.
+ *
+ * @param html_widget The HTMLDivElement where the new account interface and information will be displayed.
  */
 async function eventNewSession(html_widget: HTMLDivElement) {
   const newSession_ = await newSession();
@@ -200,8 +202,11 @@ function createAccount(
 }
 
 /**
- * Function for restore session event.
- * @param privateKey Private key to restore the session.
+ * Handles the event to restore a user session using a provided private key.
+ * It attempts to restore the session, validates the private key, displays error messages if any,
+ * and updates the UI with the restored session details if successful.
+ *
+ * @param privateKeyForRestore The private key string used to attempt session restoration.
  */
 async function eventRestoreSession(privateKeyForRestore: string) {
   const restoredSession = await restoreSession(privateKeyForRestore);
@@ -228,14 +233,19 @@ async function eventRestoreSession(privateKeyForRestore: string) {
 }
 
 /**
- * Function to make window for transfer and minting.
+ * Dynamically generates and updates the dashboard HTML content for transfer and minting operations.
+ * It sets up the interactive tabs for balance, transfer, and mint actions, and binds relevant event handlers.
+ *
+ * @param div_dashboard - The container div element where the dashboard will be rendered.
+ * @param session - The current user's session.
+ * @param privateKey - The private key of the account.
  */
-
 export async function htmlDashboard(
   div_dashboard: HTMLDivElement,
   session: Session,
   privateKey: string
 ) {
+  // Set up the initial HTML structure for the dashboard.
   div_dashboard.innerHTML = `
     <div class="transfer-window-container l-transfer-window-container first-layer-window">
 
@@ -274,12 +284,17 @@ export async function htmlDashboard(
       
     `;
 
+   // Add a click event listener to the logout element.
   document.querySelector(".logout")?.addEventListener("click", logout);
 
+  // Acquire references to DOM elements that will be dynamically updated.
   const head_currentTabLabel = document.getElementById("current-tab-label")!;
   const div_currentTab = <HTMLDivElement>(
     document.getElementById("current-tab")!
   );
+
+  // Tab event listeners for switching between balance, transfer, and mint views.
+  // Each tab click updates the view and highlights the selected tab.
   document.getElementById("balanceTab")?.addEventListener("click", async () => {
     await setBalanceTab(div_currentTab, head_currentTabLabel);
     document.querySelector("#balanceTab")?.classList.add("selected-tab");
@@ -300,9 +315,12 @@ export async function htmlDashboard(
     document.querySelector("#balanceTab")?.classList.remove("selected-tab");
     document.querySelector("#transferTab")?.classList.remove("selected-tab");
   });
+
+  // Initially set the dashboard to display the balance tab by default.
   current = "";
   await setBalanceTab(div_currentTab, head_currentTabLabel);
 
+  // Add event listeners to private key and session address elements to show alerts with the info on click.
   const btn_privateKey =
     document.querySelector<HTMLButtonElement>(".private-key")!;
   btn_privateKey.addEventListener("click", () => alert(privateKey));
@@ -311,7 +329,7 @@ export async function htmlDashboard(
     document.querySelector<HTMLButtonElement>(".session-address")!;
   btn_sessionAddress.addEventListener("click", () => alert(session!.address));
 
-  // 
+  // Event listeners for additional UI elements like the go back button and logo to perform navigation.
   const btn_return = document.querySelector<HTMLButtonElement>(
     ".transfer-window-container .goback-button"
   )!;
@@ -327,9 +345,11 @@ export async function htmlDashboard(
 }
 
 /**
- * set the given tab and label to balance
- * @param div_tab tab to set
- * @param head_tabLabel label to set
+ * Updates the dashboard to display the balance tab. Adjusts the user interface elements to show the user's balance,
+ * sets the header label to indicate the balance tab is active, and loads the balance data into the tab content area.
+ *
+ * @param div_tab The HTMLDivElement that will be updated with the balance content.
+ * @param head_tabLabel The HTMLElement that serves as the header label for the tab, to be set to "Balance".
  */
 async function setBalanceTab(
   div_tab: HTMLDivElement,
@@ -346,15 +366,17 @@ async function setBalanceTab(
   current = "Balance of";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute("class", "");
-  div_tab.style.height = "345px";
+  div_tab.style.height = "70px";
   await htmlBalance(div_tab, session!.address.toString(), session);
   
 }
 
 /**
- * set the given tab and label to transfer
- * @param div_tab tab to set
- * @param head_tabLabel label to set
+ * Changes the dashboard view to the mint tab. Alters the UI to accommodate the minting features,
+ * sets the header label to show the mint tab is selected, and loads the minting interface into the tab content.
+ *
+ * @param div_tab The HTMLDivElement that will be updated with the mint content.
+ * @param head_tabLabel The HTMLElement that acts as the header label for the tab, to be set to "Mint".
  */
 async function setTransferTab(
   div_tab: HTMLDivElement,
@@ -366,20 +388,24 @@ async function setTransferTab(
   const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
     ".l-transfer-window-container"
   )!;
-  windowContainer.style.height = "730px";
+  windowContainer.style.height = "600px";
   current = "Transfer";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute(
     "class",
     "transfer-window l-transfer-window second-layer-window"
   );
+  div_tab.style.height = "70px";
   await htmlTransfer(div_tab, session);
 }
 
 /**
- * set the given tab and label to mint
- * @param div_tab tab to set
- * @param head_tabLabel label to set
+ * Activates the mint tab on the dashboard, updating the display to show minting options.
+ * This function changes the current visual state to the mint interface, modifies the header label to reflect the change,
+ * and invokes the minting content load into the provided tab element.
+ *
+ * @param div_tab The HTMLDivElement to be populated with mint tab content.
+ * @param head_tabLabel The HTMLElement that acts as the title label, to be updated to the minting context.
  */
 async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   if (current == "Mint") {
@@ -389,7 +415,7 @@ async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
     ".l-transfer-window-container"
   )!;
 
-  windowContainer.style.height = "700px";
+  windowContainer.style.height = "750px";
 
   current = "Mint";
   head_tabLabel.innerHTML = current;
@@ -397,7 +423,7 @@ async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
     "class",
     "mint-window l-mint-window second-layer-window"
   );
-  div_tab.style.height = "430px";
+  div_tab.style.height = "470px";
   await htmlMint(div_tab, session);
 
 }

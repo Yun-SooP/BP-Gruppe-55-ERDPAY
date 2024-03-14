@@ -7,11 +7,13 @@ let session : Session | undefined;
 let privateKey : string | undefined;
 
 /**
- * Function to display selection between transfer and view balance.
- * @param div_widget HTML element to display to
+ * Renders the main widget interface which allows the user to select between accessing the dashboard
+ * or viewing the balance of an account by providing its address.
+ *
+ * @param div_widget The HTMLDivElement where the widget will be displayed.
  */
 export function widget(div_widget: HTMLDivElement) {
-
+// Set the widget's inner HTML to display the main menu with two primary actions
   div_widget.innerHTML = `
     <div class="main-window l-main-window first-layer-window">
     <img
@@ -44,6 +46,7 @@ export function widget(div_widget: HTMLDivElement) {
   );
   
   btn_transfer?.addEventListener("click", async () => {
+    // If a session and private key exist, display the dashboard, otherwise prompt for session creation
     if (session && privateKey){
       await htmlDashboard(div_widget, session, privateKey);
     } else {
@@ -57,25 +60,28 @@ export function widget(div_widget: HTMLDivElement) {
   const btn_balance = document.querySelector<HTMLButtonElement>(
     ".main-window__form .view-balance-btn"
   )!;
+
+  // Add an event listener to the view balance button for displaying balance of a given address
   btn_balance.addEventListener("click", async () => {
+    // Validate the address input before proceeding
     const valid = utils.checkBalanceAddress(
       txt_balanceAddress.value,
       "errBalanceAccAddr",
       "inputAddress"
     );
-    if (!valid) {
-      return;
+    if (valid) {
+      // If the address is valid, display the balance for the given address
+      await htmlBalanceForGuest(div_widget, txt_balanceAddress.value);
     }
-    await htmlBalanceForGuest(div_widget, txt_balanceAddress.value);
   });
 
+  // Add an event listener to the balance address input field to trigger balance view on Enter keypress
   txt_balanceAddress.addEventListener("keypress", (event) => {
     if (event.key == "Enter") {
       event.preventDefault();
       btn_balance.click();
     }
   });
-
 }
 
 // change the inner HTML of the HTML div element "app" to the main interface
@@ -91,6 +97,7 @@ export function login(sessionForLogin: Session, privateKeyForLogin: string){
   session = sessionForLogin;
   privateKey = privateKeyForLogin;
 }
+
 /**
  * Log-out and display the start page.
  */

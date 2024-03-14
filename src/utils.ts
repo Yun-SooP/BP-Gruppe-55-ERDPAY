@@ -116,9 +116,13 @@ export function checkPrivateKey(
         return false;
     }
     const hex = /[0-9A-Fa-f]{64}/g;
-    if (privateKey.slice(0, 2) != "0x" || !hex.test(privateKey.slice(2))) {
+    if (
+      privateKey.slice(0, 2) != "0x" || 
+      !hex.test(privateKey.slice(2)) ||
+      privateKey.length > 66
+      ) {
         displayErrorMessage(
-          `Please enter a valid private key. <br> The private key must be in hexadecimal and 64 characters long.`,
+          `Please enter a valid private key. (Hexadecimal of length 64, starting with 0x)`,
           errDisplay,
           inputBox
         );
@@ -230,7 +234,8 @@ export function checkRecipientAddress(
     const hex = /[0-9A-Fa-f]{40}/g;
     if (
         recipientAddress.slice(0, 2) != "0x" ||
-        !hex.test(recipientAddress.slice(2))
+        !hex.test(recipientAddress.slice(2)) ||
+        recipientAddress.length > 42
       ) {
         displayErrorMessage(
           "Please enter a valid address. (Hexadecimal of length 40, starting with 0x)",
@@ -305,6 +310,7 @@ export function makeTokensList(
       const option = document.createElement("option");
       const token = tokens[i];
       option.value = token[0];
+      option.title = token[0];
       option.text = token[0].substring(0, 6) + "..." + token[0].substring(38, 42)
       select_tokens.add(option);
 
@@ -313,6 +319,65 @@ export function makeTokensList(
         option_amount.text = (<Tokens>token[1]).value.length + "";
         select_amount.add(option_amount);
     }
+}
+
+/**
+ * Populates a given div element with a list of token IDs.
+ * Each token ID is displayed in a truncated format for better readability.
+ *
+ * @param div_tokenIDs The HTMLDivElement where the token IDs will be displayed.
+ * @param tokenIDs An array of token IDs to display.
+ * @returns
+ */
+export function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
+  div_tokenIDs.innerHTML = "";
+  for (let i = 0; i < tokenIDs.length; i++) {
+    const span = document.createElement("span");
+    span.classList.add("token-id", "third-layer-window");
+    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay}`;
+    span.title = tokenIDString;
+    setCopyToClipboardListener(tokenIDString, span);
+    span.style.cursor = 'pointer'
+    div_tokenIDs.appendChild(span);
+  }
+}
+
+/**
+ * Extends the `currentTokenIDs` array to a specified `newAmount` length by adding non-duplicate 
+ * token IDs from the `availableTokenIDs` array. If `newAmount` is less than the current length, 
+ * the `currentTokenIDs` array is truncated. The resulting array is sorted in ascending order before returning.
+ *
+ * @param currentTokenIDs - An array of BigInt token IDs currently set.
+ * @param availableTokenIDs - An array of BigInt token IDs that are available to be added.
+ * @param newAmount - The desired length of the extended `currentTokenIDs` array.
+ * @returns A new array of BigInt token IDs with the length of `newAmount`, containing original tokens 
+ *          from `currentTokenIDs` and filled with non-duplicate tokens from `availableTokenIDs`, sorted in ascending order.
+ */
+export function extendTokenIDs(currentTokenIDs: bigint[], availableTokenIDs: bigint[], newAmount: number) : bigint[] {
+  if (newAmount < currentTokenIDs.length){
+    return currentTokenIDs.slice(0,newAmount);
+  }
+  const extendedTokenIDs = [...currentTokenIDs];
+  let i = 0;
+  while (extendedTokenIDs.length < newAmount){
+    if(!extendedTokenIDs.includes(availableTokenIDs[i])){
+      extendedTokenIDs.push(availableTokenIDs[i]);
+    }
+    i++;
+  }
+
+  return extendedTokenIDs.sort();
 }
 
 /**
@@ -408,16 +473,49 @@ export function shortenString(str: string, showNumber: number) {
     return tokenIDTODisplay;
   }
   
-  /**
-   * This functions adds an event listener to a HTML element which copies the input text to the clipboard of the user on click
-   * @param text The text that should be copied to the clipboard
-   * @param element the HTML element the event listener should be added to
-   */
-  export function copyToClipboard(text: string, element: HTMLElement) {
-    element.addEventListener("click", () => {
-      navigator.clipboard.writeText(text);
-    });
-  }
+/**
+ * This function adds an event listener to an HTML element which copies the input text to the clipboard of the user on click.
+ * Additionally, it displays a temporary notification to the user indicating the copy action was successful.
+ * @param text The text that should be copied to the clipboard.
+ * @param element The HTML element the event listener should be added to.
+ */
+export function setCopyToClipboardListener(text: string, element: HTMLElement) {
+  element.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // Create and style the notification element
+      const notification = document.createElement("div");
+      notification.textContent = "Copied!";
+      notification.style.position = "fixed";
+      notification.style.left = `${element.getBoundingClientRect().left}px`;
+      notification.style.top = `${element.getBoundingClientRect().top - element.offsetHeight}px`;
+      notification.style.zIndex = "1000";
+      notification.style.background = "#000";
+      notification.style.color = "#fff";
+      notification.style.padding = "4px 8px";
+      notification.style.borderRadius = "4px";
+      notification.style.fontSize = "0.75rem";
+      notification.style.transition = "opacity 0.4s";
+      notification.style.opacity = "0";
+      notification.style.pointerEvents = "none"; // Avoid blocking clicks
+      
+      // Append notification to the body or a specific container
+      document.body.appendChild(notification);
+
+      // Use setTimeout to fade out and remove the notification after showing it
+      setTimeout(() => {
+        notification.style.opacity = "1"; // Show the notification
+        setTimeout(() => {
+          notification.style.opacity = "0"; // Start fading out
+          setTimeout(() => notification.remove(), 600); // Remove after fade out
+        }, 2000); // Duration the notification stays visible
+      }, 10); // Slight delay before showing the notification
+    } catch (error) {
+      console.error('Copy to clipboard failed:', error);
+      // Optionally handle the error, e.g., by showing an error notification
+    }
+  });
+}
 
 /**
  * Initiates the loading screen by hiding specific elements and displaying a loading screen
@@ -475,6 +573,13 @@ function removeLoadingScreen(loading_div: HTMLDivElement){
     }
 }
 
+/**
+ * Applies a blue color to the selected token option in the provided HTMLSelectElement.
+ * It removes any existing 'selected' class from all options and then adds the 'selected'
+ * class to the currently selected option.
+ *
+ * @param div_select The HTMLSelectElement containing token options.
+ */
 export function selectedTokenToBlue( div_select:HTMLSelectElement) {
     const tokenOptions = div_select.querySelectorAll("option");
     tokenOptions.forEach(option => option.classList.remove("selected"));
@@ -483,10 +588,12 @@ export function selectedTokenToBlue( div_select:HTMLSelectElement) {
 }
 
 /**
- * This method creates an info icon in the upper right corner of the widget. 
- * An infobox will popup if you click on the icon.
- * @param element The widget frame the icon should the added to
- * @param content The content of the infobox
+ * Creates an information box with a tooltip icon. When the icon is clicked, a popup with the
+ * provided content is displayed. This function dynamically creates the necessary HTML elements
+ * and appends them to the specified element.
+ *
+ * @param element The HTMLElement to which the info box will be appended.
+ * @param content The string content to be displayed in the popup when the info icon is clicked.
  */
 export function createInfoBox(element: HTMLElement, content: string ) {
     const iconFrame = document.createElement("div");
@@ -512,4 +619,33 @@ export function createInfoBox(element: HTMLElement, content: string ) {
         frame.classList.toggle("popup-visible")
     });
 
+}
+
+/**
+ * Function to sync the scrolls of two seperate select elements
+ * @param select1 first select element
+ * @param select2 second select element
+ */
+export function syncScrolls(
+  select1: HTMLSelectElement,
+  select2: HTMLSelectElement
+) {
+  let isSyncingLeftScroll = false;
+  let isSyncingRightScroll = false;
+
+  select1.onscroll = function () {
+    if (!isSyncingLeftScroll) {
+      isSyncingRightScroll = true;
+      select2.scrollTop = select1.scrollTop;
+    }
+    isSyncingLeftScroll = false;
+  };
+
+  select2.onscroll = function () {
+    if (!isSyncingRightScroll) {
+      isSyncingLeftScroll = true;
+      select1.scrollTop = select2.scrollTop;
+    }
+    isSyncingRightScroll = false;
+  };
 }
