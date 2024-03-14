@@ -6,7 +6,6 @@ import { Asset } from "@polycrypt/erdstall/ledger/assets";
 import { Assets } from "@polycrypt/erdstall/ledger/assets";
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 import * as utils from "./utils.ts";
-import { createToolTip} from "./tooltip.ts";
 
 let session: Session;
 let account: Account;
