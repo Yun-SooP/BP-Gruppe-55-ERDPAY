@@ -17,6 +17,13 @@
   background-repeat: no-repeat;
   background-position: center center;
 }
+
+@media screen and (orientation: landscape) {
+  #app {
+    height: 122vh;
+  }
+}
+
 .erdpay-h1 {
   color: rgba(0, 0, 0, 0.9);
   font-size: 30px;
