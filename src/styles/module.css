@@ -1,562 +1,563 @@
 @import "modules/utils.css";
+
 #app {
+  /* Dummy Page and Main button */
+
+  .dummy {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .dummy h2 {
+    position: relative;
+    top: -10px;
+    height: 20px;
+    padding: 10px;
+  }
+
+  .erdstall-logo {
+    filter: brightness(0) invert(1);
+  }
+
+  .main-button,
+  .pay-button {
+    width: 275px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(30px);
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .pay-button {
+    position: relative;
+  }
+
+  .pay-button span {
+    position: relative;
+    left: 25px;
+    font-weight: bold;
+  }
+
+  .main-button div {
+    position: relative;
+    font-size: 16px;
+    left: 45px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .dummy .erdstall-logo {
+    position: relative;
+    right: -30px;
+    transform: scale(0.5);
+  }
+
+  .main-button:last-child .erdstall-logo {
+    transform: scale(0.6);
+  }
+}
+
+#paymentPopup {
   --errorRed: #ff7979;
-}
 
-/* Dummy Page and Main button */
-.dummy {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.dummy h2 {
-  position: relative;
-  top: -10px;
-  height: 20px;
-  padding: 10px;
-}
-
-.erdstall-logo {
-  filter: brightness(0) invert(1);
-}
-
-.main-button,
-.pay-button {
-  width: 275px;
-  height: 55px;
-  display: flex;
-  align-items: center;
-  backdrop-filter: blur(30px);
-  background-color: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.pay-button {
-  position: relative;
-}
-
-.pay-button span {
-  position: relative;
-  left: 25px;
-  font-weight: bold;
-}
-
-.main-button div {
-  position: relative;
-  font-size: 16px;
-  left: 45px;
-  font-weight: bold;
-  color: white;
-}
-
-.dummy .erdstall-logo {
-  position: relative;
-  right: -30px;
-  transform: scale(0.5);
-}
-
-.main-button:last-child .erdstall-logo {
-  transform: scale(0.6);
-}
-/* 
-
-
-
-
-
-*/
-/* Main Window */
-.main-window__header p {
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 10px;
-}
-
-.main-window__form button {
-  height: 50px;
-  z-index: 100;
-}
-/* 
-
-
-
-*/
-/* balance window*/
-
-.balance-window__address-form {
-  display: flex;
-  margin-top: 30px;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-}
-
-.balance-window-container__address .copy-button {
-  width: 30px;
-  height: 30px;
-  position: relative;
-  right: -45px;
-}
-
-.balance-window-container__address span {
-  position: relative;
-  right: -15px;
-}
-
-.token-list-header {
-  display: flex;
-  width: 550px;
-  margin-top: 20px;
-  margin-bottom: 5px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.balance-window .token-list-header span:first-child {
-  margin-left: 130px;
-  transition: all 0.3s ease-in-out;
-}
-
-.balance-window .token-list-header span:nth-child(2) {
-  margin-left: 115px;
-  transition: all 0.3s ease-in-out;
-}
-
-.balance-window .token-list-header span:last-child {
-  margin-left: 30px;
-  color: rgba(0, 0, 0, 0);
-  transition: all 0.3s ease-in-out;
-}
-
-.balance-window .list-container {
-  width: 550px;
-  height: 150px;
-  display: flex;
-  justify-content: center;
-}
-
-.balance-window .token-list {
-  height: 150px;
-  width: 300px;
-}
-
-.balance-window .token-list__tokens {
-  width: 245px;
-}
-
-.balance-window .token-list__amount {
-  width: 50px;
-}
-
-.token-list__amount option {
-  cursor: default;
-}
-
-.token-list__amount option:hover {
-  background-color: rgba(255, 255, 255, 0);
-  border: 1px solid rgba(255, 255, 255, 0);
-  transform: none;
-}
-/* 
-
-
-
-
-
-
-*/
-
-/* Account Window */
-.session-window__header h1 {
-  letter-spacing: 0.75px;
-}
-
-.session-window__header p {
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 10px;
-}
-
-.session-window__form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.session-window__form span {
-  margin: 10px 0px;
-  color: rgba(255, 255, 255, 0.6);
-}
-/* 
-
-
-
-
-*/
-/* Transfer */
-.transfer-window-container .transfer-footer {
-  display: flex;
-  font-size: 13px;
-  text-decoration: underline;
-  color: rgba(255, 255, 255, 0.7);
-  cursor: pointer;
-  gap: 40px;
-}
-
-.transfer-window .token-list-header span:first-child {
-  margin-left: 30px;
-  transition: all 0.3s ease-in-out;
-}
-
-.transfer-window .token-list-header span:last-child {
-  margin-left: 310px;
-  transition: all 0.3s ease-in-out;
-}
-.transfer-window .token-list {
-  width: 500px;
-}
-
-.transfer-window .token-list__tokens {
-  width: 450px;
-}
-.transfer-window .token-list__amount {
-  width: 50px;
-}
-
-.transfer-window .transfer-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-top: 15px;
-  gap: 15px;
-}
-
-.transfer-form__token-amount {
-  align-self: self-end;
-  display: flex;
-  align-items: center;
-  margin-right: 30px;
-  gap: 5px;
-}
-
-.transfer-form__token-amount span {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.transfer-form__token-amount input {
-  width: 100px;
-}
-/* 
-
-
-*/
-/*toggle checkbox css*/
-.transer-form__advanced-transfer,
-.mint-form__multiple-tokens {
-  display: flex;
-  align-items: center;
-}
-.transer-form__advanced-transfer p,
-.mint-form__multiple-tokens p {
-  color: rgba(255, 255, 255, 0.7);
-  margin-left: 10px;
-}
-
-.toggle {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-.toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: 0.3s;
-  transition: 0.3s;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: 0.3s;
-  transition: 0.3s;
-}
-input:checked + .slider {
-  background-color: #6f8898;
-}
-input:focus + .slider {
-  box-shadow: 0 0 1px #6f8898;
-}
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-.slider.round:before {
-  border-radius: 50%;
-}
-/* 
-
-
-
-
-
-*/
-/* Confirm Transfer */
-
-.token-address-div,
-.amount-div,
-.tokenIDs-div,
-.recipient-address-div,
-.successful-div {
-  color: rgba(255, 255, 255, 0.8);
-  border-radius: 16px;
-  width: 480px;
-  height: 38px;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.checkboxesIDs {
-  margin-top: 20px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.advanced-transfer-form {
-  margin-top: 15px;
-  display: flex;
-  gap: 10px;
-}
-
-/* Confirm Window */
-.token-id,
-.clickable-token-id {
-  color: rgba(255, 255, 255, 0.7);
-  border-radius: 12px;
-  width: 90px;
-  height: 33px;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.clickable-token-id {
-  cursor: pointer;
-}
-
-#tokenIDs {
-  border: 1px solid rgba(255, 255, 255, 0);
-  border-radius: 20px;
-  position: relative;
-  right: 15px;
-  width: 500px;
-
-  box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.5),
-    0.8px 0.8px 1px rgba(255, 255, 255, 0.3);
-  background-color: rgba(0, 0, 0, 0.15);
-  margin-left: 35px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  max-height: 90px;
-  padding: 7px;
-  overflow-y: scroll;
-  gap: 10px;
-
-  /* scrollbar erase for Internet Explorer 10+ */
-  -ms-overflow-style: none;
-  /* scrollbar erase for Firefox */
-  scrollbar-width: none;
-}
-
-#tokenIDs::-webkit-scrollbar {
-  display: none;
-}
-
-.confirm-transfer-form {
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.confirm-transfer-form button:first-child {
-  background-color: #283048;
-}
-
-.confirm-transfer-form button:first-child:hover {
-  background-color: #283048;
-}
-
-.confirm-transfer-form button:first-child:active {
-  background-color: rgb(22, 26, 39);
-}
-
-.transfer-window .successful-div {
-  margin-top: 40%;
-}
-.successful-transfer-form {
-  margin-top: 20px;
-}
-/* 
-
-
-*/
-.pay__tokenID-header {
-  position: relative;
-  margin-top: 10px;
-  bottom: -5px;
-  display: flex;
-  height: 65px;
-  width: 100%;
-
-  align-items: center;
-  justify-content: space-between;
-}
-
-.pay__tokenID-header h2 {
-  position: relative;
-  bottom: -5px;
-}
-
-.pay__tokenID-header button {
-  margin-right: 20px;
-  width: 80px;
-  height: 35px;
-}
-
-/* 
-
-
-
-
-
-*/
-/* Mint */
-.mint-form {
-  margin-top: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-}
-
-.mint-form .token-address-txt {
-  margin-top: 25px;
-}
-
-.mint-form .random-address-btn {
-  align-self: self-end;
-  margin-right: 5px;
-}
-
-.mint-form__multiple-tokens {
-  align-self: self-start;
-  margin-left: 5px;
-  margin-top: 20px;
-}
-
-/* error: red outline*/
-
-.error-message-span {
-  font-size: 15px;
-}
-
-@keyframes horizontal-shaking {
-  0% {
-    transform: translateX(0);
+  .erdstall-logo {
+    filter: brightness(0) invert(1);
   }
-  25% {
-    transform: translateX(5px);
+  /* Main Window */
+  .main-window__header p {
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 10px;
   }
-  50% {
-    transform: translateX(-5px);
+
+  .main-window__form button {
+    height: 50px;
+    z-index: 100;
   }
-  75% {
-    transform: translateX(5px);
+  /* 
+
+
+
+  */
+  /* balance window*/
+
+  .balance-window__address-form {
+    display: flex;
+    margin-top: 30px;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
   }
-  100% {
-    transform: translateX(0);
+
+  .balance-window-container__address .copy-button {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    right: -45px;
   }
-}
-.horizontal-shake {
-  animation: horizontal-shaking 0.35s 1s;
-}
-.tooltip-icon-frame {
-  position: relative;
-  display: inline-flex;
-  justify-content: center;
-  margin-left: 5px;
-  margin-top: 10px;
-}
 
-.message-box {
-  visibility: hidden;
-  opacity: 0;
+  .balance-window-container__address span {
+    position: relative;
+    right: -15px;
+  }
 
-  width: max-content;
-  height: max-content;
+  .token-list-header {
+    display: flex;
+    width: 550px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.7);
+  }
 
-  background-color: #283048;
-  color: #fff;
+  .balance-window .token-list-header span:first-child {
+    margin-left: 130px;
+    transition: all 0.3s ease-in-out;
+  }
 
-  text-align: center;
-  vertical-align: middle;
-  position: absolute;
-  z-index: 1;
+  .balance-window .token-list-header span:nth-child(2) {
+    margin-left: 115px;
+    transition: all 0.3s ease-in-out;
+  }
 
-  padding: 5px 10px 10px 10px;
-  bottom: 30px;
+  .balance-window .token-list-header span:last-child {
+    margin-left: 30px;
+    color: rgba(0, 0, 0, 0);
+    transition: all 0.3s ease-in-out;
+  }
 
-  transition: opacity 0.4s;
-}
+  .balance-window .list-container {
+    width: 550px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+  }
 
-.message-box::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -10px;
-  border-width: 10px;
-  border-style: solid;
-  border-color: #283048 transparent transparent transparent;
-}
+  .balance-window .token-list {
+    height: 150px;
+    width: 300px;
+  }
 
-.message-box p {
-  padding: 30px 10px 30px 10px;
-}
+  .balance-window .token-list__tokens {
+    width: 245px;
+  }
 
-.tooltip-icon {
-  color: rgba(255, 255, 255, 0.7);
-  transform: scale(0.9);
-}
+  .balance-window .token-list__amount {
+    width: 50px;
+  }
 
-.content-with-tooltip {
-  height: max-content;
-  width: max-content;
+  .token-list__amount option {
+    cursor: default;
+  }
 
-  display: flex;
-  align-items: flex-start;
-  position: relative;
+  .token-list__amount option:hover {
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0);
+    transform: none;
+  }
+  /* 
 
-  left: 11px;
+
+
+
+
+
+  */
+
+  /* Account Window */
+  .session-window__header h1 {
+    letter-spacing: 0.75px;
+  }
+
+  .session-window__header p {
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 10px;
+  }
+
+  .session-window__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .session-window__form span {
+    margin: 10px 0px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  /* 
+
+
+
+
+  */
+  /* Transfer */
+  .transfer-window-container .transfer-footer {
+    display: flex;
+    font-size: 13px;
+    text-decoration: underline;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    gap: 40px;
+  }
+
+  .transfer-window .token-list-header span:first-child {
+    margin-left: 30px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .transfer-window .token-list-header span:last-child {
+    margin-left: 310px;
+    transition: all 0.3s ease-in-out;
+  }
+  .transfer-window .token-list {
+    width: 500px;
+  }
+
+  .transfer-window .token-list__tokens {
+    width: 450px;
+  }
+  .transfer-window .token-list__amount {
+    width: 50px;
+  }
+
+  .transfer-window .transfer-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 15px;
+    gap: 15px;
+  }
+
+  .transfer-form__token-amount {
+    align-self: self-end;
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+    gap: 5px;
+  }
+
+  .transfer-form__token-amount span {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .transfer-form__token-amount input {
+    width: 100px;
+  }
+  /* 
+
+
+  */
+  /*toggle checkbox css*/
+  .transer-form__advanced-transfer,
+  .mint-form__multiple-tokens {
+    display: flex;
+    align-items: center;
+  }
+  .transer-form__advanced-transfer p,
+  .mint-form__multiple-tokens p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 10px;
+  }
+
+  .toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  .toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+  }
+  input:checked + .slider {
+    background-color: #6f8898;
+  }
+  input:focus + .slider {
+    box-shadow: 0 0 1px #6f8898;
+  }
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  /* 
+
+
+
+
+
+  */
+  /* Confirm Transfer */
+
+  .token-address-div,
+  .amount-div,
+  .tokenIDs-div,
+  .recipient-address-div,
+  .successful-div {
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    width: 480px;
+    height: 38px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .checkboxesIDs {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .advanced-transfer-form {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+  }
+
+  /* Confirm Window */
+  .token-id,
+  .clickable-token-id {
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    width: 90px;
+    height: 33px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .clickable-token-id {
+    cursor: pointer;
+  }
+
+  #tokenIDs {
+    border: 1px solid rgba(255, 255, 255, 0);
+    border-radius: 20px;
+    position: relative;
+    right: 15px;
+    width: 500px;
+
+    box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.5),
+      0.8px 0.8px 1px rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.15);
+    margin-left: 35px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-height: 90px;
+    padding: 7px;
+    overflow-y: scroll;
+    gap: 10px;
+
+    /* scrollbar erase for Internet Explorer 10+ */
+    -ms-overflow-style: none;
+    /* scrollbar erase for Firefox */
+    scrollbar-width: none;
+  }
+
+  #tokenIDs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .confirm-transfer-form {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .confirm-transfer-form button:first-child {
+    background-color: #283048;
+  }
+
+  .confirm-transfer-form button:first-child:hover {
+    background-color: #283048;
+  }
+
+  .confirm-transfer-form button:first-child:active {
+    background-color: rgb(22, 26, 39);
+  }
+
+  .transfer-window .successful-div {
+    margin-top: 40%;
+  }
+  .successful-transfer-form {
+    margin-top: 20px;
+  }
+  /* 
+
+
+  */
+  .pay__tokenID-header {
+    position: relative;
+    margin-top: 10px;
+    bottom: -5px;
+    display: flex;
+    height: 65px;
+    width: 100%;
+
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pay__tokenID-header h2 {
+    position: relative;
+    bottom: -5px;
+  }
+
+  .pay__tokenID-header button {
+    margin-right: 20px;
+    width: 80px;
+    height: 35px;
+  }
+
+  /* 
+
+
+
+
+
+  */
+  /* Mint */
+  .mint-form {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .mint-form .token-address-txt {
+    margin-top: 25px;
+  }
+
+  .mint-form .random-address-btn {
+    align-self: self-end;
+    margin-right: 5px;
+  }
+
+  .mint-form__multiple-tokens {
+    align-self: self-start;
+    margin-left: 5px;
+    margin-top: 20px;
+  }
+
+  /* error: red outline*/
+
+  .error-message-span {
+    font-size: 15px;
+  }
+
+  @keyframes horizontal-shaking {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(5px);
+    }
+    50% {
+      transform: translateX(-5px);
+    }
+    75% {
+      transform: translateX(5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  .horizontal-shake {
+    animation: horizontal-shaking 0.35s 1s;
+  }
+  .tooltip-icon-frame {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    margin-left: 5px;
+    margin-top: 10px;
+  }
+
+  .message-box {
+    visibility: hidden;
+    opacity: 0;
+
+    width: max-content;
+    height: max-content;
+
+    background-color: #283048;
+    color: #fff;
+
+    text-align: center;
+    vertical-align: middle;
+    position: absolute;
+    z-index: 1;
+
+    padding: 5px 10px 10px 10px;
+    bottom: 30px;
+
+    transition: opacity 0.4s;
+  }
+
+  .message-box::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: #283048 transparent transparent transparent;
+  }
+
+  .message-box p {
+    padding: 30px 10px 30px 10px;
+  }
+
+  .tooltip-icon {
+    color: rgba(255, 255, 255, 0.7);
+    transform: scale(0.9);
+  }
+
+  .content-with-tooltip {
+    height: max-content;
+    width: max-content;
+
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+
+    left: 11px;
+  }
 }

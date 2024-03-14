@@ -1,42 +1,44 @@
-.visible-balance-window__address {
-  flex-direction: row;
-  justify-content: center;
-  width: 550px;
-  height: 38px;
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-  border: solid 1px rgba(255, 255, 255, 0.3);
-}
+#paymentPopup {
+  .visible-balance-window__address {
+    flex-direction: row;
+    justify-content: center;
+    width: 550px;
+    height: 38px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    border: solid 1px rgba(255, 255, 255, 0.3);
+  }
 
-.invisible-balance-window__id-list {
-  z-index: -1;
-  height: 150px;
-  border: none;
-  width: 0px;
-}
+  .invisible-balance-window__id-list {
+    z-index: -1;
+    height: 150px;
+    border: none;
+    width: 0px;
+  }
 
-.visible-balance-window__id-list {
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background-color: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(30px);
-  height: 150px;
-  width: 75px;
-  border-radius: 10px;
-  margin-left: 15px;
-}
+  .visible-balance-window__id-list {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background-color: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(30px);
+    height: 150px;
+    width: 75px;
+    border-radius: 10px;
+    margin-left: 15px;
+  }
 
-.info-icon-frame:hover .info-box {
-  visibility: visible;
-  opacity: 1;
-}
+  .info-icon-frame:hover .info-box {
+    visibility: visible;
+    opacity: 1;
+  }
 
-.info-icon-frame .clicked {
-  visibility: visible;
-  opacity: 1;
-}
+  .info-icon-frame .clicked {
+    visibility: visible;
+    opacity: 1;
+  }
 
-.clicked-clickable-token-id {
-  background-color: rgba(0, 0, 0, 0.2);
+  .clicked-clickable-token-id {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 }

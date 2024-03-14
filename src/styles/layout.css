@@ -1,144 +1,146 @@
-.widget-header {
-  width: 85%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 25px;
-}
+#paymentPopup {
+  .widget-header {
+    width: 85%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 25px;
+  }
 
-.widget-header .erdstall-logo {
-  transform: scale(0.7);
-  position: relative;
-  right: -25px;
-  cursor: pointer;
-}
-/* 
-
-
-
-
-*/
-/* Main */
-.l-main-window {
-  width: 500px;
-  height: 400px;
-}
-
-.l-main-logo {
-  margin-top: 50px;
-  position: relative;
-  left: -8px;
-  transform: scale(0.7);
-}
-
-.l-main-window__header {
-  margin-top: 15px;
-}
-
-.l-main-window__form {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-/* 
+  .widget-header .erdstall-logo {
+    transform: scale(0.7);
+    position: relative;
+    right: -25px;
+    cursor: pointer;
+  }
+  /* 
 
 
 
 
-*/
-/* Balance */
-.l-balance-window-container {
-  width: 700px;
-  height: 410px;
-}
+  */
+  /* Main */
+  .l-main-window {
+    width: 500px;
+    height: 400px;
+  }
 
-.l-balance-title {
-  align-self: self-start;
-  margin-left: 80px;
-  margin-top: 20px;
-}
+  .l-main-logo {
+    margin-top: 50px;
+    position: relative;
+    left: -8px;
+    transform: scale(0.7);
+  }
 
-.l-balance-window {
-  width: 550px;
-  height: 160px;
-  margin-top: 10px;
-}
+  .l-main-window__header {
+    margin-top: 15px;
+  }
 
-.l-balance-window s {
-  width: 550px;
-  height: 160px;
-  margin-top: 10px;
-}
-/* 
-
-
-
-
-*/
-/* Account */
-.l-session-window {
-  width: 550px;
-  height: 550px;
-}
-
-.l-session-window__header {
-  margin-top: 25px;
-}
-
-.l-session-window__form {
-  margin-top: 50px;
-}
-/* 
+  .l-main-window__form {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  /* 
 
 
 
 
-*/
-/* Transfer */
-.l-transfer-window-container {
-  width: 700px;
-  height: 830px;
-}
+  */
+  /* Balance */
+  .l-balance-window-container {
+    width: 700px;
+    height: 410px;
+  }
 
-.l-transfer-title {
-  align-self: self-start;
-  margin-left: 80px;
-  margin-top: 30px;
-  margin-bottom: 10px;
-}
+  .l-balance-title {
+    align-self: self-start;
+    margin-left: 80px;
+    margin-top: 20px;
+  }
 
-.l-transfer-title:last-child {
-  /*for Title: Mint*/
-  margin-top: 50px;
-}
+  .l-balance-window {
+    width: 550px;
+    height: 160px;
+    margin-top: 10px;
+  }
 
-.l-transfer-window {
-  width: 550px;
-  height: 70px;
-}
-
-.l-mint-window {
-  width: 550px;
-  height: 550px;
-}
-
-.l-transfer-footer {
-  margin-top: 15px;
-}
-/* 
+  .l-balance-window s {
+    width: 550px;
+    height: 160px;
+    margin-top: 10px;
+  }
+  /* 
 
 
 
 
-*/
-/* pay */
-.l-pay-window-container {
-  width: 700px;
-  height: 900px;
-}
+  */
+  /* Account */
+  .l-session-window {
+    width: 550px;
+    height: 550px;
+  }
 
-.l-pay-window {
-  width: 550px;
-  height: 650px;
+  .l-session-window__header {
+    margin-top: 25px;
+  }
+
+  .l-session-window__form {
+    margin-top: 50px;
+  }
+  /* 
+
+
+
+
+  */
+  /* Transfer */
+  .l-transfer-window-container {
+    width: 700px;
+    height: 830px;
+  }
+
+  .l-transfer-title {
+    align-self: self-start;
+    margin-left: 80px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+
+  .l-transfer-title:last-child {
+    /*for Title: Mint*/
+    margin-top: 50px;
+  }
+
+  .l-transfer-window {
+    width: 550px;
+    height: 70px;
+  }
+
+  .l-mint-window {
+    width: 550px;
+    height: 550px;
+  }
+
+  .l-transfer-footer {
+    margin-top: 15px;
+  }
+  /* 
+
+
+
+
+  */
+  /* pay */
+  .l-pay-window-container {
+    width: 700px;
+    height: 900px;
+  }
+
+  .l-pay-window {
+    width: 550px;
+    height: 650px;
+  }
 }
