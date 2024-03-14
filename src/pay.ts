@@ -278,6 +278,7 @@ async function htmlPay(
       
       <div id="tokenIDs">
       </div>
+      <span id = errTokenIDs> </span>
       
 
       <h2>To recipient:</h2>
@@ -377,6 +378,7 @@ function changeTokenIDsButtonEvent(
       selecting.value = false;
       btn_changeTokenIDs.innerText = "edit";
       div_tokenIDs.innerHTML = "";
+      utils.resetErrorDisplay("errTokenIDs", "tokenIDs");
       makeTokenIDsList(div_tokenIDs, tokenIDs);
       btn_cancelChangeTokenIDs.remove();
     });
@@ -385,10 +387,11 @@ function changeTokenIDsButtonEvent(
     newTokenIDs = makeTokenIDsSelection(div_tokenIDs, tokenIDsAvailable);
   } else {
     if (newTokenIDs.length != amountToPay) {
-      alert(
-        `Please select ${amountToPay} token ID${amountToPay > 1 ? "s" : ""}!`
-      );
+      const message =`Please select ${amountToPay} token ID${amountToPay > 1 ? "s" : ""}!`;
+      utils.displayErrorMessage(message, "errTokenIDs", "tokenIDs");
       return;
+    } else {
+      utils.resetErrorDisplay("errTokenIDs", "tokenIDs");
     }
     selecting.value = false;
     btn_changeTokenIDs.innerText = "edit";
