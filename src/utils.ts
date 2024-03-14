@@ -347,11 +347,10 @@ export function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[
 
     span.innerHTML = `${tokenIDTODisplay}`;
     span.title = tokenIDString;
-    span.addEventListener("click", () => copyToClipboard(tokenIDString, span));
+    setCopyToClipboardListener(tokenIDString, span);
     span.style.cursor = 'pointer'
     div_tokenIDs.appendChild(span);
   }
-  
 }
 
 /**
@@ -474,16 +473,49 @@ export function shortenString(str: string, showNumber: number) {
     return tokenIDTODisplay;
   }
   
-  /**
-   * This functions adds an event listener to a HTML element which copies the input text to the clipboard of the user on click
-   * @param text The text that should be copied to the clipboard
-   * @param element the HTML element the event listener should be added to
-   */
-  export function copyToClipboard(text: string, element: HTMLElement) {
-    element.addEventListener("click", () => {
-      navigator.clipboard.writeText(text);
-    });
-  }
+/**
+ * This function adds an event listener to an HTML element which copies the input text to the clipboard of the user on click.
+ * Additionally, it displays a temporary notification to the user indicating the copy action was successful.
+ * @param text The text that should be copied to the clipboard.
+ * @param element The HTML element the event listener should be added to.
+ */
+export function setCopyToClipboardListener(text: string, element: HTMLElement) {
+  element.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // Create and style the notification element
+      const notification = document.createElement("div");
+      notification.textContent = "Copied!";
+      notification.style.position = "fixed";
+      notification.style.left = `${element.getBoundingClientRect().left}px`;
+      notification.style.top = `${element.getBoundingClientRect().top - element.offsetHeight}px`;
+      notification.style.zIndex = "1000";
+      notification.style.background = "#000";
+      notification.style.color = "#fff";
+      notification.style.padding = "4px 8px";
+      notification.style.borderRadius = "4px";
+      notification.style.fontSize = "0.75rem";
+      notification.style.transition = "opacity 0.4s";
+      notification.style.opacity = "0";
+      notification.style.pointerEvents = "none"; // Avoid blocking clicks
+      
+      // Append notification to the body or a specific container
+      document.body.appendChild(notification);
+
+      // Use setTimeout to fade out and remove the notification after showing it
+      setTimeout(() => {
+        notification.style.opacity = "1"; // Show the notification
+        setTimeout(() => {
+          notification.style.opacity = "0"; // Start fading out
+          setTimeout(() => notification.remove(), 600); // Remove after fade out
+        }, 2000); // Duration the notification stays visible
+      }, 10); // Slight delay before showing the notification
+    } catch (error) {
+      console.error('Copy to clipboard failed:', error);
+      // Optionally handle the error, e.g., by showing an error notification
+    }
+  });
+}
 
 /**
  * Initiates the loading screen by hiding specific elements and displaying a loading screen

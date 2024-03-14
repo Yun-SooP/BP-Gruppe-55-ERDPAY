@@ -365,6 +365,7 @@ function makeTokenIDsSelection(
           )
         : tokenIDString;
     span.innerHTML = `${tokenIDTODisplay}`;
+    span.title = tokenIDString;
     span.addEventListener("click", () => {
       if (!span.classList.contains("clicked-clickable-token-id")) {
         span.classList.add("clicked-clickable-token-id");
