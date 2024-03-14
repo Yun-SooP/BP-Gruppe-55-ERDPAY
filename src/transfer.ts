@@ -103,21 +103,16 @@ export async function htmlTransfer(
     txt_amount.addEventListener("input", () => {
       const tokenAddress = select_tokens.value;
       const tokens = <Tokens>account.values.values.get(tokenAddress);
-      const valid = utils.checkAmount(
+      const validAmount = utils.checkAmount(
         txt_amount.value,
         "errTokenAmount",
         "tokenAmount",
         tokens
       );
-      if (valid && tokenAddress !== "" && !selecting.value) {
-        const newAmount = txt_amount.value;
-        const initialTokenIDs = utils.getTokenIDs(
-          account,
-          tokenAddress,
-          parseFloat(newAmount)
-        );
-        selectedTokenIDs = initialTokenIDs;
-        makeTokenIDsList(div_tokenIDs, initialTokenIDs);
+      if (validAmount && tokenAddress !== "" && !selecting.value) {
+        newTokenIDs = utils.extendTokenIDs(selectedTokenIDs, tokens.value, Number(txt_amount.value));
+        selectedTokenIDs = newTokenIDs;
+        makeTokenIDsList(div_tokenIDs, newTokenIDs);
       }
     });
 
@@ -186,6 +181,7 @@ export async function htmlTransfer(
     );
   }
 }
+
 
 
 /**

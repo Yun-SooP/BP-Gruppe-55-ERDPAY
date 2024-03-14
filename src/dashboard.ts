@@ -229,7 +229,6 @@ async function eventRestoreSession(privateKeyForRestore: string) {
 /**
  * Function to make window for transfer and minting.
  */
-
 export async function htmlDashboard(
   div_dashboard: HTMLDivElement,
   session: Session,
