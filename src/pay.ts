@@ -3,6 +3,7 @@ import { restoreSession } from "./setup_session";
 import * as utils from "./utils";
 import { Account, Address } from "@polycrypt/erdstall/ledger";
 import { Tokens, Assets, Asset } from "@polycrypt/erdstall/ledger/assets";
+import "./style.css"
 
 let popup: HTMLDivElement;
 let tokenAddress: string;
