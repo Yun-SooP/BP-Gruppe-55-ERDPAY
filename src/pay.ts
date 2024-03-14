@@ -296,7 +296,7 @@ async function htmlPay(
       amountAvailable
     );
     const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
-    makeTokenIDsList(div_tokenIDs, tokenIDs);
+    utils.makeTokenIDsList(div_tokenIDs, tokenIDs);
     const btn_changeTokenIDs = document.querySelector<HTMLButtonElement>(
       ".changeTokenIDs-btn"
     )!;
@@ -379,7 +379,7 @@ function changeTokenIDsButtonEvent(
       btn_changeTokenIDs.innerText = "edit";
       div_tokenIDs.innerHTML = "";
       utils.resetErrorDisplay("errTokenIDs", "tokenIDs");
-      makeTokenIDsList(div_tokenIDs, tokenIDs);
+      utils.makeTokenIDsList(div_tokenIDs, tokenIDs);
       btn_cancelChangeTokenIDs.remove();
     });
     div_changeTokenIDs?.appendChild(btn_cancelChangeTokenIDs);
@@ -398,37 +398,12 @@ function changeTokenIDsButtonEvent(
     div_tokenIDs.innerHTML = "";
     newTokenIDs.sort();
     tokenIDs = newTokenIDs;
-    makeTokenIDsList(div_tokenIDs, newTokenIDs);
+    utils.makeTokenIDsList(div_tokenIDs, newTokenIDs);
     btn_cancelChangeTokenIDs!.remove();
   }
 }
 
-/**
- * Populates a given div element with a list of token IDs.
- * Each token ID is displayed in a truncated format for better readability.
- *
- * @param div_tokenIDs The HTMLDivElement where the token IDs will be displayed.
- * @param tokenIDs An array of token IDs to display.
- * @returns
- */
-function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
-  for (let i = 0; i < tokenIDs.length; i++) {
-    const span = document.createElement("span");
-    span.classList.add("token-id", "third-layer-window");
-    const tokenIDString = tokenIDs[i] + "";
-    const tokenIDTODisplay =
-      tokenIDString.length > 6
-        ? tokenIDString.substring(0, 3) +
-          "..." +
-          tokenIDString.substring(
-            tokenIDString.length - 3,
-            tokenIDString.length
-          )
-        : tokenIDString;
-    span.innerHTML = `${tokenIDTODisplay}`;
-    div_tokenIDs.appendChild(span);
-  }
-}
+
 
 /**
  * Creates a clickable list of token IDs for the user to select from for the payment.
@@ -457,6 +432,8 @@ function makeTokenIDsSelection(
           )
         : tokenIDString;
     span.innerHTML = `${tokenIDTODisplay}`;
+    span.title = tokenIDString;
+    span.style.cursor = "pointer";
     span.addEventListener("click", () => {
       if (!span.classList.contains("clicked-clickable-token-id")) {
         span.classList.add("clicked-clickable-token-id");

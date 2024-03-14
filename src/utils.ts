@@ -116,9 +116,13 @@ export function checkPrivateKey(
         return false;
     }
     const hex = /[0-9A-Fa-f]{64}/g;
-    if (privateKey.slice(0, 2) != "0x" || !hex.test(privateKey.slice(2))) {
+    if (
+      privateKey.slice(0, 2) != "0x" || 
+      !hex.test(privateKey.slice(2)) ||
+      privateKey.length > 66
+      ) {
         displayErrorMessage(
-          `Please enter a valid private key. <br> The private key must be in hexadecimal and 64 characters long.`,
+          `Please enter a valid private key. (Hexadecimal of length 64, starting with 0x)`,
           errDisplay,
           inputBox
         );
@@ -230,7 +234,8 @@ export function checkRecipientAddress(
     const hex = /[0-9A-Fa-f]{40}/g;
     if (
         recipientAddress.slice(0, 2) != "0x" ||
-        !hex.test(recipientAddress.slice(2))
+        !hex.test(recipientAddress.slice(2)) ||
+        recipientAddress.length > 42
       ) {
         displayErrorMessage(
           "Please enter a valid address. (Hexadecimal of length 40, starting with 0x)",
@@ -305,6 +310,7 @@ export function makeTokensList(
       const option = document.createElement("option");
       const token = tokens[i];
       option.value = token[0];
+      option.title = token[0];
       option.text = token[0].substring(0, 6) + "..." + token[0].substring(38, 42)
       select_tokens.add(option);
 
@@ -313,6 +319,38 @@ export function makeTokensList(
         option_amount.text = (<Tokens>token[1]).value.length + "";
         select_amount.add(option_amount);
     }
+}
+
+/**
+ * Populates a given div element with a list of token IDs.
+ * Each token ID is displayed in a truncated format for better readability.
+ *
+ * @param div_tokenIDs The HTMLDivElement where the token IDs will be displayed.
+ * @param tokenIDs An array of token IDs to display.
+ * @returns
+ */
+export function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
+  div_tokenIDs.innerHTML = "";
+  for (let i = 0; i < tokenIDs.length; i++) {
+    const span = document.createElement("span");
+    span.classList.add("token-id", "third-layer-window");
+    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay}`;
+    span.title = tokenIDString;
+    setCopyToClipboardListener(tokenIDString, span);
+    span.style.cursor = 'pointer'
+    div_tokenIDs.appendChild(span);
+  }
 }
 
 /**
@@ -416,3 +454,196 @@ export function resetErrorDisplay(errDisplay: string, inputBox: string) {
     errorRemoveHighlight(inputBox);
 }
 
+/**
+ * This method is used to show only the first and last n characters of long addresses or private keys that are in hexadecimal format.
+ * @param str The string that should be shortened
+ * @param shownNumber The number of characters from the beginning and the end of a string that should be displayed
+ * @returns The input string shortened to "0x" + the first n characters of the input string and the last n characters of the input string
+ */
+export function shortenString(str: string, showNumber: number) {
+    const newString = str;
+    const bound = showNumber + 2;
+    const tokenIDTODisplay =
+      newString.length > 6
+        ? newString.substring(0, bound) +
+          "..." +
+          newString.substring(newString.length - showNumber, newString.length)
+        : newString;
+  
+    return tokenIDTODisplay;
+  }
+  
+/**
+ * This function adds an event listener to an HTML element which copies the input text to the clipboard of the user on click.
+ * Additionally, it displays a temporary notification to the user indicating the copy action was successful.
+ * @param text The text that should be copied to the clipboard.
+ * @param element The HTML element the event listener should be added to.
+ */
+export function setCopyToClipboardListener(text: string, element: HTMLElement) {
+  element.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // Create and style the notification element
+      const notification = document.createElement("div");
+      notification.textContent = "Copied!";
+      notification.style.position = "fixed";
+      notification.style.left = `${element.getBoundingClientRect().left}px`;
+      notification.style.top = `${element.getBoundingClientRect().top - element.offsetHeight}px`;
+      notification.style.zIndex = "1000";
+      notification.style.background = "#000";
+      notification.style.color = "#fff";
+      notification.style.padding = "4px 8px";
+      notification.style.borderRadius = "4px";
+      notification.style.fontSize = "0.75rem";
+      notification.style.transition = "opacity 0.4s";
+      notification.style.opacity = "0";
+      notification.style.pointerEvents = "none"; // Avoid blocking clicks
+      
+      // Append notification to the body or a specific container
+      document.body.appendChild(notification);
+
+      // Use setTimeout to fade out and remove the notification after showing it
+      setTimeout(() => {
+        notification.style.opacity = "1"; // Show the notification
+        setTimeout(() => {
+          notification.style.opacity = "0"; // Start fading out
+          setTimeout(() => notification.remove(), 600); // Remove after fade out
+        }, 2000); // Duration the notification stays visible
+      }, 10); // Slight delay before showing the notification
+    } catch (error) {
+      console.error('Copy to clipboard failed:', error);
+      // Optionally handle the error, e.g., by showing an error notification
+    }
+  });
+}
+
+/**
+ * Initiates the loading screen by hiding specific elements and displaying a loading screen
+ * within the provided HTML div.
+ * @param html_div - The HTML div containing the elements to be hidden during loading.
+ */
+export function loadingStart(html_div: HTMLDivElement){
+    
+    html_div.querySelector(".widget-header")?.classList.add("hide");
+    html_div.querySelector("#current-tab-label")?.classList.add("hide");
+    html_div.querySelector("#current-tab")?.classList.add("hide");
+    html_div.querySelector(".transfer-footer")?.classList.add("hide");
+    setLoadingScreen(html_div);
+}
+/**
+ * Ends the loading screen by displaying the previously hidden elements and removing the loading screen
+ * within the provided HTML div.
+ * @param html_div - The HTML div containing the elements to be displayed after loading.
+ */
+export function loadingEnd(html_div: HTMLDivElement){
+    removeLoadingScreen(html_div);
+    html_div.querySelector(".widget-header")?.classList.remove("hide");
+    html_div.querySelector("#current-tab-label")?.classList.remove("hide");
+    html_div.querySelector("#current-tab")?.classList.remove("hide");
+    html_div.querySelector(".transfer-footer")?.classList.remove("hide");
+}
+/**
+ * Sets up the loading screen within the specified HTML div, providing visual feedback
+ * to indicate the generation of tokens in progress.
+ * @param loading_div - The HTML div where the loading screen is to be set up.
+ */
+function setLoadingScreen(loading_div: HTMLDivElement){
+    
+    const loadingDiv = loading_div.querySelector("#loading");
+    if (loadingDiv != null) {
+        loadingDiv.innerHTML = `
+        <div id="loading" class="l-center">
+            <div class="loading">
+                <h1> Generating Tokens... please wait</h1>
+                <div id="token-counter" class></div>
+                <p> Please do not leave this page. You will be redirected soon.</p>
+            </div>
+        </div>
+        `;
+    }
+}
+/**
+ * Removes the loading screen content from the specified HTML div.
+ * @param loading_div - The HTML div from which the loading screen content is to be removed.
+ */
+function removeLoadingScreen(loading_div: HTMLDivElement){
+    const loadingDiv = loading_div.querySelector("#loading");
+    if (loadingDiv != null) {
+        loadingDiv.innerHTML = "";
+    }
+}
+
+/**
+ * Applies a blue color to the selected token option in the provided HTMLSelectElement.
+ * It removes any existing 'selected' class from all options and then adds the 'selected'
+ * class to the currently selected option.
+ *
+ * @param div_select The HTMLSelectElement containing token options.
+ */
+export function selectedTokenToBlue( div_select:HTMLSelectElement) {
+    const tokenOptions = div_select.querySelectorAll("option");
+    tokenOptions.forEach(option => option.classList.remove("selected"));
+    const selectedOption = div_select.options[div_select.selectedIndex];
+        selectedOption.classList.add("selected");
+}
+
+/**
+ * Function to sync the scrolls of two seperate select elements
+ * @param select1 first select element
+ * @param select2 second select element
+ */
+export function syncScrolls(
+  select1: HTMLSelectElement,
+  select2: HTMLSelectElement
+) {
+  let isSyncingLeftScroll = false;
+  let isSyncingRightScroll = false;
+
+  select1.onscroll = function () {
+    if (!isSyncingLeftScroll) {
+      isSyncingRightScroll = true;
+      select2.scrollTop = select1.scrollTop;
+    }
+    isSyncingLeftScroll = false;
+  };
+
+  select2.onscroll = function () {
+    if (!isSyncingRightScroll) {
+      isSyncingLeftScroll = true;
+      select1.scrollTop = select2.scrollTop;
+    }
+    isSyncingRightScroll = false;
+  };
+}
+
+/**
+ * This method creates an interactive tooltip icon inside an HTML-Div element.
+ * Hovering over the icon creates a message box that disappears when the mouse cursor leaves the icon.
+ * Clicking on the icon creates a static message box that disappears when the icon is clicked on once again.
+ *
+ * @param element The wrapper element of the HTML-Element you want to attach the tooltip to
+ * @param textbox_position A string that contains the position of where the textbox should appear. There are 4 possible inputs 'top', 'bottom, 'left' and 'right'
+ * @param text The text inside the textbox
+ * @param style_icon The css-class that contains the styling for the icon
+ * @param style_content The css-class that contains the styling for the textbox
+ */
+export function createToolTip(element: HTMLElement, textbox_position: string, text: string, style_icon: string, style_content: string) {
+  const iconFrame = document.createElement("div");
+  iconFrame.classList.add("tooltip", style_icon)
+
+  const icon = document.createElement("i");
+  icon.classList.add("fa-solid", "fa-circle-info", "tooltip", "tooltip-icon")
+
+  const textbox = document.createElement("span");
+  textbox.classList.add("tooltiptext-" + textbox_position, style_content);
+
+  textbox.textContent = text
+  iconFrame.appendChild(icon);
+  iconFrame.appendChild(textbox);
+
+  element.prepend(iconFrame);
+
+  iconFrame.addEventListener("click", () => {
+      textbox.classList.toggle("clicked");
+    });
+}
