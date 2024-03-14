@@ -203,7 +203,7 @@ async function viewBalance(client: Client, address: string) {
     for (let i = 0; i < selectedIds.length; i++) {
       const span = document.createElement("span");
       span.classList.add("token-id", "third-layer-window");
-
+      
       const tokenIDString = selectedIds[i] + "";
       const tokenIDTODisplay =
         tokenIDString.length > 6
@@ -216,6 +216,9 @@ async function viewBalance(client: Client, address: string) {
           : tokenIDString;
 
       span.innerHTML = `${tokenIDTODisplay}`;
+      span.title = tokenIDString;
+      span.addEventListener("click", () => utils.copyToClipboard(tokenIDString, span));
+      span.style.cursor = 'pointer'
       div_id.appendChild(span);
     }
   });
