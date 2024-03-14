@@ -322,6 +322,39 @@ export function makeTokensList(
 }
 
 /**
+ * Populates a given div element with a list of token IDs.
+ * Each token ID is displayed in a truncated format for better readability.
+ *
+ * @param div_tokenIDs The HTMLDivElement where the token IDs will be displayed.
+ * @param tokenIDs An array of token IDs to display.
+ * @returns
+ */
+export function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
+  div_tokenIDs.innerHTML = "";
+  for (let i = 0; i < tokenIDs.length; i++) {
+    const span = document.createElement("span");
+    span.classList.add("token-id", "third-layer-window");
+    const tokenIDString = tokenIDs[i] + "";
+    const tokenIDTODisplay =
+      tokenIDString.length > 6
+        ? tokenIDString.substring(0, 3) +
+          "..." +
+          tokenIDString.substring(
+            tokenIDString.length - 3,
+            tokenIDString.length
+          )
+        : tokenIDString;
+
+    span.innerHTML = `${tokenIDTODisplay}`;
+    span.title = tokenIDString;
+    span.addEventListener("click", () => copyToClipboard(tokenIDString, span));
+    span.style.cursor = 'pointer'
+    div_tokenIDs.appendChild(span);
+  }
+  
+}
+
+/**
  * Extends the `currentTokenIDs` array to a specified `newAmount` length by adding non-duplicate 
  * token IDs from the `availableTokenIDs` array. If `newAmount` is less than the current length, 
  * the `currentTokenIDs` array is truncated. The resulting array is sorted in ascending order before returning.

@@ -171,7 +171,7 @@ async function viewBalance(client: Client, address: string) {
   utils.makeTokensList(select_tokens, select_amount, entries);
 
   //Make select_id, if a token is selected
-  const div_id = document.querySelector<HTMLSelectElement>(
+  const div_id = document.querySelector<HTMLDivElement>(
     ".balance-window__id-list"
   )!;
 
@@ -197,30 +197,7 @@ async function viewBalance(client: Client, address: string) {
     div_id.classList.add("visible-balance-window__id-list");
     const selectedIds = utils.getTokenIDs(account, select_tokens.value);
 
-    //reset id list
-    div_id.innerHTML = ``;
-    //fill id-list
-    for (let i = 0; i < selectedIds.length; i++) {
-      const span = document.createElement("span");
-      span.classList.add("token-id", "third-layer-window");
-      
-      const tokenIDString = selectedIds[i] + "";
-      const tokenIDTODisplay =
-        tokenIDString.length > 6
-          ? tokenIDString.substring(0, 3) +
-            "..." +
-            tokenIDString.substring(
-              tokenIDString.length - 3,
-              tokenIDString.length
-            )
-          : tokenIDString;
-
-      span.innerHTML = `${tokenIDTODisplay}`;
-      span.title = tokenIDString;
-      span.addEventListener("click", () => utils.copyToClipboard(tokenIDString, span));
-      span.style.cursor = 'pointer'
-      div_id.appendChild(span);
-    }
+    utils.makeTokenIDsList(div_id, selectedIds);
   });
 }
 

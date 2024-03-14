@@ -133,7 +133,7 @@ export async function htmlTransfer(
         // adjust the token ids to match the amount
         newTokenIDs = utils.extendTokenIDs(selectedTokenIDs, tokens.value, Number(txt_amount.value));
         selectedTokenIDs = newTokenIDs;
-        makeTokenIDsList(div_tokenIDs, newTokenIDs);
+        utils.makeTokenIDsList(div_tokenIDs, newTokenIDs);
       }
     });
 
@@ -233,7 +233,7 @@ function eventSelectTokenAddress(
   div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
   div_tokenIdSection.classList.add("visible-transfer-window__id-list");
   // Display the first token ID in the list
-  makeTokenIDsList(div_tokenIDs, firstTokenID);
+  utils.makeTokenIDsList(div_tokenIDs, firstTokenID);
   // Change the selected token's background color to indicate selection
   utils.selectedTokenToBlue(select_tokens);
 
@@ -279,7 +279,7 @@ function restoreSelections(
     div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
     div_tokenIdSection.classList.add("visible-transfer-window__id-list");
 
-    makeTokenIDsList(div_tokenIDs, tokenIDs);
+    utils.makeTokenIDsList(div_tokenIDs, tokenIDs);
 
     // Change the selected token's background color to indicate selection
     utils.selectedTokenToBlue(select_tokens);
@@ -287,34 +287,6 @@ function restoreSelections(
   txt_recipientAddress.value = recipientAddress ? recipientAddress : "";
 }
 
-/**
- * Populates a given div element with a list of token IDs.
- * Each token ID is displayed in a truncated format for better readability.
- *
- * @param div_tokenIDs The HTMLDivElement where the token IDs will be displayed.
- * @param tokenIDs An array of token IDs to display.
- * @returns
- */
-function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
-  div_tokenIDs.innerHTML = "";
-  for (let i = 0; i < tokenIDs.length; i++) {
-    const span = document.createElement("span");
-    span.classList.add("token-id", "third-layer-window");
-    const tokenIDString = tokenIDs[i] + "";
-    const tokenIDTODisplay =
-      tokenIDString.length > 6
-        ? tokenIDString.substring(0, 3) +
-          "..." +
-          tokenIDString.substring(
-            tokenIDString.length - 3,
-            tokenIDString.length
-          )
-        : tokenIDString;
-
-    span.innerHTML = `${tokenIDTODisplay}`;
-    div_tokenIDs.appendChild(span);
-  }
-}
 
 /**
  * Initializes an event on the given 'Change Token IDs' button to enable the selection of new token IDs for transfer.
@@ -341,7 +313,7 @@ function changeTokenIDsButtonEvent(
     btn_cancelChangeTokenIDs.addEventListener("click", () => {
       selecting.value = false;
       btn_changeTokenIDs.innerText = "edit";
-      makeTokenIDsList(div_tokenIDs, selectedTokenIDs);
+      utils.makeTokenIDsList(div_tokenIDs, selectedTokenIDs);
       txt_amount.value = selectedTokenIDs.length.toString();
       btn_cancelChangeTokenIDs.remove();
     });
@@ -360,7 +332,7 @@ function changeTokenIDsButtonEvent(
     btn_changeTokenIDs.innerText = "edit";
     newTokenIDs.sort();
     selectedTokenIDs = newTokenIDs;
-    makeTokenIDsList(div_tokenIDs, newTokenIDs);
+    utils.makeTokenIDsList(div_tokenIDs, newTokenIDs);
     txt_amount.value = selectedTokenIDs.length.toString();
     btn_cancelChangeTokenIDs!.remove();
   }
@@ -526,7 +498,7 @@ function htmlTransferConfirmation(
   `;
   const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
 
-  makeTokenIDsList(div_tokenIDs, tokenIDs);
+  utils.makeTokenIDsList(div_tokenIDs, tokenIDs);
 
   const btn_makeTransfer = document.querySelector<HTMLInputElement>(
     ".confirm-transfer-form .confirm-transfer-btn"
