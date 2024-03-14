@@ -588,40 +588,6 @@ export function selectedTokenToBlue( div_select:HTMLSelectElement) {
 }
 
 /**
- * Creates an information box with a tooltip icon. When the icon is clicked, a popup with the
- * provided content is displayed. This function dynamically creates the necessary HTML elements
- * and appends them to the specified element.
- *
- * @param element The HTMLElement to which the info box will be appended.
- * @param content The string content to be displayed in the popup when the info icon is clicked.
- */
-export function createInfoBox(element: HTMLElement, content: string ) {
-    const iconFrame = document.createElement("div");
-    iconFrame.classList.add("l-main-infobox")
-
-    const icon = document.createElement("i");
-    icon.classList.add("fa-solid", "fa-circle-info", "info-icon")
-
-    const frame = document.createElement("div");
-    frame.classList.add("l-popup", "popup");
-
-    
-    const info_content = document.createElement("div");
-    info_content.classList.add("info-content");
-    info_content.innerHTML = content;
-
-    frame.appendChild(info_content)
-    iconFrame.appendChild(icon);
-    element.prepend(iconFrame);
-    element.prepend(frame);
-
-    iconFrame.addEventListener("click", () => {
-        frame.classList.toggle("popup-visible")
-    });
-
-}
-
-/**
  * Function to sync the scrolls of two seperate select elements
  * @param select1 first select element
  * @param select2 second select element

@@ -71,8 +71,8 @@
 
 .first-layer-window,
 .second-layer-window,
-.third-layer-window,
-.popup-visible {
+.third-layer-window
+{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -268,31 +268,5 @@
   display: none;
 }
 
-.popup {
-  visibility: hidden;
-  background-color: rgb(255, 255, 255);
-  position: absolute;
-  translate: 0 25%;
-  z-index: -100;
-}
-
-.popup-visible {
-  visibility: visible;
-  z-index: 99;
-  border-radius: 5px;
-  -webkit-backdrop-filter: blur(50px);
-  backdrop-filter: blur(50px);
-}
-
-
-.info-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: justify;
-  width: 300px;
-  color: rgba(0, 0, 0, 1);
-}
 
 
