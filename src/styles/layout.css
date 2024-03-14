@@ -25,7 +25,7 @@
   padding: 15px;
 }
 
-.l-main-infobox {
+.l-main-tooltip {
   align-self: self-end;
   margin-right: 10px;
   margin-top: 10px;
@@ -77,6 +77,10 @@
   width: 550px;
   height: 160px;
   margin-top: 10px;
+}
+
+.l-balance-tooltip {
+  visibility:hidden;
 }
 /* 
 
@@ -131,6 +135,7 @@
   height: 550px;
 }
 
+
 .l-transfer-footer {
   margin-top: 15px;
 }
@@ -138,6 +143,12 @@
 .l-logout {
   margin-left: 450px;
   margin-top: 20px;
+}
+
+.l-transfer-tooltip {
+  align-self: auto;
+  top: 46%;
+  left: 2%;
 }
 
 /* 
@@ -180,10 +191,4 @@
   width: 65%;
   height: 100%;
   gap: 10px;
-}
-
-/* Popup */
-.l-popup {
-  width: 350px;
-  height: 300px;
 }

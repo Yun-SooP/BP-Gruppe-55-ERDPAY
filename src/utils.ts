@@ -482,12 +482,18 @@ export function selectedTokenToBlue( div_select:HTMLSelectElement) {
         selectedOption.classList.add("selected");
 }
 
+/**
+ * This method creates an info icon in the upper right corner of the widget. 
+ * An infobox will popup if you click on the icon.
+ * @param element The widget frame the icon should the added to
+ * @param content The content of the infobox
+ */
 export function createInfoBox(element: HTMLElement, content: string ) {
     const iconFrame = document.createElement("div");
-    iconFrame.classList.add("tooltip", "l-main-infobox")
+    iconFrame.classList.add("l-main-infobox")
 
     const icon = document.createElement("i");
-    icon.classList.add("fa-solid", "fa-circle-info", "tooltip", "info-icon")
+    icon.classList.add("fa-solid", "fa-circle-info", "info-icon")
 
     const frame = document.createElement("div");
     frame.classList.add("l-popup", "popup");

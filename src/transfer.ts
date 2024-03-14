@@ -6,6 +6,7 @@ import { Asset } from "@polycrypt/erdstall/ledger/assets";
 import { Assets } from "@polycrypt/erdstall/ledger/assets";
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 import * as utils from "./utils.ts";
+import { createToolTip} from "./tooltip.ts";
 
 let session: Session;
 let account: Account;
@@ -117,6 +118,7 @@ export async function htmlTransfer(
         selectedTokenIDs = initialTokenIDs;
         makeTokenIDsList(div_tokenIDs, initialTokenIDs);
       }
+
     });
 
     const txt_recipientAddress = document.querySelector<HTMLInputElement>(
@@ -182,6 +184,13 @@ export async function htmlTransfer(
       recipientAddressRestore,
       txt_recipientAddress
     );
+
+    // Create tooltip
+    if (document.querySelector<HTMLDivElement>(".tooltip") == null) {
+      const wrapperDiv = document.querySelector<HTMLDivElement>(".transfer__tokenID-header")!;
+      const text = "Token IDs are selected based on the chosen amount. \n Press \"edit\" to change the selected IDs.";
+      createToolTip(wrapperDiv, "top", text, "l-transfer-tooltip", "transfer-tooltip");
+    }
   }
 }
 function syncScrolls(

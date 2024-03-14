@@ -25,6 +25,12 @@
   transform: scale(2.5);
 }
 
+
+.info-icon {
+  position: relative;
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .copy-icon-private-key,
 .copy-icon-session {
   color: rgba(255, 255, 255, 0.8);
@@ -113,7 +119,7 @@
   display: flex;
   flex-direction: column;
   align-items:center;
-  position: relative;
+  position: absolute;
   align-content: center;
   color: rgba(255, 255, 255, 0.8);
   width: 17px;
@@ -124,15 +130,14 @@
 .tooltip .tooltiptext-bottom {
   display: inline-block;
   visibility: hidden;
-  width: 150px;
   height: max-content;
   position: absolute;
   translate: -50% -50%;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   color: rgba(0, 0, 0, 0.8);
   text-align: center;
   border-radius: 6px;
-  padding: 5px;
+  padding: 10px;
   margin: 280% 0;
 
   z-index: 1;
@@ -159,7 +164,7 @@
 
 .tooltiptext-top::after {
   top: 100%;
-  border-color: rgba(255, 255, 255, 0.8) transparent transparent transparent;
+  border-color: rgba(255, 255, 255, 0.9) transparent transparent transparent;
 }
 
 .tooltiptext-bottom::after {
@@ -180,6 +185,12 @@
   padding: 5px;
 }
 
+.transfer-tooltip {
+  width: 250px;
+  bottom: -320%;
+  padding: 5px;
+  text-align: center;
+}
 
 /* .tooltip-icon-frame {
   position: relative;

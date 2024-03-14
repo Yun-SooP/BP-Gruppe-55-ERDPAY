@@ -7,6 +7,7 @@ import { htmlTransfer } from "./transfer";
 import { htmlMint } from "./mint";
 import { login, logout } from "./widget";
 import * as utils from "./utils";
+import { createToolTip} from "./tooltip";
 
 export let div_dashboard: HTMLDivElement;
 let session: Session;
@@ -310,8 +311,7 @@ export async function htmlDashboard(
     document.querySelector<HTMLButtonElement>(".session-address")!;
   btn_sessionAddress.addEventListener("click", () => alert(session!.address));
 
-  // Event listener for going back one page
-
+  // 
   const btn_return = document.querySelector<HTMLButtonElement>(
     ".transfer-window-container .goback-button"
   )!;
@@ -348,6 +348,7 @@ async function setBalanceTab(
   div_tab.setAttribute("class", "");
   div_tab.style.height = "345px";
   await htmlBalance(div_tab, session!.address.toString(), session);
+  
 }
 
 /**
@@ -398,4 +399,5 @@ async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   );
   div_tab.style.height = "430px";
   await htmlMint(div_tab, session);
+
 }

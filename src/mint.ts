@@ -65,6 +65,7 @@ export async function htmlMint(div: HTMLDivElement, session: Session) {
     "click",
     () => (txt_tokenAddress.value = utils.generateRandomAddress())
   );
+  
 }
 
 /**

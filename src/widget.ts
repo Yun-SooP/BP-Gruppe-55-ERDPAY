@@ -1,7 +1,6 @@
 import { htmlBalanceForGuest } from "./balance";
 import { htmlCreateSession, htmlDashboard } from "./dashboard";
 import { Session } from "@polycrypt/erdstall";
-import {createInfoBox } from "./utils";
 import * as utils from "./utils";
 
 let session : Session | undefined;
@@ -39,12 +38,6 @@ export function widget(div_widget: HTMLDivElement) {
     </form>
     </div>
     `;
-    const content =`
-      <h1 class="erdpay-h1"> Hi! </h1>
-      <p class="erdpay-p"> You can start viewing any account you like by putting in the address below <br>
-          or you can checkout more individual features on our dashhboard! </p>
-    `
-    createInfoBox(document.querySelector<HTMLElement>(".main-window")!, content);
 
   const btn_transfer = document.querySelector(
     ".main-window__form .transfer-btn"
