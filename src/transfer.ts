@@ -189,16 +189,16 @@ export async function htmlTransfer(
 
 
 /**
- * Function to retore the input values for transfer,
- * if the user returns to the transfer form from the confirmation.
- * @param tokenAddress 
- * @param select_tokens 
- * @param amount 
- * @param txt_amount 
- * @param tokenIDs 
- * @param div_tokenIDs 
- * @param recipientAddress 
- * @param txt_recipientAddress 
+ * Restores the selections in the transfer form with previously inputted values.
+ * This is used when a user navigates back to the transfer form from a confirmation screen.
+ * @param tokenAddress - The address of the selected token. If undefined, the token selection is cleared.
+ * @param select_tokens - The dropdown element for selecting tokens.
+ * @param amount - The amount of the token to transfer. If undefined, the amount field is cleared.
+ * @param txt_amount - The input element for the token transfer amount.
+ * @param tokenIDs - An array of token IDs to be transferred. If undefined, the token ID list is not updated.
+ * @param div_tokenIDs - The container element where the list of token IDs will be displayed.
+ * @param recipientAddress - The address of the transfer recipient. If undefined, the recipient address field is cleared.
+ * @param txt_recipientAddress - The input element for the recipient's address.
  */
 function restoreSelections(
   tokenAddress: string | undefined,
