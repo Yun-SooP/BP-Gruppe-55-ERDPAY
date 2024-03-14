@@ -18,6 +18,11 @@
   background-position: center center;
 }
 
+#paymentPopup {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
 h1 {
   font-size: 25px;
   color: rgba(255, 255, 255, 0.95);
@@ -79,8 +84,8 @@ session-window(only first button):
 height: 50 
 */
 
-input[type="text"],
-input[type="password"] {
+#paymentOverlay input[type="text"],
+#paymentOverlay input[type="password"] {
   width: 380px;
   height: 38px;
   padding-left: 15px;
