@@ -13,6 +13,8 @@ let div_transfer: HTMLDivElement;
 
 let newTokenIDs: bigint[];
 let selectedTokenIDs: bigint[];
+
+let btn_changeTokenIDs: HTMLButtonElement;
 let btn_cancelChangeTokenIDs: HTMLButtonElement;
 
 type BooleanWrapper = {
@@ -142,31 +144,10 @@ export async function htmlTransfer(
     // Populate the token and amount select lists with account data
     utils.makeTokensList(select_tokens, select_amount, tokens);
 
-    // Set up an event listener for when the user changes the selected token
-    select_tokens.addEventListener("change", () => {
-      // Adjust the window height for the additional token ID section
-      utils.setWindowHeight(div_transfer, 670);
-      div_transfer.parentElement!.style.height = "930px";
-
-      // Retrieve the first token ID based on the selected token
-      const tokenAddress = select_tokens.value;
-      txt_amount.value = "1";
-      const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
-      selectedTokenIDs = firstTokenID;
-
-      // Make the token ID section visible
-      div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
-      div_tokenIdSection.classList.add("visible-transfer-window__id-list");
-      // Display the first token ID in the list
-      makeTokenIDsList(div_tokenIDs, firstTokenID);
-      // Change the selected token's background color to indicate selection
-      utils.selectedTokenToBlue(select_tokens);
-    });
-
     // Create a BooleanWrapper object to track the state of token ID selection
     const selecting: BooleanWrapper = { value: false };
 
-    const btn_changeTokenIDs = document.querySelector<HTMLButtonElement>(
+    btn_changeTokenIDs = document.querySelector<HTMLButtonElement>(
       ".changeTokenIDs-btn"
     )!;
 
@@ -182,10 +163,14 @@ export async function htmlTransfer(
         selecting,
         tokenIDsAvailable,
         txt_amount,
-        div_tokenIDs,
-        btn_changeTokenIDs
+        div_tokenIDs
       );
     });
+
+    // Set up an event listener for when the user changes the selected token
+    select_tokens.addEventListener("change", () => 
+      eventSelectTokenAddress(select_tokens, txt_amount, div_tokenIDs, div_tokenIdSection, selecting)
+    );
 
     // Select the button to confirm the transfer and attach an event listener
     const btn_confirm = document.querySelector<HTMLInputElement>(
@@ -219,7 +204,45 @@ export async function htmlTransfer(
   }
 }
 
+/**
+ * Handles the event when a user selects a token address from the select element.
+ * It updates the display to show the token ID section and populates the first token ID.
+ * @param select_tokens The select element for selecting tokens.
+ * @param txt_amount The input element for the token transfer amount.
+ * @param div_tokenIDs The container element where the list of token IDs will be displayed.
+ * @param div_tokenIdSection The container element for the token ID section.
+ * @param selecting 
+ */
+function eventSelectTokenAddress(
+  select_tokens:HTMLSelectElement, 
+  txt_amount:HTMLInputElement, 
+  div_tokenIDs:HTMLDivElement, 
+  div_tokenIdSection:HTMLDivElement,
+  selecting:BooleanWrapper){
+  // Adjust the window height for the additional token ID section
+  utils.setWindowHeight(div_transfer, 670);
+  div_transfer.parentElement!.style.height = "930px";
 
+  // Retrieve the first token ID based on the selected token
+  const tokenAddress = select_tokens.value;
+  txt_amount.value = "1";
+  const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
+  selectedTokenIDs = firstTokenID;
+
+  // Make the token ID section visible
+  div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
+  div_tokenIdSection.classList.add("visible-transfer-window__id-list");
+  // Display the first token ID in the list
+  makeTokenIDsList(div_tokenIDs, firstTokenID);
+  // Change the selected token's background color to indicate selection
+  utils.selectedTokenToBlue(select_tokens);
+
+  if(selecting.value){
+    btn_changeTokenIDs.innerText = "edit"
+    btn_cancelChangeTokenIDs!.remove();
+    selecting.value = false;
+  }
+}
 
 /**
  * Restores the selections in the transfer form with previously inputted values.
@@ -301,15 +324,13 @@ function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
  * @param tokenIDsAvailable An array of available token IDs for selection.
  * @param txt_amount txt element for amount, it's value is adjusted when the token ids selection is confirmed
  * @param div_tokenIDs The container element where the token IDs selection form is rendered.
- * @param btn_changeTokenIDs The button element that toggles the selection mode.
  * @returns
  */
 function changeTokenIDsButtonEvent(
   selecting: BooleanWrapper,
   tokenIDsAvailable: bigint[],
   txt_amount: HTMLInputElement,
-  div_tokenIDs: HTMLDivElement,
-  btn_changeTokenIDs: HTMLButtonElement
+  div_tokenIDs: HTMLDivElement
 ) {
   if (!selecting.value) {
     selecting.value = true;
@@ -337,7 +358,7 @@ function changeTokenIDsButtonEvent(
     }
     selecting.value = false;
     btn_changeTokenIDs.innerText = "edit";
-    newTokenIDs.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+    newTokenIDs.sort();
     selectedTokenIDs = newTokenIDs;
     makeTokenIDsList(div_tokenIDs, newTokenIDs);
     txt_amount.value = selectedTokenIDs.length.toString();
