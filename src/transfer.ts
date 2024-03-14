@@ -6,7 +6,7 @@ import { Asset } from "@polycrypt/erdstall/ledger/assets";
 import { Assets } from "@polycrypt/erdstall/ledger/assets";
 import { Tokens } from "@polycrypt/erdstall/ledger/assets";
 import * as utils from "./utils.ts";
-import { createToolTip} from "./tooltip.ts";
+import { createToolTip } from "./utils.ts";
 
 let session: Session;
 let account: Account;
@@ -41,7 +41,6 @@ export async function htmlTransfer(
   tokenIDsRestore?: bigint[],
   recipientAddressRestore?: string
 ) {
-
   // Set the current session and div_transfer to the passed parameters
   session = sessionForTransfer;
   div_transfer = div;
@@ -107,7 +106,6 @@ export async function htmlTransfer(
       ".transfer-tokenID-section"
     )!;
 
-
     //Synchronize scroll of select_tokens and select_amount
     utils.syncScrolls(select_tokens, select_amount);
 
@@ -118,7 +116,6 @@ export async function htmlTransfer(
     )!;
     const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
 
-    
     // Set up an event listener for the amount input field to validate and adjust token IDs upon input
     txt_amount.addEventListener("input", () => {
       const tokenAddress = select_tokens.value;
@@ -132,11 +129,14 @@ export async function htmlTransfer(
       // If the amount is valid, not empty, and the user is not currently selecting token IDs
       if (validAmount && tokenAddress !== "" && !selecting.value) {
         // adjust the token ids to match the amount
-        newTokenIDs = utils.extendTokenIDs(selectedTokenIDs, tokens.value, Number(txt_amount.value));
+        newTokenIDs = utils.extendTokenIDs(
+          selectedTokenIDs,
+          tokens.value,
+          Number(txt_amount.value)
+        );
         selectedTokenIDs = newTokenIDs;
         utils.makeTokenIDsList(div_tokenIDs, newTokenIDs);
       }
-
     });
 
     const txt_recipientAddress = document.querySelector<HTMLInputElement>(
@@ -155,7 +155,7 @@ export async function htmlTransfer(
 
     // Set up an event listener for the edit button next to token IDs
     btn_changeTokenIDs.addEventListener("click", () => {
-       // Retrieve the token address and available IDs for the selected token
+      // Retrieve the token address and available IDs for the selected token
       const tokenAddress = select_tokens.value;
       const tokenIDsAvailable = (<Tokens>(
         account.values.values.get(tokenAddress)
@@ -170,8 +170,14 @@ export async function htmlTransfer(
     });
 
     // Set up an event listener for when the user changes the selected token
-    select_tokens.addEventListener("change", () => 
-      eventSelectTokenAddress(select_tokens, txt_amount, div_tokenIDs, div_tokenIdSection, selecting)
+    select_tokens.addEventListener("change", () =>
+      eventSelectTokenAddress(
+        select_tokens,
+        txt_amount,
+        div_tokenIDs,
+        div_tokenIdSection,
+        selecting
+      )
     );
 
     // Select the button to confirm the transfer and attach an event listener
@@ -190,7 +196,6 @@ export async function htmlTransfer(
       );
     });
 
-
     // If any pre-existing values are provided (e.g., from a previous state), restore those selections
     restoreSelections(
       tokenAddressRestore,
@@ -206,9 +211,18 @@ export async function htmlTransfer(
 
     // Create tooltip
     if (document.querySelector<HTMLDivElement>(".tooltip") == null) {
-      const wrapperDiv = document.querySelector<HTMLDivElement>(".transfer__tokenID-header")!;
-      const text = "Token IDs are selected based on the chosen amount. \n Press \"edit\" to change the selected IDs.";
-      createToolTip(wrapperDiv, "top", text, "l-transfer-tooltip", "transfer-tooltip");
+      const wrapperDiv = document.querySelector<HTMLDivElement>(
+        ".transfer__tokenID-header"
+      )!;
+      const text =
+        'Token IDs are selected based on the chosen amount. \n Press "edit" to change the selected IDs.';
+      createToolTip(
+        wrapperDiv,
+        "top",
+        text,
+        "l-transfer-tooltip",
+        "transfer-tooltip"
+      );
     }
   }
 }
@@ -220,14 +234,15 @@ export async function htmlTransfer(
  * @param txt_amount The input element for the token transfer amount.
  * @param div_tokenIDs The container element where the list of token IDs will be displayed.
  * @param div_tokenIdSection The container element for the token ID section.
- * @param selecting 
+ * @param selecting
  */
 function eventSelectTokenAddress(
-  select_tokens:HTMLSelectElement, 
-  txt_amount:HTMLInputElement, 
-  div_tokenIDs:HTMLDivElement, 
-  div_tokenIdSection:HTMLDivElement,
-  selecting:BooleanWrapper){
+  select_tokens: HTMLSelectElement,
+  txt_amount: HTMLInputElement,
+  div_tokenIDs: HTMLDivElement,
+  div_tokenIdSection: HTMLDivElement,
+  selecting: BooleanWrapper
+) {
   // Adjust the window height for the additional token ID section
   utils.setWindowHeight(div_transfer, 670);
   div_transfer.parentElement!.style.height = "930px";
@@ -246,8 +261,8 @@ function eventSelectTokenAddress(
   // Change the selected token's background color to indicate selection
   utils.selectedTokenToBlue(select_tokens);
 
-  if(selecting.value){
-    btn_changeTokenIDs.innerText = "edit"
+  if (selecting.value) {
+    btn_changeTokenIDs.innerText = "edit";
     btn_cancelChangeTokenIDs!.remove();
     selecting.value = false;
   }
@@ -295,7 +310,6 @@ function restoreSelections(
   }
   txt_recipientAddress.value = recipientAddress ? recipientAddress : "";
 }
-
 
 /**
  * Initializes an event on the given 'Change Token IDs' button to enable the selection of new token IDs for transfer.
@@ -476,7 +490,7 @@ function checkInputsForTransfer(
 }
 
 /**
- * Renders the transfer confirmation interface, displaying the details of the transfer and 
+ * Renders the transfer confirmation interface, displaying the details of the transfer and
  * providing buttons for the user to confirm or return to the previous screen.
  *
  * @param tokenAddress The blockchain address of the token to be transferred.
@@ -532,7 +546,6 @@ function htmlTransferConfirmation(
     );
   });
 }
-
 
 /**
  * Initiates the token transfer process based on the provided details. Upon completion,
