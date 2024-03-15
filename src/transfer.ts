@@ -65,7 +65,7 @@ export async function htmlTransfer(
     utils.setWindowHeight(div_transfer, 490);
     div_transfer.parentElement!.style.height = "750px";
     div_transfer.innerHTML = `
-      <h2>Choose your token and the amount of tokens you want to send</h2>
+      <h2>Choose your token and the amount of tokens to send</h2>
       <header class="token-list-header">
           <span>Available Tokens</span>
           <span>Amount</span>
