@@ -7,7 +7,6 @@ import { htmlTransfer } from "./transfer";
 import { htmlMint } from "./mint";
 import { login, logout } from "./widget";
 import * as utils from "./utils";
-import { createToolTip} from "./tooltip";
 
 export let div_dashboard: HTMLDivElement;
 let session: Session;
@@ -356,7 +355,7 @@ async function setBalanceTab(
   div_tab: HTMLDivElement,
   head_tabLabel: HTMLElement
 ) {
-  if (current == "Balance of") {
+  if (current == "My Balance") {
     return;
   }
   const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
@@ -364,7 +363,7 @@ async function setBalanceTab(
   )!;
   windowContainer.style.height = "600px";
 
-  current = "Balance of";
+  current = "My Balance";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute("class", "");
   div_tab.style.height = "110px";
