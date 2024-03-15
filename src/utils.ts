@@ -306,7 +306,6 @@ export function makeTokensList(
     select_amount: HTMLSelectElement,
     tokens: [string, Asset][]
   ) {
-    tokens.sort((t1, t2) => Number(t1[0]) - Number(t2[0]));
     for (let i = 0; i < tokens.length; i++) {
       const option = document.createElement("option");
       const token = tokens[i];
