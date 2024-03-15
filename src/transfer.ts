@@ -210,7 +210,8 @@ export async function htmlTransfer(
       div_tokenIDs,
       div_tokenIdSection,
       recipientAddressRestore,
-      txt_recipientAddress
+      txt_recipientAddress,
+      selecting
     );
 
     // Create tooltip
@@ -238,7 +239,7 @@ export async function htmlTransfer(
  * @param txt_amount The input element for the token transfer amount.
  * @param div_tokenIDs The container element where the list of token IDs will be displayed.
  * @param div_tokenIdSection The container element for the token ID section.
- * @param selecting
+ * @param selecting - A wrapper object for a boolean flag indicating if the selection mode is active.
  */
 function eventSelectTokenAddress(
   div_transfer: HTMLDivElement,
@@ -258,34 +259,7 @@ function eventSelectTokenAddress(
   const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
   selectedTokenIDs = firstTokenID;
 
-  // Show the selected Token Address with copy button.
-  const div_transferInstruction = div_transfer.querySelector(
-    ".transfer-instruction"
-  )!;
-
-  if (div_transferInstruction.childElementCount > 1) {
-    div_transferInstruction.querySelector(
-      ".selected-token-address"
-    )!.innerHTML = `<span>${tokenAddress}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
-  } else {
-    const h2_selectedTokenAddressHeader = document.createElement("h2");
-    h2_selectedTokenAddressHeader.classList.add(
-      "selected-token-header",
-      "visible-token-header"
-    );
-    h2_selectedTokenAddressHeader!.innerHTML = `Currently selected Token`;
-
-    const div_selectedTokenAddress = document.createElement("div");
-    div_selectedTokenAddress.classList.add(
-      "selected-token-address",
-      "visible-transfer-window-selected-token-address",
-      "third-layer-window"
-    );
-    div_selectedTokenAddress!.innerHTML = `<span>${tokenAddress}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
-
-    div_transferInstruction.append(h2_selectedTokenAddressHeader);
-    div_transferInstruction.append(div_selectedTokenAddress);
-  }
+  displayCurrentlySelectedTokenAddress(tokenAddress);
 
   // Make the token ID section visible
   div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
@@ -302,6 +276,40 @@ function eventSelectTokenAddress(
   }
 }
 
+function displayCurrentlySelectedTokenAddress(tokenAddress:string){
+  const div_transferInstruction = div_transfer.querySelector(
+    ".transfer-instruction"
+  )!;
+  if (div_transferInstruction.childElementCount > 1) {
+    div_transferInstruction.querySelector(
+      ".selected-token-address"
+    )!.innerHTML = `<span>${tokenAddress}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+    const btn_copy = div_transferInstruction.querySelector<HTMLButtonElement>(".selected-token-address .copy-button")!;
+    utils.setCopyToClipboardListener(tokenAddress, btn_copy);
+  } else {
+    const h2_selectedTokenAddressHeader = document.createElement("h2");
+    h2_selectedTokenAddressHeader.classList.add(
+      "selected-token-header",
+      "visible-token-header"
+    );
+    h2_selectedTokenAddressHeader!.innerHTML = `Currently selected Token`;
+
+    const div_selectedTokenAddress = document.createElement("div");
+    div_selectedTokenAddress.classList.add(
+      "selected-token-address",
+      "visible-transfer-window-selected-token-address",
+      "third-layer-window"
+    );
+    div_selectedTokenAddress!.innerHTML = `<span>${tokenAddress}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+    
+    div_transferInstruction.append(h2_selectedTokenAddressHeader);
+    div_transferInstruction.append(div_selectedTokenAddress);
+
+    const btn_copy = div_transferInstruction.querySelector<HTMLButtonElement>(".selected-token-address .copy-button")!;
+    utils.setCopyToClipboardListener(tokenAddress, btn_copy);
+  }
+}
+
 /**
  * Restores the selections in the transfer form with previously inputted values.
  * This is used when a user navigates back to the transfer form from a confirmation screen.
@@ -314,6 +322,7 @@ function eventSelectTokenAddress(
  * @param div_tokenIdSection - The container element for the token ID section.
  * @param recipientAddress - The address of the transfer recipient. If undefined, the recipient address field is cleared.
  * @param txt_recipientAddress - The input element for the recipient's address.
+ * @param selecting - A wrapper object for a boolean flag indicating if the selection mode is active.
  */
 function restoreSelections(
   tokenAddress: string | undefined,
@@ -324,23 +333,19 @@ function restoreSelections(
   div_tokenIDs: HTMLDivElement,
   div_tokenIdSection: HTMLDivElement,
   recipientAddress: string | undefined,
-  txt_recipientAddress: HTMLInputElement
+  txt_recipientAddress: HTMLInputElement,
+  selecting: BooleanWrapper
 ) {
-  select_tokens.value = tokenAddress ? tokenAddress : "";
+  if (tokenAddress){
+    select_tokens.value = tokenAddress ;
+    eventSelectTokenAddress(div_transfer, select_tokens, txt_amount, div_tokenIDs, div_tokenIdSection, selecting);
+  } else {
+    select_tokens.value = "";
+  }
   txt_amount.value = amount ? amount : "";
   if (tokenIDs) {
-    // Adjust the window height for the additional token ID section
-    utils.setWindowHeight(div_transfer, 670);
-    div_transfer.parentElement!.style.height = "930px";
-
-    // Make the token ID section visible
-    div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
-    div_tokenIdSection.classList.add("visible-transfer-window__id-list");
-
+    selectedTokenIDs = tokenIDs;
     utils.makeTokenIDsList(div_tokenIDs, tokenIDs);
-
-    // Change the selected token's background color to indicate selection
-    utils.selectedTokenToBlue(select_tokens);
   }
   txt_recipientAddress.value = recipientAddress ? recipientAddress : "";
 }

@@ -638,7 +638,14 @@ export function createToolTip(element: HTMLElement, textbox_position: string, te
   const textbox = document.createElement("span");
   textbox.classList.add("tooltiptext-" + textbox_position, style_content);
 
-  textbox.textContent = text
+  //textbox.textContent = text
+  const lines = text.split('\n');
+  lines.forEach(line => {
+    const lineElement = document.createElement("div");
+    lineElement.innerHTML = line;
+    textbox.appendChild(lineElement);
+  });
+
   iconFrame.appendChild(icon);
   iconFrame.appendChild(textbox);
 
