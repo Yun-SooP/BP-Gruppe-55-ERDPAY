@@ -276,6 +276,10 @@ function eventSelectTokenAddress(
   }
 }
 
+/**
+ * Display the full token address of the selected token address and makes a copy button for the selected token address.
+ * @param tokenAddress The token address that is currently selected.
+ */
 function displayCurrentlySelectedTokenAddress(tokenAddress:string){
   const div_transferInstruction = div_transfer.querySelector(
     ".transfer-instruction"

@@ -195,11 +195,13 @@ async function viewBalance(client: Client, address: string) {
     const div_balanceInstruction = document.querySelector(
       ".balance-instruction"
     )!;
-
+    const tokenAddress = select_tokens.value;
     if (div_balanceInstruction.childElementCount > 1) {
       div_balanceInstruction.querySelector(
         ".selected-token-address"
-      )!.innerHTML = `<span>${select_tokens.value}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+      )!.innerHTML = `<span>${tokenAddress}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+      const btn_copy = div_balanceInstruction.querySelector<HTMLButtonElement>(".selected-token-address .copy-button")!;
+      utils.setCopyToClipboardListener(tokenAddress, btn_copy);
     } else {
       const h2_selectedTokenAddressHeader = document.createElement("h2");
       h2_selectedTokenAddressHeader.classList.add(
@@ -214,10 +216,13 @@ async function viewBalance(client: Client, address: string) {
         "visible-transfer-window-selected-token-address",
         "third-layer-window"
       );
-      div_selectedTokenAddress!.innerHTML = `<span>${select_tokens.value}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+      div_selectedTokenAddress!.innerHTML = `<span>${tokenAddress}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
 
       div_balanceInstruction.append(h2_selectedTokenAddressHeader);
       div_balanceInstruction.append(div_selectedTokenAddress);
+
+      const btn_copy = div_balanceInstruction.querySelector<HTMLButtonElement>(".selected-token-address .copy-button")!;
+      utils.setCopyToClipboardListener(tokenAddress, btn_copy);
     }
 
     //move spans to left
