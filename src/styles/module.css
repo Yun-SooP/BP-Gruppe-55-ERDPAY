@@ -173,7 +173,7 @@
 
 .balance-window__id-list .token-id:hover {
   transform: perspective(1px) scale(1.04, 1.04);
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--toggleBlue);
 }
 .balance-window__id-list .token-id:active {
   background-color: rgba(255, 255, 255, 0.02);
@@ -473,7 +473,7 @@ input:checked + .slider:before {
 }
 
 #tokenIDs .token-id:hover {
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: #8aa6b7;
 }
 
 .confirm-transfer-form {
