@@ -295,6 +295,7 @@ async function htmlPay(
       tokenAddress,
       amountAvailable
     );
+    tokenIDs.sort();
     const div_tokenIDs = document.querySelector<HTMLDivElement>("#tokenIDs")!;
     utils.makeTokenIDsList(div_tokenIDs, tokenIDs);
     const btn_changeTokenIDs = document.querySelector<HTMLButtonElement>(
@@ -418,6 +419,7 @@ function makeTokenIDsSelection(
   tokenIDsAvailable: bigint[]
 ): bigint[] {
   const newTokenIDs: bigint[] = [];
+  tokenIDsAvailable.sort();
   for (let i = 0; i < tokenIDsAvailable.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");

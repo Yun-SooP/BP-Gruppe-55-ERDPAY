@@ -289,10 +289,11 @@ export function getTokenIDs(
     tokenAddress: string,
     amount?: number
   ): bigint[] {
-    const tokens = <Tokens>account.values.values.get(tokenAddress)!;
-    if (amount == undefined) return tokens.value;
-    return tokens.value.slice(0, amount);
-  }
+    const tokenIDs = (<Tokens>account.values.values.get(tokenAddress)!).value;
+    tokenIDs.sort();
+    if (amount == undefined) return tokenIDs;
+    return tokenIDs.slice(0, amount);
+}
 
 /**
  * Populates the token and amount select elements with options based on the available tokens.
@@ -331,6 +332,7 @@ export function makeTokensList(
  */
 export function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
   div_tokenIDs.innerHTML = "";
+  tokenIDs.sort();
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
