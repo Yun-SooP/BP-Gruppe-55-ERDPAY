@@ -1,7 +1,27 @@
+#app {
+  --toggleBlue: #6f8898;
+}
+
 .visible-balance-window__address {
   flex-direction: row;
   justify-content: center;
   width: 550px;
+  height: 38px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  border: solid 1px rgba(255, 255, 255, 0.3);
+}
+
+.visible-token-header {
+  visibility: visible;
+}
+.visible-transfer-window-selected-token-address {
+  visibility: visible;
+  flex-direction: row;
+  justify-content: center;
+  width: 500px;
   height: 38px;
   margin-top: 10px;
   font-size: 16px;
@@ -18,17 +38,16 @@
 }
 
 .visible-balance-window__id-list {
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background-color: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(30px);
   height: 150px;
-  width: 75px;
-  border-radius: 10px;
+  width: 110px;
   margin-left: 15px;
 }
 
-.tooltip-icon-frame:hover .message-box-top, .tooltip-icon-frame:hover .message-box-right, .tooltip-icon-frame:hover .message-box-left, .tooltip-icon-frame:hover .message-box-bottom {
-  visibility: visible; 
+.tooltip-icon-frame:hover .message-box-top,
+.tooltip-icon-frame:hover .message-box-right,
+.tooltip-icon-frame:hover .message-box-left,
+.tooltip-icon-frame:hover .message-box-bottom {
+  visibility: visible;
   z-index: 100;
   opacity: 1;
 }
@@ -37,4 +56,22 @@
   visibility: visible;
   z-index: 100;
   opacity: 1;
+}
+
+.clicked-clickable-token-id {
+  background-color: var(--toggleBlue);
+}
+
+.invisible-transfer-window__id-list {
+  z-index: -1;
+  visibility: hidden;
+  width: 510px;
+  border: none;
+  height: 0px;
+}
+
+.visible-transfer-window__id-list {
+  height: 180px;
+  width: 510px;
+  visibility: visible;
 }

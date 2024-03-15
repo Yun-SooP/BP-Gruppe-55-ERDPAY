@@ -21,7 +21,18 @@
 /* Main */
 .l-main-window {
   width: 500px;
-  height: 400px;
+  height: 500px;
+  padding: 15px;
+}
+
+.l-main-tooltip-balance {
+  left: 75%;
+  top: 78.5%;
+}
+
+.l-main-tooltip-dashboard {
+  left: 75%;
+  top: 47.5%;
 }
 
 .l-main-logo {
@@ -39,6 +50,7 @@
   margin-top: 40px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 15px;
 }
 /* 
@@ -50,7 +62,7 @@
 /* Balance */
 .l-balance-window-container {
   width: 700px;
-  height: 410px;
+  height: 550px;
 }
 
 .l-balance-title {
@@ -70,6 +82,10 @@
   height: 160px;
   margin-top: 10px;
 }
+
+.l-balance-tooltip {
+  visibility: hidden;
+}
 /* 
 
 
@@ -79,7 +95,7 @@
 /* Account */
 .l-session-window {
   width: 550px;
-  height: 550px;
+  height: 520px;
 }
 
 .l-session-window__header {
@@ -87,7 +103,7 @@
 }
 
 .l-session-window__form {
-  margin-top: 50px;
+  margin-top: 20px;
 }
 /* 
 
@@ -115,14 +131,88 @@
 
 .l-transfer-window {
   width: 550px;
-  height: 70px;
+  height: 110px;
 }
 
+.l-transfer-footer {
+  margin-top: 15px;
+}
+
+.l-logout {
+  margin-left: 450px;
+  margin-top: 20px;
+}
+
+.l-transfer-tooltip {
+  align-self: auto;
+  top: 46%;
+  left: 2%;
+}
+/* 
+
+
+
+
+*/
+/* Mint */
 .l-mint-window {
   width: 550px;
   height: 550px;
 }
 
-.l-transfer-footer {
-  margin-top: 15px;
+.l-mint-tooltip {
+  left: 93%;
+  top: 5%;
+}
+
+.l-mint-tooltip-option {
+  left: 55%;
+  top: 45%;
+  position: relative;
+}
+/* 
+
+
+
+
+*/
+/* Create Account */
+.l-create-account-window-container {
+  width: 700px;
+  height: 385px;
+}
+
+.l-create-account-window-header {
+  size: 80%;
+  padding: 40px 40px 0 40px;
+}
+
+.l-create-account-window-container-body {
+  width: 400px;
+}
+
+.l-create-account-session-address-container,
+.l-create-account-private-key-container {
+  width: 200px;
+}
+
+.l-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+/* 
+
+
+
+
+*/
+/* Tab layout */
+.widget-header .l-tab {
+  position: relative;
+  width: 65%;
+  height: 100%;
+  gap: 10px;
 }
