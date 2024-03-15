@@ -345,8 +345,7 @@ function restoreSelections(
   txt_amount.value = amount ? amount : "";
   if (tokenIDs) {
     selectedTokenIDs = tokenIDs;
-    // Change the selected token's background color to indicate selection
-    utils.selectedTokenToBlue(select_tokens);
+    utils.makeTokenIDsList(div_tokenIDs, tokenIDs);
   }
   txt_recipientAddress.value = recipientAddress ? recipientAddress : "";
 }
