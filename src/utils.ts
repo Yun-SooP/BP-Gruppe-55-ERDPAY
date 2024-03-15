@@ -30,7 +30,7 @@ export function checkTokenAddress(
         tokenAddress.length > 42
       ) {
         displayErrorMessage(
-          "Please enter a valid address. (Hexadecimal of length 40, starting with 0x)",
+          "Please enter a valid  token address. <br>(Hexadecimal of length 40, starting with 0x)",
           errDisplay,
           inputBox
         );
@@ -55,7 +55,7 @@ export function checkBalanceAddress(
     resetErrorDisplay(errDisplay, inputBox);
 
     if (address == "") {
-        displayErrorMessage("Please enter a token address.", errDisplay, inputBox);
+        displayErrorMessage("Please enter an account address.", errDisplay, inputBox);
         return false;
     }
     const hex = /[0-9A-Fa-f]{40}/g;
@@ -285,14 +285,15 @@ export function generateRandomTokenID(): bigint {
  * @returns {bigint[]} - An array of token IDs.
  */
 export function getTokenIDs(
-    account: Account,
-    tokenAddress: string,
-    amount?: number
-  ): bigint[] {
-    const tokens = <Tokens>account.values.values.get(tokenAddress)!;
-    if (amount == undefined) return tokens.value;
-    return tokens.value.slice(0, amount);
-  }
+  account: Account,
+  tokenAddress: string,
+  amount?: number
+): bigint[] {
+  const tokenIDs = (<Tokens>account.values.values.get(tokenAddress)!).value;
+  tokenIDs.sort();
+  if (amount == undefined) return tokenIDs;
+  return tokenIDs.slice(0, amount);
+}
 
 /**
  * Populates the token and amount select elements with options based on the available tokens.

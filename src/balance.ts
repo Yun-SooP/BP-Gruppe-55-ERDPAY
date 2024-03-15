@@ -58,13 +58,24 @@ export async function htmlBalanceForGuest(
     alert(error);
     return;
   }
+
+  // Create back and home buttons & its functions
+  btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
+  logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
+  btn_return.addEventListener("click", () => widget(div_widget));
+  logo_return.addEventListener("click", () => widget(div_widget));
+
   // Change content of balance to empty box if there are no tokens to see
   const account = await client!.getAccount(Address.fromString(address));
   const div_balanceContent = document.querySelector<HTMLDivElement>("#balance-content")!;
   if (account.values.values.size == 0) {
     div_balanceContent.innerHTML = `
       <div class = "transfer-window l-transfer-window second-layer-window">
-        <p>You have no token available.</p>
+        <p>
+          You have no token available.<br>
+          Get tokens transferred to you from other account<br>
+          or create your own by minting them!
+        </p>
       </div>
     `;
   } else {
@@ -72,28 +83,28 @@ export async function htmlBalanceForGuest(
     <div class="balance-window-container__address"></div>
     <div class="balance-window l-balance-window second-layer-window"></div>
     `;
+    
+    //Used in viewBalance() to change the content
+    div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
+      ".balance-window-container"
+    )!;
+    div_balanceWindow = document.querySelector<HTMLDivElement>(
+      ".balance-window-container .balance-window"
+    )!;
+    div_address = document.querySelector<HTMLDivElement>(
+      ".balance-window-container__address"
+    )!;
+    h1_title = document.querySelector<HTMLHeadingElement>(
+      ".balance-window-container h1"
+    )!;
+    await viewBalance(client!, address);
   }
 
-  btn_return = document.querySelector<HTMLButtonElement>(".goback-button")!;
-  logo_return = document.querySelector<HTMLButtonElement>(".erdstall-logo")!;
 
-  //Used in viewBalance() to change the content
-  div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
-    ".balance-window-container"
-  )!;
-  div_balanceWindow = document.querySelector<HTMLDivElement>(
-    ".balance-window-container .balance-window"
-  )!;
-  div_address = document.querySelector<HTMLDivElement>(
-    ".balance-window-container__address"
-  )!;
-  h1_title = document.querySelector<HTMLHeadingElement>(
-    ".balance-window-container h1"
-  )!;
-  await viewBalance(client!, address);
 
-  btn_return.addEventListener("click", () => widget(div_widget));
-  logo_return.addEventListener("click", () => widget(div_widget));
+  
+
+  
 }
 
 /**
@@ -115,7 +126,11 @@ export async function htmlBalance(
     div_balance.innerHTML = `
       
         <div class = "transfer-window l-transfer-window second-layer-window">
-          <p>You have no token available.</p>
+          <p>
+            You have no token available.<br>
+            Get tokens transferred to you from other account<br>
+            or create your own by minting them!
+        </p>
         </div>
       
     `;
@@ -186,7 +201,7 @@ async function viewBalance(client: Client, address: string) {
     const span_id = document.querySelector<HTMLSpanElement>(
       ".balance-window header span:last-child"
     )!;
-    span_id.style.marginLeft = "70px";
+    span_id.style.marginLeft = "110px";
     span_id.style.color = "rgba(255, 255, 255, 0.7)";
 
     //change color of selecteed token color
