@@ -162,9 +162,7 @@ export async function htmlTransfer(
     btn_changeTokenIDs.addEventListener("click", () => {
       // Retrieve the token address and available IDs for the selected token
       const tokenAddress = select_tokens.value;
-      const tokenIDsAvailable = (<Tokens>(
-        account.values.values.get(tokenAddress)
-      )).value;
+      const tokenIDsAvailable = utils.getTokenIDs(account, tokenAddress);
       // Invoke the function to handle the edit token IDs event
       changeTokenIDsButtonEvent(
         selecting,

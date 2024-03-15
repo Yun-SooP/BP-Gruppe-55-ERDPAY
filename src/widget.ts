@@ -82,6 +82,15 @@ export function widget(div_widget: HTMLDivElement) {
       btn_balance.click();
     }
   });
+
+  // Create tooltip for view balance as a guest
+  if (document.querySelector<HTMLElement>(".tooltip") == null) {
+    const div_elem = document.querySelector<HTMLDivElement>(".main-window")!;
+    const text_balance = "Check out other account balances by putting in the address of the account you want to view";
+    const text_dashboard = "Our dashboard contains all functionalities of Erdstall and provides a general overview of your own account balance";
+    utils.createToolTip(div_elem, "top", text_balance, "l-main-tooltip-balance", "main-tooltip-balance");
+    utils.createToolTip(div_elem, "top", text_dashboard, "l-main-tooltip-dashboard", "main-tooltip-dashboard");
+  }
 }
 
 // change the inner HTML of the HTML div element "app" to the main interface

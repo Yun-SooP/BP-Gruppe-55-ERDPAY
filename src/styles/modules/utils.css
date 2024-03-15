@@ -13,10 +13,10 @@
 }
 
 .fa-angle-left {
-  transform: scale(1.2, 1.2);
   position: relative;
   filter: brightness(0) invert(1);
   opacity: 0.8;
+  transform: scale(1.2, 1.2);
 }
 .fa-user,
 .fa-key {
@@ -33,15 +33,17 @@
 
 .copy-icon-private-key,
 .copy-icon-session {
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 5px;
   width: max-content;
+  margin-top: 5px;
+
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .copy-button {
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0);
   border: none;
+
   color: rgba(255, 255, 255, 0.9);
   box-shadow: none;
   backdrop-filter: none;
@@ -107,53 +109,39 @@
 }
 
 /* Tooltip */
-.content-with-tooltip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  left: 7px;
-}
-
 .tooltip {
+  position: absolute;
+  width: 17px;
+  height: 17px;
   display: flex;
   flex-direction: column;
   align-items:center;
-  position: absolute;
   align-content: center;
   color: rgba(255, 255, 255, 0.8);
-  width: 17px;
-  height: 17px;
+  
 }
 
 .tooltip .tooltiptext-top,
-.tooltip .tooltiptext-bottom {
-  display: inline-block;
+.tooltip .tooltiptext-bottom
+ {
   visibility: hidden;
-  height: max-content;
   position: absolute;
-  translate: -50% -50%;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: rgba(0, 0, 0, 0.8);
-  text-align: center;
+  display: inline-block;
+  height: max-content;
+  text-align: justify;
   border-radius: 6px;
-  padding: 10px;
+  padding: 13px;
   margin: 280% 0;
-
+  background-color: rgba(255, 255, 255, 0.95);
+  color: rgba(0, 0, 0, 0.8);
+  translate: -50% -50%;
   z-index: 1;
   left: 50%;
 }
 
-/* .tooltiptext-top {
-  bottom: 100%;
-}
-
-.tooltiptext-bottom {
-  top: 80px;
-} */
-
 .tooltip .tooltiptext-top::after,
-.tooltip .tooltiptext-bottom::after {
+.tooltip .tooltiptext-bottom::after
+{
   content: "";
   position: absolute;
   left: 50%;
@@ -169,11 +157,12 @@
 
 .tooltiptext-bottom::after {
   bottom: 100%;
-  border-color: transparent transparent rgba(255, 255, 255, 0.8) transparent;
+  border-color: transparent transparent rgba(255, 255, 255, 0.9) transparent;
 }
 
 .tooltip:hover .tooltiptext-top,
-.tooltip:hover .tooltiptext-bottom {
+.tooltip:hover .tooltiptext-bottom
+{
   visibility: visible;
 }
 
@@ -185,84 +174,33 @@
   padding: 5px;
 }
 
+.main-tooltip-balance {
+  width: 190px;
+  bottom: -370%;
+}
+
+.main-tooltip-dashboard {
+  width: 210px;
+  bottom: -370%;
+}
+
+.mint-tooltip {
+  width: 270px;
+  top: 435%;
+}
+
+.mint-tooltip-option {
+  width: 280px;
+  bottom: -370%;
+}
+
 .transfer-tooltip {
-  width: 250px;
+  width: 243px;
   bottom: -320%;
   padding: 5px;
   text-align: center;
 }
 
-/* .tooltip-icon-frame {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  margin-left: 8px;
-  margin-top: 10px;
-  margin-bottom: 4px;
-}
-
-.message-box-top,
-.message-box-bottom,
-.message-box-right,
-.message-box-left {
-  visibility: hidden;
-  opacity: 0;
-
-  width: max-content;
-  height: max-content;
-
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: 10px;
-  color: #283048;
-
-  text-align: center;
-  vertical-align: middle;
-  position: absolute;
-  z-index: 1;
-
-  padding: 5px 10px 10px 10px;
-  transition: opacity 0.4s;
-}
-
-.message-box-top {
-  bottom: 30px;
-}
-.message-box-bottom {
-  top: 30px;
-}
-
-.message-box-right {
-  left: 30px;
-  bottom: -35px;
-}
-
-.message-box-left {
-  right: 30px;
-  bottom: -35px;
-}
-
-.message-box-text {
-  padding: 20px 10px 20px 10px;
-}
-
-.tooltip-icon {
-  color: rgba(255, 255, 255, 0.7);
-  transform: scale(0.9);
-}
-
-.content-with-tooltip {
-  height: max-content;
-  width: max-content;
-
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  left: 11px;
-
-}
-
-} */
 .hide {
   visibility: hidden;
   display: none;
