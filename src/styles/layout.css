@@ -25,10 +25,14 @@
   padding: 15px;
 }
 
-.l-main-tooltip {
-  align-self: self-end;
-  margin-right: 10px;
-  margin-top: 10px;
+.l-main-tooltip-balance {
+  left: 75%;
+  top: 78.5%;
+}
+
+.l-main-tooltip-dashboard {
+  left: 75%;
+  top: 47.5%;
 }
 
 .l-main-logo {
@@ -130,12 +134,6 @@
   height: 70px;
 }
 
-.l-mint-window {
-  width: 550px;
-  height: 550px;
-}
-
-
 .l-transfer-footer {
   margin-top: 15px;
 }
@@ -150,7 +148,28 @@
   top: 46%;
   left: 2%;
 }
+/* 
 
+
+
+
+*/
+/* Mint */
+.l-mint-window {
+  width: 550px;
+  height: 550px;
+}
+
+.l-mint-tooltip {
+  left: 93%;
+  top: 5%;
+}
+
+.l-mint-tooltip-option {
+  left: 55%;
+  top: 45%;
+  position: relative;
+}
 /* 
 
 
