@@ -332,7 +332,6 @@ export function makeTokensList(
  */
 export function makeTokenIDsList(div_tokenIDs: HTMLDivElement, tokenIDs: bigint[]) {
   div_tokenIDs.innerHTML = "";
-  tokenIDs.sort();
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
     span.classList.add("token-id", "third-layer-window");
