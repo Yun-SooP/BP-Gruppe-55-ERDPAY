@@ -374,6 +374,7 @@ function makeTokenIDsSelection(
   div_tokenIDs: HTMLDivElement,
   tokenIDs: bigint[]
 ): bigint[] {
+  tokenIDs.sort();
   const newTokenIDs: bigint[] = [];
   for (let i = 0; i < tokenIDs.length; i++) {
     const span = document.createElement("span");
