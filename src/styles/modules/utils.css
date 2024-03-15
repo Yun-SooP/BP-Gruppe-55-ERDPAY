@@ -176,22 +176,22 @@
 
 .main-tooltip-balance {
   width: 190px;
-  bottom: -370%;
+  bottom: -400%;
 }
 
 .main-tooltip-dashboard {
   width: 210px;
-  bottom: -370%;
+  bottom: -400%;
 }
 
 .mint-tooltip {
   width: 270px;
-  top: 435%;
+  top: 500%;
 }
 
 .mint-tooltip-option {
   width: 280px;
-  bottom: -370%;
+  bottom: -400%;
 }
 
 .transfer-tooltip {
