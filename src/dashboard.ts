@@ -42,8 +42,9 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
           <header class="session-window__header l-session-window__header">
             <h1>Sign-In</h1>
             <p>
-              Create a new account or <br/>
-              log-in with your private key
+              Log-in with your private key or
+              <br/>
+              Create a new account  
             </p>
           </header>
   
@@ -140,8 +141,8 @@ function createAccount(
   html_widget.innerHTML = `
     <div class="l-create-account-window-container create-window-account-container first-layer-window">
       <header class="create-account-window-header l-create-account-window-header"> 
-        <h1> You have successfully created a new account! </h1>
-        <p> You can view your account details below <br> Please make sure to keep your data private </p>
+        <h1> Your account was created successfully! </h1>
+        <p> Here is your account information. <br> Please do not share your private-key data with anyone else. </p>
       </header>
 
       <div class="l-create-account-window-container-body create-account-window-container-body"> 
@@ -366,7 +367,7 @@ async function setBalanceTab(
   current = "Balance of";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute("class", "");
-  div_tab.style.height = "70px";
+  div_tab.style.height = "110px";
   await htmlBalance(div_tab, session!.address.toString(), session);
   
 }
@@ -395,7 +396,7 @@ async function setTransferTab(
     "class",
     "transfer-window l-transfer-window second-layer-window"
   );
-  div_tab.style.height = "70px";
+  div_tab.style.height = "110px";
   await htmlTransfer(div_tab, session);
 }
 

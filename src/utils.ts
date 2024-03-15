@@ -30,7 +30,7 @@ export function checkTokenAddress(
         tokenAddress.length > 42
       ) {
         displayErrorMessage(
-          "Please enter a valid address. (Hexadecimal of length 40, starting with 0x)",
+          "Please enter a valid  token address. <br>(Hexadecimal of length 40, starting with 0x)",
           errDisplay,
           inputBox
         );
@@ -55,7 +55,7 @@ export function checkBalanceAddress(
     resetErrorDisplay(errDisplay, inputBox);
 
     if (address == "") {
-        displayErrorMessage("Please enter a token address.", errDisplay, inputBox);
+        displayErrorMessage("Please enter an account address.", errDisplay, inputBox);
         return false;
     }
     const hex = /[0-9A-Fa-f]{40}/g;
