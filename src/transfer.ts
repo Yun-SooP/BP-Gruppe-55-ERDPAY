@@ -65,7 +65,8 @@ export async function htmlTransfer(
     utils.setWindowHeight(div_transfer, 490);
     div_transfer.parentElement!.style.height = "750px";
     div_transfer.innerHTML = `
-      <h2>Choose your token and the amount of tokens you want to send</h2>
+      <div class="transfer-instruction"><h2>Choose your token and the amount of tokens you want to send</h2></div>
+      
       <header class="token-list-header">
           <span>Available Tokens</span>
           <span>Amount</span>
@@ -161,9 +162,7 @@ export async function htmlTransfer(
     btn_changeTokenIDs.addEventListener("click", () => {
       // Retrieve the token address and available IDs for the selected token
       const tokenAddress = select_tokens.value;
-      const tokenIDsAvailable = (<Tokens>(
-        account.values.values.get(tokenAddress)
-      )).value;
+      const tokenIDsAvailable = utils.getTokenIDs(account, tokenAddress);
       // Invoke the function to handle the edit token IDs event
       changeTokenIDsButtonEvent(
         selecting,
@@ -176,6 +175,7 @@ export async function htmlTransfer(
     // Set up an event listener for when the user changes the selected token
     select_tokens.addEventListener("change", () =>
       eventSelectTokenAddress(
+        div_transfer,
         select_tokens,
         txt_amount,
         div_tokenIDs,
@@ -241,6 +241,7 @@ export async function htmlTransfer(
  * @param selecting
  */
 function eventSelectTokenAddress(
+  div_transfer: HTMLDivElement,
   select_tokens: HTMLSelectElement,
   txt_amount: HTMLInputElement,
   div_tokenIDs: HTMLDivElement,
@@ -248,14 +249,43 @@ function eventSelectTokenAddress(
   selecting: BooleanWrapper
 ) {
   // Adjust the window height for the additional token ID section
-  utils.setWindowHeight(div_transfer, 670);
-  div_transfer.parentElement!.style.height = "930px";
+  utils.setWindowHeight(div_transfer, 720);
+  div_transfer.parentElement!.style.height = "980px";
 
   // Retrieve the first token ID based on the selected token
   const tokenAddress = select_tokens.value;
   txt_amount.value = "1";
   const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
   selectedTokenIDs = firstTokenID;
+
+  // Show the selected Token Address with copy button.
+  const div_transferInstruction = div_transfer.querySelector(
+    ".transfer-instruction"
+  )!;
+
+  if (div_transferInstruction.childElementCount > 1) {
+    div_transferInstruction.querySelector(
+      ".selected-token-address"
+    )!.innerHTML = `<span>${tokenAddress}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+  } else {
+    const h2_selectedTokenAddressHeader = document.createElement("h2");
+    h2_selectedTokenAddressHeader.classList.add(
+      "selected-token-header",
+      "visible-token-header"
+    );
+    h2_selectedTokenAddressHeader!.innerHTML = `Currently selected Token`;
+
+    const div_selectedTokenAddress = document.createElement("div");
+    div_selectedTokenAddress.classList.add(
+      "selected-token-address",
+      "visible-transfer-window-selected-token-address",
+      "third-layer-window"
+    );
+    div_selectedTokenAddress!.innerHTML = `<span>${tokenAddress}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+
+    div_transferInstruction.append(h2_selectedTokenAddressHeader);
+    div_transferInstruction.append(div_selectedTokenAddress);
+  }
 
   // Make the token ID section visible
   div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");
