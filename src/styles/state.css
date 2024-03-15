@@ -14,6 +14,22 @@
   border: solid 1px rgba(255, 255, 255, 0.3);
 }
 
+.visible-token-header {
+  visibility: visible;
+}
+.visible-transfer-window-selected-token-address {
+  visibility: visible;
+  flex-direction: row;
+  justify-content: center;
+  width: 500px;
+  height: 38px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  border: solid 1px rgba(255, 255, 255, 0.3);
+}
+
 .invisible-balance-window__id-list {
   z-index: -1;
   height: 150px;

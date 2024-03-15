@@ -65,7 +65,8 @@ export async function htmlTransfer(
     utils.setWindowHeight(div_transfer, 490);
     div_transfer.parentElement!.style.height = "750px";
     div_transfer.innerHTML = `
-      <h2>Choose your token and the amount of tokens you want to send</h2>
+      <div class="transfer-instruction"><h2>Choose your token and the amount of tokens you want to send</h2></div>
+      
       <header class="token-list-header">
           <span>Available Tokens</span>
           <span>Amount</span>
@@ -176,6 +177,7 @@ export async function htmlTransfer(
     // Set up an event listener for when the user changes the selected token
     select_tokens.addEventListener("change", () =>
       eventSelectTokenAddress(
+        div_transfer,
         select_tokens,
         txt_amount,
         div_tokenIDs,
@@ -241,6 +243,7 @@ export async function htmlTransfer(
  * @param selecting
  */
 function eventSelectTokenAddress(
+  div_transfer: HTMLDivElement,
   select_tokens: HTMLSelectElement,
   txt_amount: HTMLInputElement,
   div_tokenIDs: HTMLDivElement,
@@ -256,6 +259,28 @@ function eventSelectTokenAddress(
   txt_amount.value = "1";
   const firstTokenID = utils.getTokenIDs(account, tokenAddress, 1);
   selectedTokenIDs = firstTokenID;
+
+  const h2_selectedTokenAddressHeader = document.createElement("h2");
+  h2_selectedTokenAddressHeader.classList.add(
+    "selected-token-header",
+    "visible-token-header"
+  );
+  h2_selectedTokenAddressHeader!.innerHTML = `Currently selected Token`;
+
+  const div_selectedTokenAddress = document.createElement("div");
+  div_selectedTokenAddress.classList.add(
+    "selected-token-address",
+    "visible-transfer-window-selected-token-address",
+    "third-layer-window"
+  );
+  div_selectedTokenAddress!.innerHTML = `<span>${tokenAddress}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+
+  div_transfer
+    .querySelector(".transfer-instruction")!
+    .append(h2_selectedTokenAddressHeader);
+  div_transfer
+    .querySelector(".transfer-instruction")!
+    .append(div_selectedTokenAddress);
 
   // Make the token ID section visible
   div_tokenIdSection.classList.remove("invisible-transfer-window__id-list");

@@ -12,7 +12,6 @@ let div_balanceWindowContainer: HTMLDivElement;
 let btn_return: HTMLButtonElement;
 let logo_return: HTMLButtonElement;
 
-
 /**
  * Renders the balance viewer interface for guest users within the specified HTMLDivElement.
  * This function sets up the initial HTML structure and configures event listeners for navigation.
@@ -67,7 +66,8 @@ export async function htmlBalanceForGuest(
 
   // Change content of balance to empty box if there are no tokens to see
   const account = await client!.getAccount(Address.fromString(address));
-  const div_balanceContent = document.querySelector<HTMLDivElement>("#balance-content")!;
+  const div_balanceContent =
+    document.querySelector<HTMLDivElement>("#balance-content")!;
   if (account.values.values.size == 0) {
     div_balanceContent.innerHTML = `
       <div class = "transfer-window l-transfer-window second-layer-window">
@@ -83,7 +83,7 @@ export async function htmlBalanceForGuest(
     <div class="balance-window-container__address"></div>
     <div class="balance-window l-balance-window second-layer-window"></div>
     `;
-    
+
     //Used in viewBalance() to change the content
     div_balanceWindowContainer = document.querySelector<HTMLDivElement>(
       ".balance-window-container"
@@ -99,12 +99,6 @@ export async function htmlBalanceForGuest(
     )!;
     await viewBalance(client!, address);
   }
-
-
-
-  
-
-  
 }
 
 /**

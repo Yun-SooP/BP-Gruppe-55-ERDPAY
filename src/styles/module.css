@@ -255,6 +255,21 @@
   font-size: large;
   color: rgba(255, 255, 255, 0.8);
 }
+.transfer-window h2 {
+  margin-left: 0px;
+}
+
+.transfer-window .copy-button {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  right: -25px;
+}
+
+.selected-token-address span {
+  position: relative;
+  right: -15px;
+}
 
 .transfer-window .token-list-header span:first-child {
   margin-left: 30px;
