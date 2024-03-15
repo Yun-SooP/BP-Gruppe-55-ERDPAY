@@ -206,5 +206,10 @@
   display: none;
 }
 
+.l-mint-window .error-message-span {
+  position: absolute;
+  left: 33%;
+  translate: 0 -50%;
+}
 
 

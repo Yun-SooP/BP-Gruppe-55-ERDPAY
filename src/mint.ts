@@ -24,7 +24,7 @@ export async function htmlMint(div: HTMLDivElement, session: Session) {
         <span id="errMintTokenAddr"></span>
         <input type="text" class="token-address-txt" placeholder="token address (ex. 0x1234...)" id="mintTokenAddr"/>
         <button type="button" class="random-address-btn">generate random address</button>
-
+        
         <div class="mint-form__multiple-tokens">
           <label class="toggle">
             <input type="checkbox" id="multiple"></checkbox>
@@ -79,8 +79,8 @@ export async function htmlMint(div: HTMLDivElement, session: Session) {
   // Create tooltips
   if(document.querySelector<HTMLElement>(".tooltips") == null) {
     const element = document.querySelector<HTMLElement>(".mint-form__multiple-tokens")!;
-    const text_mint = "Create your own cryptocurrency or NFTs through Minting. Each Token has an address and token ID. You can assign any 40 digit hexadecimal to a new token or let us create a random address for you. You can create one digital asset with a natural number token ID of your choice, or you can choose to create multiples with random token IDs.";
-    const text_option = "By activating this option you can mint multiple tokens of the same address. Just put in the number of tokens you want to create in the field below!";
+    const text_mint = "Create your own cryptocurrency or NFTs through Minting. Each Token has an address and token ID. \n\n You can assign any 40 digit hexadecimal to a new token or let us create a random address for you. \n\n You can create one digital asset with a natural number token ID of your choice, or you can choose to create multiples with random token IDs.";
+    const text_option = "Toggle to mint multiple tokens of the same address. \n Put in the number of tokens you want in the field below!";
     utils.createToolTip(element, "bottom", text_mint,"l-mint-tooltip", "mint-tooltip");
     utils.createToolTip(element, "top", text_option,"l-mint-tooltip-option", "mint-tooltip-option");
   }
