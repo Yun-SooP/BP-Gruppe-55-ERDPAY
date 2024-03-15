@@ -129,7 +129,7 @@ export async function htmlBalance(
       
     `;
   } else {
-    div_balance.style.height = "340px";
+    div_balance.style.height = "400px";
     div_balance.innerHTML = `
     <div class="balance-window-container__address"></div>
     <div class="balance-window l-balance-window second-layer-window"></div>
@@ -190,6 +190,7 @@ async function viewBalance(client: Client, address: string) {
       345
     );
     utils.setWindowHeight(div_balanceWindowContainer, 700);
+    
 
     const div_balanceInstruction = document.querySelector(
       ".balance-instruction"
@@ -263,7 +264,7 @@ function transformToTokenListWindow(address: string) {
     //header for dashboard balance section is different to guest balance.
     h1_title.textContent = "My Balance";
   }
-  div_balanceWindow.style.height = "270px";
+  div_balanceWindow.style.height = "270px";  //lower 2ndlayer
 
   div_address.innerHTML = `<span>${address}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
   div_address.classList.add(
