@@ -24,7 +24,7 @@ export async function htmlMint(div: HTMLDivElement, session: Session) {
         <span id="errMintTokenAddr"></span>
         <input type="text" class="token-address-txt" placeholder="token address (ex. 0x1234...)" id="mintTokenAddr"/>
         <button type="button" class="random-address-btn">generate random address</button>
-
+        
         <div class="mint-form__multiple-tokens">
           <label class="toggle">
             <input type="checkbox" id="multiple"></checkbox>
