@@ -642,10 +642,10 @@ export function createToolTip(element: HTMLElement, textbox_position: string, te
   const lines = text.split('\n');
   lines.forEach(line => {
     const lineElement = document.createElement("div");
-    lineElement.textContent = line;
+    lineElement.innerHTML = line;
     textbox.appendChild(lineElement);
   });
-  
+
   iconFrame.appendChild(icon);
   iconFrame.appendChild(textbox);
 
