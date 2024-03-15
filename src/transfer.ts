@@ -50,11 +50,15 @@ export async function htmlTransfer(
 
   // Check if the account has any tokens and display a message if it doesn't
   if (account.values.values.size == 0) {
-    div_transfer.style.height = "70px";
+    div_transfer.style.height = "110px";
     div_transfer.parentElement!.style.height = "600px";
     // If no tokens are available, inform the user with a message
     div_transfer.innerHTML = `
-      <p>You have no token available.</p>
+      <p>
+          You have no token available.<br>
+          Get tokens transferred to you from other account<br>
+          or create your own by minting them!
+      </p>
     `;
   } else {
     // If tokens are available, set up the transfer interface
@@ -80,7 +84,7 @@ export async function htmlTransfer(
         </div>
         <div class="transfer-tokenID-section invisible-transfer-window__id-list">
           <div class="transfer__tokenID-header">
-            <h2 id="token ID label">token ID:</h2>
+            <h2 id="token ID label">token IDs</h2>
             <div id="changeTokenIDs">
               <button type="button" class="changeTokenIDs-btn">edit</button>
             </div>

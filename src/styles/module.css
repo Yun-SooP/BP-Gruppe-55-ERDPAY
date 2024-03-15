@@ -267,6 +267,7 @@
 }
 .transfer-window .token-list {
   width: 500px;
+  margin-top: 5px;
 }
 
 .transfer-window .token-list__tokens {
@@ -506,7 +507,7 @@ input:checked + .slider:before {
 */
 /* Mint */
 .mint-form {
-  margin-top: 30px;
+  margin-top: 55px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -514,7 +515,7 @@ input:checked + .slider:before {
 }
 
 .mint-form .token-address-txt {
-  margin-top: 25px;
+  margin-top: 0px;
 }
 
 .mint-form .random-address-btn {

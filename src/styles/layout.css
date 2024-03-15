@@ -127,7 +127,7 @@
 
 .l-transfer-window {
   width: 550px;
-  height: 70px;
+  height: 110px;
 }
 
 .l-mint-window {
@@ -160,7 +160,7 @@
 /* Create Account */
 .l-create-account-window-container {
   width: 700px;
-  height: 410px;
+  height: 385px;
 }
 
 .l-create-account-window-header {
