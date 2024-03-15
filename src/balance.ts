@@ -189,7 +189,7 @@ async function viewBalance(client: Client, address: string) {
       document.querySelector<HTMLDivElement>(".balance-window")!,
       345
     );
-    utils.setWindowHeight(div_balanceWindowContainer, 700);
+    utils.setWindowHeight(div_balanceWindowContainer, 670);
     
 
     const div_balanceInstruction = document.querySelector(

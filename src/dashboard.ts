@@ -361,7 +361,7 @@ async function setBalanceTab(
   const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
     ".l-transfer-window-container"
   )!;
-  windowContainer.style.height = "760px";
+  windowContainer.style.height = "670px";
 
   current = "My Balance";
   head_tabLabel.innerHTML = current;
