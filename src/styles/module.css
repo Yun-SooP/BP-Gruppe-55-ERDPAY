@@ -76,6 +76,10 @@
   width: 100%;
 }
 
+.balance-instruction h2 {
+  margin-left: 0px;
+}
+
 .balance-window__address-form {
   display: flex;
   margin-top: 30px;
@@ -255,7 +259,7 @@
   font-size: large;
   color: rgba(255, 255, 255, 0.8);
 }
-.transfer-window h2 {
+.transfer-window .transfer-instruction h2 {
   margin-left: 0px;
 }
 

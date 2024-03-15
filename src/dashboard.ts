@@ -61,7 +61,7 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
       </div>
     `;
 
-   // Select the "New Account" button and attach the event for creating a new session
+  // Select the "New Account" button and attach the event for creating a new session
   const btn_newSession = document.querySelector<HTMLButtonElement>(
     ".session-window__form .new-session-btn"
   )!;
@@ -79,7 +79,7 @@ export function htmlCreateSession(div_widget: HTMLDivElement) {
     async () => await eventRestoreSession(txt_previousPrivateKey.value)
   );
 
-   // Select the private key input field and set up an event listener for the "Enter" key
+  // Select the private key input field and set up an event listener for the "Enter" key
   const txt_previousPrivateKey = document.querySelector<HTMLInputElement>(
     ".session-window__form input[type='password']"
   )!;
@@ -284,7 +284,7 @@ export async function htmlDashboard(
       
     `;
 
-   // Add a click event listener to the logout element.
+  // Add a click event listener to the logout element.
   document.querySelector(".logout")?.addEventListener("click", logout);
 
   // Acquire references to DOM elements that will be dynamically updated.
@@ -361,14 +361,13 @@ async function setBalanceTab(
   const windowContainer = div_dashboard.querySelector<HTMLDivElement>(
     ".l-transfer-window-container"
   )!;
-  windowContainer.style.height = "600px";
+  windowContainer.style.height = "760px";
 
   current = "My Balance";
   head_tabLabel.innerHTML = current;
   div_tab.setAttribute("class", "");
   div_tab.style.height = "110px";
   await htmlBalance(div_tab, session!.address.toString(), session);
-  
 }
 
 /**
@@ -425,5 +424,4 @@ async function setMintTab(div_tab: HTMLDivElement, head_tabLabel: HTMLElement) {
   );
   div_tab.style.height = "470px";
   await htmlMint(div_tab, session);
-
 }

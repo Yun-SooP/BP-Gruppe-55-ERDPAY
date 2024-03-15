@@ -62,7 +62,7 @@
 /* Balance */
 .l-balance-window-container {
   width: 700px;
-  height: 410px;
+  height: 550px;
 }
 
 .l-balance-title {
@@ -84,7 +84,7 @@
 }
 
 .l-balance-tooltip {
-  visibility:hidden;
+  visibility: hidden;
 }
 /* 
 

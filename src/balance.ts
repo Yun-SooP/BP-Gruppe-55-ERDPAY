@@ -185,6 +185,40 @@ async function viewBalance(client: Client, address: string) {
   )!;
 
   select_tokens.addEventListener("change", () => {
+    utils.setWindowHeight(
+      document.querySelector<HTMLDivElement>(".balance-window")!,
+      345
+    );
+    utils.setWindowHeight(div_balanceWindowContainer, 700);
+
+    const div_balanceInstruction = document.querySelector(
+      ".balance-instruction"
+    )!;
+
+    if (div_balanceInstruction.childElementCount > 1) {
+      div_balanceInstruction.querySelector(
+        ".selected-token-address"
+      )!.innerHTML = `<span>${select_tokens.value}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+    } else {
+      const h2_selectedTokenAddressHeader = document.createElement("h2");
+      h2_selectedTokenAddressHeader.classList.add(
+        "selected-token-header",
+        "visible-token-header"
+      );
+      h2_selectedTokenAddressHeader!.innerHTML = `Currently selected Token`;
+
+      const div_selectedTokenAddress = document.createElement("div");
+      div_selectedTokenAddress.classList.add(
+        "selected-token-address",
+        "visible-transfer-window-selected-token-address",
+        "third-layer-window"
+      );
+      div_selectedTokenAddress!.innerHTML = `<span>${select_tokens.value}</span> <button class="copy-button"><i class="fa-regular fa-copy"></i></button>`;
+
+      div_balanceInstruction.append(h2_selectedTokenAddressHeader);
+      div_balanceInstruction.append(div_selectedTokenAddress);
+    }
+
     //move spans to left
     document.querySelector<HTMLSpanElement>(
       ".balance-window header span:first-child"
@@ -238,7 +272,7 @@ function transformToTokenListWindow(address: string) {
   );
   div_balanceWindow.innerHTML = `
 
-      <h2 class="l-balance-instruction">To see the ID, please select the corresponding token</h2>
+      <div class="balance-instruction"><h2 class="l-balance-instruction">To see the ID, please select the corresponding token</h2></div>
       <header class="token-list-header">
           <span>Available Tokens</span>
           <span>amount</span>
