@@ -1,5 +1,6 @@
 #paymentPopup {
+  --toggleBlue: #6f8898;
   .clicked-clickable-token-id {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--toggleBlue);
   }
 }
